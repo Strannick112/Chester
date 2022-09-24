@@ -4,6 +4,8 @@ config = {
     'prefix': '$',
     'server_name': "Server_Name",
     'short_server_name': "SN",
+    'start_claims': "Start_Claims",
+    'stop_claims': "Stop_Claims"
 }
 
 replies = {
