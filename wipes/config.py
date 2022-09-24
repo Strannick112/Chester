@@ -1,0 +1,1 @@
+main_dir = "./wipes/wipe_list"
