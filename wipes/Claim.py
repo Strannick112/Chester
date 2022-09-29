@@ -77,7 +77,7 @@ class Claim:
         if self.status == Status.approved:
             for item in self.items:
                 os.system(
-                    f'''screen -S {config['short_server_name']} -X stuff 'UserToPlayer("{self.player.dst_nickname}").components.inventory:GiveItem(SpawnPrefab("{item.id}"))\n'''
+                    f'''screen -S {config['short_server_name']} -X stuff 'UserToPlayer("{self.player.dst_nickname}").components.inventory:GiveItem(SpawnPrefab("{item.id}"))\n\''''
                 )
             self.executed_at = executed_at
             self.status = Status.executed
