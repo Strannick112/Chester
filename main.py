@@ -22,7 +22,7 @@ intents.members = True
 bot = commands.Bot(command_prefix=config['prefix'], intents=intents)
 
 
-@bot.command(name=config["start_claims"])
+@bot.command(name=config['short_server_name']+"_start_claims")
 @commands.has_role(replies['master_role'])
 async def start_wipe(ctx):
     """Открывает приём заявок от игроков"""
@@ -55,7 +55,7 @@ async def start_wipe(ctx):
         return False
 
 
-@bot.command(name=config["stop_claims"])
+@bot.command(name=config['short_server_name']+"_stop_claims")
 @commands.has_role(replies['master_role'])
 async def stop_wipe(ctx):
     """Закрывает набор заявок от игроков"""
