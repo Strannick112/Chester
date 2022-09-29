@@ -110,7 +110,7 @@ async def mark_claim_executed(user_name: str):
     return False
 
 
-@bot.command(name="give_items")
+@bot.command(name=config['short_server_name']+"_give_items")
 async def give_items(ctx):
     """Выдает игроку предметы на сервере по оставленной и подтверждённой заявке"""
     user_name = ctx.author.__str__()
@@ -139,7 +139,7 @@ async def give_items(ctx):
         return False
 
 
-@bot.command(name="change_replies")
+@bot.command(name=config['short_server_name']+"_change_replies")
 @commands.has_role(replies['master_role'])
 async def change_replies(ctx, reply: str, new_text: str):
     """
@@ -161,7 +161,7 @@ async def change_replies(ctx, reply: str, new_text: str):
         return True
 
 
-@bot.command(name="get_replies_list")
+@bot.command(name=config['short_server_name']+"_get_replies_list")
 @commands.has_role(replies['master_role'])
 async def get_replies_list(ctx):
     """
@@ -178,7 +178,7 @@ async def get_replies_list(ctx):
         page_number += 1
 
 
-@bot.command(name="get_claim")
+@bot.command(name=config['short_server_name']+"_get_claim")
 async def get_claim(ctx, user_name: str = None):
     """
     Отправляет заявку пользователя в чат.
