@@ -4,6 +4,7 @@ config = {
     'prefix': '$',
     'server_name': "Server_Name",
     'short_server_name': "SN",
+    'server_main_screen_name': 'Server_Main_Screen_Name',
 }
 
 replies = {
