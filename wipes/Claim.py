@@ -42,25 +42,6 @@ class Claim:
         if os.path.exists(tmp_path):
             os.remove(tmp_path)
 
-    # @staticmethod
-    # def load(file_name):
-    #     """Загружает данные из файла с указанным именем"""
-    #     with codecs.open(
-    #             file_name,
-    #             "r",
-    #             encoding="utf-8"
-    #     ) as file:
-    #         raw_data = json.load(file)
-    #         claim = Claim(
-    #             Player.from_dict(raw_data['player']),
-    #             tuple(Item.from_dict(raw_item) for raw_item in raw_data['items']),
-    #             raw_data['created_at'],
-    #             raw_data['approved_at'],
-    #             raw_data['executed_at'],
-    #             Wipe.from_dict(raw_data['wipe'])
-    #         )
-    #         return claim
-
     @staticmethod
     def from_dict(raw_dict):
         return Claim(
