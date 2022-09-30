@@ -229,7 +229,7 @@ async def on_message(ctx):
             else:
                 if wipes.last_wipe.stoped_at == "":
                     if message := re.findall(
-                            r'''Сервер: ''' + main_config['server_name'] + '''\sИгровой ник: ([\w].+?)\sПрошу: ([\w\W]+)''',
+                            r'''Сервер: ''' + main_config['server_name'] + '''\sИгровой ник: ([\w\d]+?)\sПрошу: ([\w\W]+)''',
                             ctx.content):
                         loot = re.findall(r'''(\w[\w\s].+?) \("([\w].+?)"\)''', message[0][1])
                         print(f"Игровой ник: {message[0][0]}")
