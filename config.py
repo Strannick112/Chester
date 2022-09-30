@@ -2,8 +2,8 @@
 config = {
     'token': 'token',
     'prefix': '$',
-    'server_name': "Server_Name",
-    'short_server_name': "SN",
+    'server_name': 'Server_Name',
+    'short_server_name': 'SN',
     'server_main_screen_name': 'Server_Main_Screen_Name',
 }
 
@@ -22,15 +22,15 @@ replies = {
     "text_is_too_big_to_send": "Текст слишком велик для отправки, поэтому он будет передан в виде файла",
     "get_claim_fail": "Заявка не найдена",
 
-    'master_role': 'Master_Role',
-    'claim_accepted_is_ok': 'reaction',
-    'claim_admin_approved_is_ok': 'reaction',
-    'claim_error': 'reaction',
-    'claim_items_executed': 'reaction',
-    'claim_is_overdue': 'reaction',
-    'claim_full_approved': 'reaction',
-    'claim_channel_id': 123123123,
-    'commands_channel_id': 123123123,
+    "master_role": "Master_Role",
+    "claim_accepted_is_ok": "reaction",
+    "claim_admin_approved_is_ok": "reaction",
+    "claim_error": "reaction",
+    "claim_items_executed": "reaction",
+    "claim_is_overdue": "reaction",
+    "claim_full_approved": "reaction",
+    "claim_channel_id": 123123123,
+    "commands_channel_id": 123123123,
 }
 
 # for locally rewrite settings add it to settings_local.py
