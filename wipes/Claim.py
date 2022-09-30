@@ -2,7 +2,7 @@ import codecs
 import json
 import os
 
-from config import config
+from config import main_config
 from wipes import main_dir
 from wipes.Item import Item
 from wipes.Player import Player
@@ -77,7 +77,7 @@ class Claim:
         if self.status == Status.approved:
             for item in self.items:
                 os.system(
-                    f'''screen -S {config['server_main_screen_name']} -X stuff 'UserToPlayer("{self.player.dst_nickname}").components.inventory:GiveItem(SpawnPrefab("{item.id}"))\n\''''
+                    f'''screen -S {main_config['server_main_screen_name']} -X stuff 'UserToPlayer("{self.player.dst_nickname}").components.inventory:GiveItem(SpawnPrefab("{item.id}"))\n\''''
                 )
             self.executed_at = executed_at
             self.status = Status.executed

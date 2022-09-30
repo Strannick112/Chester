@@ -8,7 +8,7 @@ from discord.ext import commands
 import re
 
 import wipes
-from config import config, replies
+from config import main_config
 from wipes import Wipe
 from wipes.Claim import Claim
 from wipes.Item import Item
@@ -19,15 +19,19 @@ intents = discord.Intents.default()
 intents.message_content = True
 intents.members = True
 
-bot = commands.Bot(command_prefix=config['prefix'], intents=intents)
+
+bot = commands.Bot(command_prefix=main_config['prefix'], intents=intents)
+
+with codecs.open("./replies.json", "r", encoding="utf-8") as file:
+    replies = json.load(file)
 
 
-@bot.command(name=config['short_server_name']+"_start_claims")
+@bot.command(name=main_config['short_server_name'] + "_start_claims")
 @commands.has_role(replies['master_role'])
 async def start_wipe(ctx):
     """Открывает приём заявок от игроков"""
     if wipes.last_wipe.started_at == "" or wipes.last_wipe.stoped_at != "" or wipes.last_wipe.path == "./wipes/_":
-        wipes.last_wipe = Wipe(config['server_name'], ctx.message.created_at.__str__(), claims={})
+        wipes.last_wipe = Wipe(main_config['server_name'], ctx.message.created_at.__str__(), claims={})
         wipes.last_wipe.save()
         async for msg in bot \
                 .get_channel(replies['claim_channel_id']) \
@@ -55,7 +59,7 @@ async def start_wipe(ctx):
         return False
 
 
-@bot.command(name=config['short_server_name']+"_stop_claims")
+@bot.command(name=main_config['short_server_name'] + "_stop_claims")
 @commands.has_role(replies['master_role'])
 async def stop_wipe(ctx):
     """Закрывает набор заявок от игроков"""
@@ -110,7 +114,13 @@ async def mark_claim_executed(user_name: str):
     return False
 
 
-@bot.command(name=config['short_server_name']+"_give_items")
+def reload_replies():
+    with codecs.open("./replies.json", "r", encoding="utf-8") as file:
+        global replies
+        replies = json.load(file)
+
+
+@bot.command(name=main_config['short_server_name'] + "_give_items")
 async def give_items(ctx):
     """Выдает игроку предметы на сервере по оставленной и подтверждённой заявке"""
     user_name = ctx.author.__str__()
@@ -139,7 +149,7 @@ async def give_items(ctx):
         return False
 
 
-@bot.command(name=config['short_server_name']+"_change_replies")
+@bot.command(name=main_config['short_server_name'] + "_change_replies")
 @commands.has_role(replies['master_role'])
 async def change_replies(ctx, reply: str, new_text: str):
     """
@@ -148,11 +158,12 @@ async def change_replies(ctx, reply: str, new_text: str):
     new_text: новая фраза
     """
     try:
-        if os.path.exists("./config_local.py"):
-            with codecs.open("./config_local.py", "rb", encoding="utf-8") as file:
+        if os.path.exists("./replies.json"):
+            with codecs.open("./replies.json", "rb", encoding="utf-8") as file:
                 old_text = file.read()
-            with codecs.open("./config_local.py", "w", encoding="utf-8") as file:
+            with codecs.open("./replies.json", "w", encoding="utf-8") as file:
                 file.write(re.sub('(' + reply + r'": ")([\w\W].+?)"', r'\1' + new_text + '"', old_text))
+            reload_replies()
             await ctx.reply(replies['change_replies_success'])
     except Exception:
         await ctx.reply(replies['change_replies_fail'])
@@ -161,7 +172,7 @@ async def change_replies(ctx, reply: str, new_text: str):
         return True
 
 
-@bot.command(name=config['short_server_name']+"_get_replies_list")
+@bot.command(name=main_config['short_server_name'] + "_get_replies_list")
 @commands.has_role(replies['master_role'])
 async def get_replies_list(ctx):
     """
@@ -178,7 +189,7 @@ async def get_replies_list(ctx):
         page_number += 1
 
 
-@bot.command(name=config['short_server_name']+"_get_claim")
+@bot.command(name=main_config['short_server_name'] + "_get_claim")
 async def get_claim(ctx, user_name: str = None):
     """
     Отправляет заявку пользователя в чат.
@@ -212,13 +223,13 @@ async def get_claim(ctx, user_name: str = None):
 async def on_message(ctx):
     if ctx.author != bot.user:
         if len(ctx.content) > 0:
-            if ctx.content[0] == config['prefix']:
+            if ctx.content[0] == main_config['prefix']:
                 if ctx.channel.id == replies['commands_channel_id']:
                     await bot.process_commands(ctx)
             else:
                 if wipes.last_wipe.stoped_at == "":
                     if message := re.findall(
-                            r'''Сервер: ''' + config['server_name'] + '''\sИгровой ник: ([\w].+?)\sПрошу: ([\w\W]+)''',
+                            r'''Сервер: ''' + main_config['server_name'] + '''\sИгровой ник: ([\w].+?)\sПрошу: ([\w\W]+)''',
                             ctx.content):
                         loot = re.findall(r'''(\w[\w\s].+?) \("([\w].+?)"\)''', message[0][1])
                         print(f"Игровой ник: {message[0][0]}")
@@ -236,4 +247,4 @@ async def on_message(ctx):
                         await ctx.add_reaction(replies['claim_accepted_is_ok'])
 
 
-bot.run(config['token'])
+bot.run(main_config['token'])
