@@ -24,6 +24,8 @@ bot = commands.Bot(command_prefix=main_config['prefix'], intents=intents)
 
 with codecs.open("./replies.json", "r", encoding="utf-8") as file:
     replies = json.load(file)
+    replies["claim_channel_id"] = int(replies["claim_channel_id"])
+    replies["commands_channel_id"] = json.loads(replies["commands_channel_id"])
 
 
 @bot.command(name=main_config['short_server_name'] + "_start_claims")
@@ -118,6 +120,8 @@ def reload_replies():
     with codecs.open("./replies.json", "r", encoding="utf-8") as file:
         global replies
         replies = json.load(file)
+        replies["claim_channel_id"] = int(replies["claim_channel_id"])
+        replies["commands_channel_id"] = json.loads(replies["commands_channel_id"])
 
 
 @bot.command(name=main_config['short_server_name'] + "_give_items")
@@ -224,7 +228,7 @@ async def on_message(ctx):
     if ctx.author != bot.user:
         if len(ctx.content) > 0:
             if ctx.content[0] == main_config['prefix']:
-                if ctx.channel.id == replies['commands_channel_id']:
+                if ctx.channel.id in replies['commands_channel_id']:
                     await bot.process_commands(ctx)
             else:
                 if wipes.last_wipe.stoped_at == "":
