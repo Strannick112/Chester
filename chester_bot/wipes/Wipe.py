@@ -2,18 +2,18 @@ import codecs
 import json
 import os
 
-from wipes import main_dir
-from wipes.Claim import Claim
+from chester_bot.wipes import main_dir
+from chester_bot.wipes.Claim import Claim
 
 
 class Wipe:
     def __init__(
             self,
+            claims: dict[Claim],
             server_name: str = "",
             started_at: str = "",
             stoped_at: str = "",
             path: str = "",
-            claims: dict[str:Claim] = {},
     ):
         self.server_name = server_name
         self.started_at = started_at
@@ -40,7 +40,13 @@ class Wipe:
 
     @staticmethod
     def from_dict(raw_dict):
-        return Wipe(raw_dict["server_name"], raw_dict["started_at"], raw_dict['stoped_at'], raw_dict['path'])
+        return Wipe(
+            claims={},
+            server_name=raw_dict["server_name"],
+            started_at=raw_dict["started_at"],
+            stoped_at=raw_dict['stoped_at'],
+            path=raw_dict['path']
+        )
 
     @staticmethod
     def load(file_name, claims_dir):
@@ -52,10 +58,11 @@ class Wipe:
         ) as file:
             raw_data = json.load(file)
             wipe = Wipe(
-                raw_data['server_name'],
-                raw_data['started_at'],
-                raw_data['stoped_at'],
-                raw_data['path'],
+                server_name=raw_data['server_name'],
+                started_at=raw_data['started_at'],
+                stoped_at=raw_data['stoped_at'],
+                path=raw_data['path'],
+                claims=
                 {
                     claim_name[:-5]: Claim.from_dict(
                         json.load(

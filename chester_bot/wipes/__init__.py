@@ -1,6 +1,6 @@
 import os
-from wipes.config import main_dir
-from wipes.Wipe import Wipe
+from chester_bot.wipes.config import main_dir
+from chester_bot.wipes.Wipe import Wipe
 
 if not os.path.exists(main_dir):
     os.mkdir(main_dir)
@@ -14,7 +14,7 @@ wipe_list = [
 ]
 
 last_wipe = \
-    Wipe() if len(wipe_list) == 0 \
+    Wipe(claims={}) if len(wipe_list) == 0 \
         else Wipe.load(
         os.path.join(main_dir, wipe_list[0], "wipe.json"),
         os.path.join(main_dir, wipe_list[0], "claims")

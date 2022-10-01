@@ -1,6 +1,3 @@
-import codecs
-
-
 class Player:
     def __init__(self, discord_nickname: str, dst_nickname: str):
         self.discord_nickname = discord_nickname.__str__()

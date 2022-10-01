@@ -1,4 +1,3 @@
-
 main_config = {
     'token': 'token',
     'prefix': '$',
@@ -10,6 +9,6 @@ main_config = {
 
 # for locally rewrite settings add it to settings_local.py
 try:
-    from config_local import *
+    from chester_bot.config_local import *
 except ModuleNotFoundError as err:
     pass

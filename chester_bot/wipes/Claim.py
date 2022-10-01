@@ -2,11 +2,11 @@ import codecs
 import json
 import os
 
-from config import main_config
-from wipes import main_dir
-from wipes.Item import Item
-from wipes.Player import Player
-from wipes.Status import Status
+from chester_bot.config import main_config
+from chester_bot.wipes import main_dir
+from chester_bot.wipes.Item import Item
+from chester_bot.wipes.Player import Player
+from chester_bot.wipes.Status import Status
 
 
 class Claim:
@@ -37,10 +37,10 @@ class Claim:
         ) as file:
             json.dump(self, file, default=lambda o: o.__dict__, indent=4, ensure_ascii=False)
 
-    def __del__(self):
-        tmp_path = f"{main_dir}/{self.path}/claims/{self.player.discord_nickname}.json"
-        if os.path.exists(tmp_path):
-            os.remove(tmp_path)
+    # def __del__(self):
+    #     tmp_path = f"{main_dir}/{self.path}/claims/{self.player.discord_nickname}.json"
+    #     if os.path.exists(tmp_path):
+    #         os.remove(tmp_path)
 
     @staticmethod
     def from_dict(raw_dict):
