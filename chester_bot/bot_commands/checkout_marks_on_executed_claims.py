@@ -1,6 +1,7 @@
 import datetime
 
 from chester_bot import wipes, bot, replies, main_config
+from chester_bot.wipes.Status import Status
 
 
 @bot.command(name=main_config['short_server_name'] + "_checkout_marks_on_executed_claims")
@@ -16,6 +17,9 @@ async def checkout_marks_on_executed_claims(ctx):
                     for reaction in msg.reactions:
                         if reaction.__str__() == replies['claim_full_approved']:
                             if reaction.me:
-                                await msg.add_reaction(replies['claim_items_executed'])
+                                if wipes.last_wipe.claims[user_name].status == Status.executed:
+                                    await msg.add_reaction(replies['claim_items_executed'])
+                                else:
+                                    await msg.remove_reaction(replies['claim_items_executed'])
 
     return True
