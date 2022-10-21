@@ -9,7 +9,7 @@ def reload_replies():
     with codecs.open("./chester_bot/replies.json", "r", encoding="utf-8") as file:
         global replies
         replies = json.load(file)
-        replies["claim_channel_id"] = int(replies["claim_channel_id"])
+        replies["claim_channel_id"] = json.loads(replies["claim_channel_id"])
         replies["commands_channel_id"] = json.loads(replies["commands_channel_id"])
 
 
@@ -19,7 +19,7 @@ intents.members = True
 
 with codecs.open("./chester_bot/replies.json", "r", encoding="utf-8") as file:
     replies = json.load(file)
-    replies["claim_channel_id"] = int(replies["claim_channel_id"])
+    replies["claim_channel_id"] = json.loads(replies["claim_channel_id"])
     replies["commands_channel_id"] = json.loads(replies["commands_channel_id"])
 
 bot = commands.Bot(command_prefix=main_config['prefix'], intents=intents)
