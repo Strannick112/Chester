@@ -1,6 +1,6 @@
 import datetime
 
-from discord.app_commands import commands
+from discord.ext import commands
 
 from chester_bot import wipes, bot, replies, main_config
 from chester_bot.wipes.Status import Status
