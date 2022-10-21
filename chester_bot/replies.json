@@ -12,6 +12,8 @@
     "change_replies_fail": "Смена фразы не удалась",
     "text_is_too_big_to_send": "Текст слишком велик для отправки, поэтому он будет передан в виде файла",
     "get_claim_fail": "Заявка не найдена",
+    "delete_claim_success": "Заявка успешно удалена",
+    "delete_claim_fail": "Удаление заявки не удалось",
 
     "master_role": "Гуляет с Честером",
     "claim_accepted_is_ok": "<:3nekohmm:872133257649594499>",
@@ -20,6 +22,7 @@
     "claim_items_executed": "<:3nekogift:872132513580073050>",
     "claim_is_overdue": "<:3nekowaiintfire:872133130973233193>",
     "claim_full_approved": "<:3nekocool:872132457112150076>",
-    "claim_channel_id": "1023193192209846383",
+    "claim_deleted": "<:3nekoprison:870276755460608040>",
+    "claim_channel_id": "[880077986072780830, 1023193192209846383]",
     "commands_channel_id": "[1025151299391586304, 1025743931947896844, 1021843197942579320]"
 }

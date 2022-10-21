@@ -37,10 +37,10 @@ class Claim:
         ) as file:
             json.dump(self, file, default=lambda o: o.__dict__, indent=4, ensure_ascii=False)
 
-    # def __del__(self):
-    #     tmp_path = f"{main_dir}/{self.path}/claims/{self.player.discord_nickname}.json"
-    #     if os.path.exists(tmp_path):
-    #         os.remove(tmp_path)
+    def delete(self):
+        tmp_path = f"{main_dir}/{self.path}/claims/{self.player.discord_nickname}.json"
+        if os.path.exists(tmp_path):
+            os.remove(tmp_path)
 
     @staticmethod
     def from_dict(raw_dict):
