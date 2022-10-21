@@ -7,3 +7,4 @@ from .start_wipe import start_wipe
 from .stop_wipe import stop_wipe
 from .delete_claim import delete_claim
 from .checkout_marks_on_executed_claims import checkout_marks_on_executed_claims
+from .rollback_claims import rollback_claims

@@ -58,10 +58,19 @@ class Claim:
         if self.status == Status.approved:
             for item in self.items:
                 os.system(
-                    f'''screen -S {main_config['server_main_screen_name']} -X stuff 'UserToPlayer("{self.player.dst_nickname}").components.inventory:GiveItem(SpawnPrefab("{item.id}"))\n\''''
+                    f'''screen -S {main_config['server_main_screen_name']} -X stuff "UserToPlayer(\"{self.player.dst_nickname}\").components.inventory:GiveItem(SpawnPrefab(\"{item.id}\"))\n\"'''
                 )
             self.executed_at = executed_at
             self.status = Status.executed
+            self.save()
+            return True
+        else:
+            return False
+
+    def rollback_claim(self) -> bool:
+        if self.status == Status.executed:
+            self.executed_at = ""
+            self.status = Status.approved
             self.save()
             return True
         else:
