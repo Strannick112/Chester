@@ -2,6 +2,7 @@ import codecs
 import json
 import os
 import re
+import shlex
 import subprocess
 
 from chester_bot.config import main_config
@@ -59,11 +60,13 @@ class Claim:
     def give_items(self, executed_at: str) -> bool:
         if self.status == Status.approved:
             for item in self.items:
-                dst_nickname = re.sub(r'\'', r"\'", self.player.dst_nickname)
-                dst_nickname = re.sub(r'\"', r"\"", dst_nickname)
+                # dst_nickname = re.sub(r'\'', r"\'", self.player.dst_nickname)
+                # dst_nickname = re.sub(r'\"', r"\"", dst_nickname)
+                dst_nickname = shlex.quote(self.player.dst_nickname)
+                item_id = shlex.quote(item.id)
                 print(
                     subprocess.check_output(
-                        f"""screen -S {main_config['server_main_screen_name']} -X stuff "UserToPlayer(\"{dst_nickname}\").components.inventory:GiveItem(SpawnPrefab(\"{item.id}\"))\n\"""",
+                        f"""screen -S {main_config['server_main_screen_name']} -X stuff "UserToPlayer(\"{dst_nickname}\").components.inventory:GiveItem(SpawnPrefab(\"{item_id}\"))\n\"""",
                         shell=True
                     )
                 )
