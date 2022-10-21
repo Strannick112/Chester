@@ -60,7 +60,7 @@ class Claim:
             for item in self.items:
                 print(
                     subprocess.check_output(
-                        f'''screen -S {main_config['server_main_screen_name']} -X stuff "UserToPlayer(\"{self.player.dst_nickname}\").components.inventory:GiveItem(SpawnPrefab(\"{item.id}\"))\n\"''',
+                        f"""screen -S {main_config['server_main_screen_name']} -X stuff "UserToPlayer(\"{self.player.dst_nickname}\").components.inventory:GiveItem(SpawnPrefab(\"{item.id}\"))\n\"""",
                         shell=True
                     )
                 )
