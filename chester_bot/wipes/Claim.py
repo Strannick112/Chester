@@ -1,6 +1,7 @@
 import codecs
 import json
 import os
+import subprocess
 
 from chester_bot.config import main_config
 from chester_bot.wipes import main_dir
@@ -57,9 +58,15 @@ class Claim:
     def give_items(self, executed_at: str) -> bool:
         if self.status == Status.approved:
             for item in self.items:
-                os.system(
-                    f'''screen -S {main_config['server_main_screen_name']} -X stuff "UserToPlayer(\"{self.player.dst_nickname}\").components.inventory:GiveItem(SpawnPrefab(\"{item.id}\"))\n\"'''
+                print(
+                    subprocess.check_output(
+                        f'''screen -S {main_config['server_main_screen_name']} -X stuff "UserToPlayer(\"{self.player.dst_nickname}\").components.inventory:GiveItem(SpawnPrefab(\"{item.id}\"))\n\"''',
+                        shell=True
+                    )
                 )
+                # os.system(
+                #     f'''screen -S {main_config['server_main_screen_name']} -X stuff "UserToPlayer(\"{self.player.dst_nickname}\").components.inventory:GiveItem(SpawnPrefab(\"{item.id}\"))\n\"'''
+                # )
             self.executed_at = executed_at
             self.status = Status.executed
             self.save()
