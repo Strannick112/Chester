@@ -20,6 +20,6 @@ async def checkout_marks_on_executed_claims(ctx):
                                 if wipes.last_wipe.claims[user_name].status == Status.executed:
                                     await msg.add_reaction(replies['claim_items_executed'])
                                 else:
-                                    await msg.remove_reaction(replies['claim_items_executed'])
+                                    await msg.remove_reaction(replies['claim_items_executed'], reaction.me)
 
     return True
