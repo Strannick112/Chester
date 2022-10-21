@@ -8,8 +8,8 @@ from chester_bot.wipes.Player import Player
 
 def make_claim(text: str, author: str, created_at: str):
     if message := re.findall(
-            r'''Сервер:[\s]*?''' + main_config['server_name']
-            + '''[\s]*?Игровой ник:[\s]*?([\w\d\s]+?)[\s]+?Прошу:[\s]*?([\w\W]+)''',
+            r'''Сервер: ''' + main_config['server_name']
+            + '''[\s]*?Игровой ник: ([\w\W]+?)[\s]+?Прошу:[\s]*?([\w\W]+)''',
             text
     ):
         loot = re.findall(r'''(\w[\w\s].+?) \("([\w].+?)"\)''', message[0][1])
