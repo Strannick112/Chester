@@ -14,6 +14,7 @@
     "get_claim_fail": "Заявка не найдена",
     "delete_claim_success": "Заявка успешно удалена",
     "delete_claim_fail": "Удаление заявки не удалось",
+    "checkout_marks_on_executed_claims_success": "Все реакции под оставленными заявками были синхронизированы",
 
     "master_role": "Гуляет с Честером",
     "claim_accepted_is_ok": "<:3nekohmm:872133257649594499>",

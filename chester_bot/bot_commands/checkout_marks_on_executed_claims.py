@@ -22,5 +22,5 @@ async def checkout_marks_on_executed_claims(ctx):
                                     await msg.add_reaction(replies['claim_items_executed'])
                                 else:
                                     await msg.remove_reaction(replies['claim_items_executed'], bot.user)
-
+    ctx.reply(replies['checkout_marks_on_executed_claims_success'])
     return True
