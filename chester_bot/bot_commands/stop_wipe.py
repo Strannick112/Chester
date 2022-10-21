@@ -23,6 +23,8 @@ async def stop_wipe(ctx):
             ):
                 if msg.author == bot.user:
                     continue
+                if msg.author.__str__() not in wipes.last_wipe.claims.keys():
+                    continue
                 to_approve = {'bot_ok': False, 'admin_ok': False}
                 for reaction in msg.reactions:
                     if reaction.__str__() == replies['claim_accepted_is_ok']:
