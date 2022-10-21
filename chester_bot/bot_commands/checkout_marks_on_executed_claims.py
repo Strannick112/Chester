@@ -6,6 +6,7 @@ from chester_bot.wipes.Status import Status
 
 @bot.command(name=main_config['short_server_name'] + "_checkout_marks_on_executed_claims")
 async def checkout_marks_on_executed_claims(ctx):
+    "Синхронизирует реакции под всеми сообщениями с заявками, хранящимися у бота"
     for user_name in wipes.last_wipe.claims.keys():
         for channel_id in replies['claim_channel_id']:
             async for msg in bot \
