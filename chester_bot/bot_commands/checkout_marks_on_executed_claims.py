@@ -1,8 +1,9 @@
 import datetime
 
-from chester_bot import wipes, bot, replies
+from chester_bot import wipes, bot, replies, main_config
 
 
+@bot.command(name=main_config['short_server_name'] + "_checkout_marks_on_executed_claims")
 async def checkout_marks_on_executed_claims():
     for user_name in wipes.last_wipe.claims.keys():
         for channel_id in replies['claim_channel_id']:
