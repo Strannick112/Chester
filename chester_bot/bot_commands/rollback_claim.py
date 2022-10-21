@@ -5,11 +5,15 @@ from discord.ext import commands
 from chester_bot import wipes, bot, replies, main_config
 
 
-@bot.command(name=main_config['short_server_name'] + "_rollback_claims")
+@bot.command(name=main_config['short_server_name'] + "_rollback_claim")
 @commands.has_role(replies['master_role'])
-async def rollback_claims(ctx):
-    """Изменяет у всех заявок статус "Выполнена" на "Одобрена", таким образом, позволяя взять вещи еще раз."""
-    for user_name, claim in wipes.last_wipe.claims.items():
+async def rollback_claim(ctx, user_name: str):
+    """
+    Изменяет у определённого игрока статус заявки с "Выполнена" на "Одобрена", таким образом, позволяя взять вещи еще раз.
+    Принимает один аргумент: ник игрока в дискорде
+    """
+    if user_name in wipes.last_wipe.claims.keys():
+        claim = wipes.last_wipe.claims[user_name]
         if claim.rollback_claim():
             for channel_id in replies['claim_channel_id']:
                 async for msg in bot.get_channel(channel_id).history(
@@ -20,5 +24,7 @@ async def rollback_claims(ctx):
                             if reaction.__str__() == replies['claim_items_executed']:
                                 if reaction.me:
                                     await msg.remove_reaction(replies['claim_items_executed'], bot.user)
-    await ctx.reply(replies['rollback_claims_success'])
-    return True
+        await ctx.reply(replies['rollback_claims_success'])
+        return True
+    else:
+        return False
