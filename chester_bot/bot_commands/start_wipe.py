@@ -18,25 +18,26 @@ async def start_wipe(ctx):
             started_at=ctx.message.created_at.__str__(),
         )
         wipes.last_wipe.save()
-        async for msg in bot \
-                .get_channel(replies['claim_channel_id']) \
-                .history(
-            after=datetime.datetime.strptime(wipes.last_wipe.started_at, '%Y-%m-%d %H:%M:%S.%f%z')
-        ):
-            if msg.author == bot.user:
-                continue
-            to_approve = {'approved_twice': False, 'executed': False}
-            for reaction in msg.reactions:
-                if reaction.__str__() == replies['claim_full_approved']:
-                    if reaction.me:
-                        to_approve['approved_twice'] = True
+        for channel_id in replies['claim_channel_id']:
+            async for msg in bot \
+                    .get_channel(channel_id) \
+                    .history(
+                after=datetime.datetime.strptime(wipes.last_wipe.started_at, '%Y-%m-%d %H:%M:%S.%f%z')
+            ):
+                if msg.author == bot.user:
                     continue
-                if reaction.__str__() == replies['claim_items_executed']:
-                    if reaction.me:
-                        to_approve['executed'] = True
-                    continue
-            if to_approve['approved_twice'] and not to_approve['executed']:
-                await msg.add_reaction(replies['claim_is_overdue'])
+                to_approve = {'approved_twice': False, 'executed': False}
+                for reaction in msg.reactions:
+                    if reaction.__str__() == replies['claim_full_approved']:
+                        if reaction.me:
+                            to_approve['approved_twice'] = True
+                        continue
+                    if reaction.__str__() == replies['claim_items_executed']:
+                        if reaction.me:
+                            to_approve['executed'] = True
+                        continue
+                if to_approve['approved_twice'] and not to_approve['executed']:
+                    await msg.add_reaction(replies['claim_is_overdue'])
         await ctx.reply(replies['start_success'])
         return True
     if wipes.last_wipe.started_at != "":
