@@ -5,7 +5,7 @@ from chester_bot.config import main_config
 
 @bot.command(name=main_config['short_server_name'] + "_stop_server")
 async def stop_server(ctx):
-    """Выдает игроку предметы на сервере по оставленной и подтверждённой заявке"""
+    """Останавливает сервер сразу"""
     for role in ctx.author.roles:
         if role.__str__() == replies['master_role']:
             print(
