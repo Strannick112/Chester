@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from chester_bot import wipes, bot, replies
-from chester_bot.bot_commands.utils.make_claim import make_claim
+from chester_bot.bot_commands.wipe_manage.utils.make_claim import make_claim
 from chester_bot.config import main_config
 
 

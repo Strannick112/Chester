@@ -64,11 +64,11 @@ class Claim:
                 dst_nickname = re.sub(r'\"', r"\\\\\"", dst_nickname)
                 # dst_nickname = shlex.quote(self.player.dst_nickname)
                 item_id = shlex.quote(item.id)
-                print(
-                    subprocess.check_output(
-                        f"""screen -S {main_config['server_main_screen_name']} -X stuff "UserToPlayer(\\\"{dst_nickname}\\\").components.inventory:GiveItem(SpawnPrefab(\\\"{item_id}\\\"))\n\"""",
-                        shell=True
-                    )
+                subprocess.check_output(
+                    f"""screen -S {main_config['server_main_screen_name']} -X stuff""" +
+                    f""" "UserToPlayer(\\\"{dst_nickname}\\\").components.inventory:""" +
+                    f"""GiveItem(SpawnPrefab(\\\"{item_id}\\\"))\n\"""",
+                    shell=True
                 )
                 # os.system(
                 #     f'''screen -S {main_config['server_main_screen_name']} -X stuff "UserToPlayer(\"{self.player.dst_nickname}\").components.inventory:GiveItem(SpawnPrefab(\"{item.id}\"))\n\"'''

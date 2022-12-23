@@ -1,7 +1,7 @@
 from chester_bot import wipes, bot, replies
 from chester_bot.wipes.Status import Status
 from chester_bot.config import main_config
-from chester_bot.bot_commands.utils.mark_claim_executed import mark_claim_executed
+from chester_bot.bot_commands.wipe_manage.utils.mark_claim_executed import mark_claim_executed
 
 
 @bot.command(name=main_config['short_server_name'] + "_give_items")

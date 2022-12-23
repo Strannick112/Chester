@@ -1,5 +1,5 @@
 from chester_bot import bot, replies, wipes
-from chester_bot.bot_commands.utils.make_claim import make_claim
+from chester_bot.bot_commands.wipe_manage.utils.make_claim import make_claim
 from chester_bot.config import main_config
 
 
@@ -7,9 +7,11 @@ from chester_bot.config import main_config
 async def on_message(ctx):
     if ctx.author != bot.user:
         if len(ctx.content) > 0:
+            # When command
             if ctx.content[0] == main_config['prefix']:
                 if ctx.channel.id in replies['commands_channel_id']:
                     await bot.process_commands(ctx)
+            # When a message
             else:
                 if wipes.last_wipe.stoped_at == "":
                     author = ctx.author.__str__()
