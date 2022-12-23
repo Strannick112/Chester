@@ -2,6 +2,7 @@ import codecs
 import json
 import discord
 from discord.ext import commands
+
 from chester_bot.config import main_config
 
 
@@ -24,5 +25,11 @@ with codecs.open("./chester_bot/replies.json", "r", encoding="utf-8") as file:
 
 bot = commands.Bot(command_prefix=main_config['prefix'], intents=intents)
 
-from chester_bot.on_message import on_message
 import chester_bot.bot_commands
+from chester_bot.on_message import on_message
+from chester_bot.bot_commands.server_manage import ServerManage
+
+
+# @bot.event
+# async def on_ready():
+#     await bot.add_cog(ServerManage(bot))
