@@ -75,7 +75,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
             cur_user = ctx.author.__str__()
         else:
             for role in ctx.author.roles:
-                if role.__str__() == self.__replies['master_role']:
+                if role.__str__() == main_config['master_role']:
                     cur_user = user_name
         if cur_user in wipes.last_wipe.claims:
             for channel_id in self.__replies['claim_channel_id']:
@@ -110,7 +110,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
             cur_user = ctx.author.__str__()
         else:
             for role in ctx.author.roles:
-                if role.__str__() == self.__replies['master_role']:
+                if role.__str__() == main_config['master_role']:
                     cur_user = user_name
         if cur_user in wipes.last_wipe.claims:
             text = json.dumps(wipes.last_wipe.claims[cur_user], default=lambda o: o.__dict__, ensure_ascii=False,
@@ -265,7 +265,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                                 if user == self.bot.user:
                                     continue
                                 for role in user.roles:
-                                    if self.__replies['master_role'] == role.name:
+                                    if main_config['master_role'] == role.name:
                                         to_approve['admin_ok'] = True
                                         break
                             continue
