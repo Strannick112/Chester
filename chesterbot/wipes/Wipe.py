@@ -2,8 +2,8 @@ import codecs
 import json
 import os
 
-from chester_bot.wipes import main_dir
-from chester_bot.wipes.Claim import Claim
+from chesterbot.wipes import main_dir
+from chesterbot.wipes.Claim import Claim
 
 
 class Wipe:

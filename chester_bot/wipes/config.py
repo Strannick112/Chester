@@ -1,1 +1,0 @@
-main_dir = "./chester_bot/wipes/wipe_list"

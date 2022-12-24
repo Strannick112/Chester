@@ -1,0 +1,1 @@
+main_dir = "./chesterbot/wipes/wipe_list"

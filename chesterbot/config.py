@@ -4,11 +4,12 @@ main_config = {
     'server_name': 'Server_Name',
     'short_server_name': 'SN',
     'server_main_screen_name': 'Server_Main_Screen_Name',
+    'master_role': 'Master_Role',
 }
 
 
 # for locally rewrite settings add it to settings_local.py
 try:
-    from chester_bot.config_local import *
+    from chesterbot.config_local import *
 except ModuleNotFoundError as err:
     pass

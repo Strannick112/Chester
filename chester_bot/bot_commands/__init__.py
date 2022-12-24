@@ -1,3 +1,0 @@
-import chester_bot.bot_commands.server_manage
-import chester_bot.bot_commands.bot_manage
-import chester_bot.bot_commands.wipe_manage

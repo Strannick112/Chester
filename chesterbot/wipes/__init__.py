@@ -1,6 +1,6 @@
 import os
-from chester_bot.wipes.config import main_dir
-from chester_bot.wipes.Wipe import Wipe
+from chesterbot.wipes.config import main_dir
+from chesterbot.wipes.Wipe import Wipe
 
 if not os.path.exists(main_dir):
     os.mkdir(main_dir)

@@ -5,11 +5,11 @@ import re
 import shlex
 import subprocess
 
-from chester_bot.config import main_config
-from chester_bot.wipes import main_dir
-from chester_bot.wipes.Item import Item
-from chester_bot.wipes.Player import Player
-from chester_bot.wipes.Status import Status
+from chesterbot.config import main_config
+from chesterbot.wipes import main_dir
+from chesterbot.wipes.Item import Item
+from chesterbot.wipes.Player import Player
+from chesterbot.wipes.Status import Status
 
 
 class Claim:

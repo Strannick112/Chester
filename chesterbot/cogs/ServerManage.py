@@ -1,29 +1,15 @@
 import subprocess
 
 from discord.ext import commands
-
-# from .restart_server import restart_server
-# from .soft_restart_server import soft_restart_server
-# from .soft_stop_server import soft_stop_server
-# from .start_server import start_server
-from .stop_server import stop_server
-from .. import server_manage
-from ... import main_config, replies
-
-attrs = tuple(
-    getattr(server_manage, arg)
-    for arg in dir(server_manage)
-    if arg[0] != '_' and callable(getattr(server_manage, arg))
-)
+from chesterbot import main_config
 
 
 class ServerManage(commands.Cog, name="Управление сервером"):
-    def __init__(self, bot):
-        self.bot = bot
-        # self.name = "server_manage"
+    def __init__(self, chester_bot):
+        self.chester_bot = chester_bot
 
     @commands.command(name=main_config['short_server_name'] + "_restart_server")
-    @commands.has_role(replies['master_role'])
+    @commands.has_role(main_config['master_role'])
     async def restart_server(self, ctx):
         """Перезапускает сервер сразу"""
         try:
@@ -38,7 +24,7 @@ class ServerManage(commands.Cog, name="Управление сервером"):
             return False
 
     @commands.command(name=main_config['short_server_name'] + "_soft_restart_server")
-    @commands.has_role(replies['master_role'])
+    @commands.has_role(main_config['master_role'])
     async def soft_restart_server(self, ctx):
         """Перезапускает сервер через 1 минуту"""
         try:
@@ -53,7 +39,7 @@ class ServerManage(commands.Cog, name="Управление сервером"):
             return False
 
     @commands.command(name=main_config['short_server_name'] + "_soft_stop_server")
-    @commands.has_role(replies['master_role'])
+    @commands.has_role(main_config['master_role'])
     async def soft_stop_server(self, ctx):
         """Останавливает сервер через 1 минуту"""
         try:
@@ -68,7 +54,7 @@ class ServerManage(commands.Cog, name="Управление сервером"):
             return False
 
     @commands.command(name=main_config['short_server_name'] + "_start_server")
-    @commands.has_role(replies['master_role'])
+    @commands.has_role(main_config['master_role'])
     async def start_server(self, ctx):
         """Запускает сервер"""
         try:
@@ -83,7 +69,7 @@ class ServerManage(commands.Cog, name="Управление сервером"):
             return False
 
     @commands.command(name=main_config['short_server_name'] + "_start_server")
-    @commands.has_role(replies['master_role'])
+    @commands.has_role(main_config['master_role'])
     async def start_server(self, ctx):
         """Запускает сервер"""
         try:
@@ -98,7 +84,7 @@ class ServerManage(commands.Cog, name="Управление сервером"):
             return False
 
     @commands.command(name=main_config['short_server_name'] + "_stop_server")
-    @commands.has_role(replies['master_role'])
+    @commands.has_role(main_config['master_role'])
     async def stop_server(self, ctx):
         """Останавливает сервер сразу"""
         try:
@@ -111,9 +97,3 @@ class ServerManage(commands.Cog, name="Управление сервером"):
             return True
         finally:
             return False
-
-
-# def setup(bot):
-#     bot.add_cog(ServerManage(bot))
-
-
