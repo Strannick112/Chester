@@ -1,4 +1,5 @@
 import asyncio
+import re
 import select
 import subprocess
 
@@ -14,6 +15,10 @@ class ServerManage(commands.Cog, name="Управление сервером"):
         self.file_poll.register(self.file_iterator.stdout)
         self.log_channel = None
         self.chester_bot.event(self.on_ready)
+
+    async def on_ready(self):
+        self.log_channel = self.chester_bot.get_channel(main_config["game_log_sync_channel"])
+        self.on_server_message.start()
 
     @commands.command(name=main_config['short_server_name'] + "_restart_server")
     @commands.has_role(main_config['master_role'])
@@ -90,9 +95,16 @@ class ServerManage(commands.Cog, name="Управление сервером"):
         finally:
             return False
 
-    async def on_ready(self):
-        self.log_channel = self.chester_bot.get_channel(main_config["game_log_sync_channel"])
-        self.on_server_message.start()
+    @commands.command(name=main_config['short_server_name'] + "_command")
+    @commands.has_role(main_config['master_role'])
+    async def command(self, ctx, shard_id, *, command):
+        text = re.sub(r'\'', r"\\\\\'", command)
+        text = re.sub(r'\"', r"\\\\\"", text)
+        subprocess.check_output(
+            f"""screen -S {main_config['short_server_name']}{shard_id} -X stuff""" +
+            f""" \"{text}\n\"""",
+            shell=True
+        )
 
     @tasks.loop(seconds=0.1)
     async def on_server_message(self):
