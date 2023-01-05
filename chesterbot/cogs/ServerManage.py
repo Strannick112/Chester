@@ -1,19 +1,19 @@
 import asyncio
 import select
 import subprocess
-import threading
-import time
 
-from discord.ext import commands
+from discord.ext import commands, tasks
 from chesterbot import main_config, ChesterBot
 
 
 class ServerManage(commands.Cog, name="Управление сервером"):
     def __init__(self, chester_bot: ChesterBot):
         self.chester_bot = chester_bot
-        asyncio.create_task(self.on_server_message())
-        # thread = threading.Thread(target=self.on_server_message)
-        # thread.start()
+        self.file_iterator = subprocess.Popen(['tail', '-F', main_config["path_to_log"]], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        self.file_poll = select.poll()
+        self.file_poll.register(self.file_iterator.stdout)
+        self.log_channel = None
+        self.chester_bot.event(self.on_ready)
 
     @commands.command(name=main_config['short_server_name'] + "_restart_server")
     @commands.has_role(main_config['master_role'])
@@ -75,21 +75,6 @@ class ServerManage(commands.Cog, name="Управление сервером"):
         finally:
             return False
 
-    @commands.command(name=main_config['short_server_name'] + "_start_server")
-    @commands.has_role(main_config['master_role'])
-    async def start_server(self, ctx):
-        """Запускает сервер"""
-        try:
-            print(
-                subprocess.check_output(
-                    f"""{main_config['short_server_name']}_start.sh""",
-                    shell=True
-                )
-            )
-            return True
-        finally:
-            return False
-
     @commands.command(name=main_config['short_server_name'] + "_stop_server")
     @commands.has_role(main_config['master_role'])
     async def stop_server(self, ctx):
@@ -105,13 +90,12 @@ class ServerManage(commands.Cog, name="Управление сервером"):
         finally:
             return False
 
+    async def on_ready(self):
+        self.log_channel = self.chester_bot.get_channel(main_config["game_log_sync_channel"])
+        self.on_server_message.start()
+
+    @tasks.loop(seconds=0.1)
     async def on_server_message(self):
         """Следить за сообщениями на игровом сервере"""
-        f = subprocess.Popen(['tail', '-F', main_config["path_to_log"]], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        p = select.poll()
-        p.register(f.stdout)
-        channel = self.chester_bot.get_channel(main_config["game_chat_sync_channel"])
-        while True:
-            if p.poll(1):
-                await channel.send(content=f.stdout.readline().decode())
-            await asyncio.sleep(0.1)
+        if self.file_poll.poll(1):
+            await self.log_channel.send(content=self.file_iterator.stdout.readline().decode())
