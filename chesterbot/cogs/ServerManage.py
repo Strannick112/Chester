@@ -98,7 +98,7 @@ class ServerManage(commands.Cog, name="Управление сервером"):
     async def on_server_message(self):
         """Следить за сообщениями на игровом сервере"""
         if self.file_poll.poll(1):
-            text = self.file_iterator.stdout.readline().decode()
+            text = self.file_iterator.stdout.readline().decode()[12:]
             if ':' in text:
                 if "[Announcement]" in text:
                     return
