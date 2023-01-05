@@ -6,8 +6,8 @@ main_config = {
     'server_main_screen_name': 'Server_Main_Screen_Name',
     'master_role': 'Master_Role',
 
-    "game_chat_sync_channel": "",
-    "game_log_sync_channel": ""
+    "game_chat_sync_channel": 0,
+    "game_log_sync_channel": 0
 }
 
 
