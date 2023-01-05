@@ -1,5 +1,7 @@
 import codecs
 import json
+import re
+import subprocess
 
 import discord
 from discord.ext import commands
@@ -48,7 +50,17 @@ class ChesterBot(commands.Bot):
                         await self.process_commands(message)
                 # When a message
                 else:
-                    if wipes.last_wipe.stoped_at == "":
+                    if message.channel.id == main_config["game_chat_sync_channel"]:
+                        nickname = re.sub(r'\'', r"\\\\\'", message.author.nick)
+                        nickname = re.sub(r'\"', r"\\\\\"", nickname)
+                        text = re.sub(r'\'', r"\\\\\'", message.content)
+                        text = re.sub(r'\"', r"\\\\\"", text)
+                        subprocess.check_output(
+                            f"""screen -S {main_config['server_main_screen_name']} -X stuff""" +
+                            f""" "c_announce(\\\"{nickname}: {text}\\\")\n\"""",
+                            shell=True
+                        )
+                    elif wipes.last_wipe.stoped_at == "":
                         author = message.author.__str__()
                         claim = WipeManage.make_claim(message.content, author, message.created_at.__str__())
                         if claim is not None:
