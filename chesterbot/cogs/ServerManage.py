@@ -104,7 +104,7 @@ class ServerManage(commands.Cog, name="Управление сервером"):
             f""" \"{text}\n\"""")
         subprocess.check_output(
             f"""screen -S {main_config['short_server_name']}{shard_id} -X stuff""" +
-            f""" \"{text}\n\"""",
+            f""" "{text}\n\"""",
             shell=True
         )
 
