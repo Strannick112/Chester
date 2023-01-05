@@ -1,12 +1,19 @@
+import asyncio
+import select
 import subprocess
+import threading
+import time
 
 from discord.ext import commands
-from chesterbot import main_config
+from chesterbot import main_config, ChesterBot
 
 
 class ServerManage(commands.Cog, name="Управление сервером"):
-    def __init__(self, chester_bot):
+    def __init__(self, chester_bot: ChesterBot):
         self.chester_bot = chester_bot
+        asyncio.create_task(self.on_server_message())
+        # thread = threading.Thread(target=self.on_server_message)
+        # thread.start()
 
     @commands.command(name=main_config['short_server_name'] + "_restart_server")
     @commands.has_role(main_config['master_role'])
@@ -97,3 +104,14 @@ class ServerManage(commands.Cog, name="Управление сервером"):
             return True
         finally:
             return False
+
+    async def on_server_message(self):
+        """Следить за сообщениями на игровом сервере"""
+        f = subprocess.Popen(['tail', '-F', main_config["path_to_log"]], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        p = select.poll()
+        p.register(f.stdout)
+        channel = self.chester_bot.get_channel(main_config["game_chat_sync_channel"])
+        while True:
+            if p.poll(1):
+                await channel.send(content=f.stdout.readline().decode())
+            await asyncio.sleep(0.1)

@@ -7,7 +7,8 @@ main_config = {
     'master_role': 'Master_Role',
 
     "game_chat_sync_channel": 0,
-    "game_log_sync_channel": 0
+    "game_log_sync_channel": 0,
+    "path_to_log": "/path/to/log/file"
 }
 
 
