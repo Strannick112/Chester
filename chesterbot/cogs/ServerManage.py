@@ -105,8 +105,6 @@ class ServerManage(commands.Cog, name="Управление сервером"):
         """
         text = re.sub(r'\'', r"\'", command)
         text = re.sub(r'\"', r"\"", text)
-        print(f"""screen -S {main_config['short_server_name']}{shard_id} -X stuff""" +
-            f""" '{text}\n'""")
         subprocess.check_output(
             f"""screen -S {main_config['short_server_name']}{shard_id} -X stuff""" +
             f""" "{text}\n\"""",
