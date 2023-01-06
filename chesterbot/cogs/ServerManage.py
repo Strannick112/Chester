@@ -98,6 +98,11 @@ class ServerManage(commands.Cog, name="Управление сервером"):
     @commands.command(name=main_config['short_server_name'] + "_command")
     @commands.has_role(main_config['master_role'])
     async def command(self, ctx, shard_id, *, command):
+        """
+        Выполняет команды на игровом сервере. Имеет два параметра:
+        shard_id - уникальный ид игрового мира, на котором будет выполнена команда. 1 - поверхность, 2 - пещеры, и т д;
+        command - собственно команда, которая будет передана на указанный игровой мир.
+        """
         text = re.sub(r'\'', r"\'", command)
         text = re.sub(r'\"', r"\"", text)
         print(f"""screen -S {main_config['short_server_name']}{shard_id} -X stuff""" +
