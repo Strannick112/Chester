@@ -98,10 +98,10 @@ class ServerManage(commands.Cog, name="Управление сервером"):
     @commands.command(name=main_config['short_server_name'] + "_command")
     @commands.has_role(main_config['master_role'])
     async def command(self, ctx, shard_id, *, command):
-        text = re.sub(r'\'', r"\\\'", command)
-        text = re.sub(r'\"', r"\\\"", text)
+        text = re.sub(r'\'', r"\'", command)
+        text = re.sub(r'\"', r"\"", text)
         print(f"""screen -S {main_config['short_server_name']}{shard_id} -X stuff""" +
-            f""" "{text}\n\"""")
+            f""" '{text}\n'""")
         subprocess.check_output(
             f"""screen -S {main_config['short_server_name']}{shard_id} -X stuff""" +
             f""" "{text}\n\"""",
