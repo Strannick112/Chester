@@ -103,8 +103,8 @@ class ServerManage(commands.Cog, name="Управление сервером"):
         shard_id - уникальный ид игрового мира, на котором будет выполнена команда. 1 - поверхность, 2 - пещеры, и т д;
         command - собственно команда, которая будет передана на указанный игровой мир.
         """
-        text = re.sub(r'\'', r"\'", command)
-        text = re.sub(r'\"', r"\"", text)
+        text = re.sub(r'\"', r"\"", re.sub(r'\'', r"\'", command))
+
         subprocess.check_output(
             f"""screen -S {main_config['short_server_name']}{shard_id} -X stuff""" +
             f""" "{text}\n\"""",
