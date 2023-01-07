@@ -8,6 +8,7 @@ from discord.ext import commands
 
 from chesterbot import main_config, wipes
 from chesterbot.cogs import BotManage, WipeManage, ServerManage
+from chesterbot.cogs.DashBoard import DashBoard
 
 
 class ChesterBot(commands.Bot):
@@ -27,6 +28,7 @@ class ChesterBot(commands.Bot):
         await self.add_cog(ServerManage(self))
         await self.add_cog(BotManage(self))
         await self.add_cog(WipeManage(self))
+        await self.add_cog(DashBoard(self))
 
     async def start(self, token: str = main_config['token'], *, reconnect: bool = True):
         await self.init()

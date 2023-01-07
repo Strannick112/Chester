@@ -10,7 +10,13 @@ from chesterbot import main_config, ChesterBot
 class ServerManage(commands.Cog, name="Управление сервером"):
     def __init__(self, chester_bot: ChesterBot):
         self.chester_bot = chester_bot
-        self.file_iterator = subprocess.Popen(['tail', '-F', main_config["path_to_log"]], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        self.file_iterator = subprocess.Popen(
+            ['tail', '-F', main_config["path_to_log"]],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            # encoding="utf-8",
+            text=True
+        )
         self.file_poll = select.poll()
         self.file_poll.register(self.file_iterator.stdout)
         self.log_channel = None
@@ -115,8 +121,11 @@ class ServerManage(commands.Cog, name="Управление сервером"):
     async def on_server_message(self):
         """Следить за сообщениями на игровом сервере"""
         if self.file_poll.poll(1):
-            text = self.file_iterator.stdout.readline().decode()[12:]
-            if ':' in text:
-                if "[Announcement]" in text:
-                    return
-            await self.log_channel.send(content=text)
+            try:
+                text = self.file_iterator.stdout.readline()[12:]
+                if ':' in text:
+                    if "[Announcement]" in text:
+                        return
+                await self.log_channel.send(content=text)
+            except Exception as error:
+                print(error)
