@@ -1,5 +1,6 @@
 import codecs
 import json
+import os.path
 
 from discord.ext import commands, tasks
 
@@ -13,6 +14,9 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
 
     async def on_ready(self):
         self.channel = self.chester_bot.get_channel(main_config["game_log_sync_channel"])
+        if not os.path.exists("./chesterbot/cogs/dashboard.json"):
+            with codecs.open("./chesterbot/cogs/dashboard.json", "w", encoding="utf-8") as file:
+                json.dump(0, file)
         with codecs.open("./chesterbot/cogs/dashboard.json", "rb", encoding="utf-8") as file:
             self.message_id = json.load(file)
         try:

@@ -1,3 +1,4 @@
 /chesterbot/config_local.py
 /chesterbot/wipes/wipe_list
 /chesterbot/replies.json
+/chesterbot/cogs/dashboard.json
