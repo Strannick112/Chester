@@ -43,7 +43,7 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             # encoding="utf-8",
-            # text=True
+            text=True
         )
         self.file_first_poll = select.poll()
         self.file_first_poll.register(self.file_first_iterator.stdout)
@@ -71,28 +71,28 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
     def make_dashboard(self):
         return \
             f"""```
-            Вольт-коз: {self.data[1]["lightninggoat"]};
-            Взрослых бифало: {self.data[1]["beefalo"]};
-            Иглу: {self.data[1]["walrus_camp"]};
-            Живых МакБивней: {self.data[1]["walrus"]};
-            Домов свина: {self.data[1]["pighouse"]};
-            Кустов каменных фруктов: {self.data[1]["rock_avocado_bush"]};
+Вольт-коз: {self.data[1]["lightninggoat"]};
+Взрослых бифало: {self.data[1]["beefalo"]};
+Иглу: {self.data[1]["walrus_camp"]};
+Живых МакБивней: {self.data[1]["walrus"]};
+Домов свина: {self.data[1]["pighouse"]};
+Кустов каменных фруктов: {self.data[1]["rock_avocado_bush"]};
 
-            Гломмер: {self.data[1]["glommer"]};
-            Дружелюбная плодовая муха: {self.data[1]["friendlyfruitfly"]};
+Гломмер: {self.data[1]["glommer"]};
+Дружелюбная плодовая муха: {self.data[1]["friendlyfruitfly"]};
 
-            Мешок клауса: {self.data[1]["klaus_sack"]};
-            Драконья муха: {self.data[1]["dragonfly"]};
-            Улей пчелиной матки: {self.data[1]["beequeenhivegrown"]};
+Мешок клауса: {self.data[1]["klaus_sack"]};
+Драконья муха: {self.data[1]["dragonfly"]};
+Улей пчелиной матки: {self.data[1]["beequeenhivegrown"]};
 
-            Медведь-барсук: {self.data[1]["bearger"]};
-            Гусь-лусей: {self.data[1]["moose"]};
-            Яиц гусь-луся: {self.data[1]["mooseegg"]};
-            Лусят: {self.data[1]["mossling"]};
-            Муравьиный лев: {self.data[1]["antlion"]};
-            Король крабов: {self.data[1]["crabking"]};
+Медведь-барсук: {self.data[1]["bearger"]};
+Гусь-лусей: {self.data[1]["moose"]};
+Яиц гусь-луся: {self.data[1]["mooseegg"]};
+Лусят: {self.data[1]["mossling"]};
+Муравьиный лев: {self.data[1]["antlion"]};
+Король крабов: {self.data[1]["crabking"]};
 
-            Скелетов игроков: {self.data[1]["skeleton"]};```
+Скелетов игроков: {self.data[1]["skeleton"]};```
 """
 
     @tasks.loop(minutes=1)
