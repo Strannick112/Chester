@@ -114,7 +114,7 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
                 if text[:9] == "There are":
                     for prefab in self.data[1]:
                         if prefab in text:
-                            self.data[1][prefab] = text
+                            self.data[1][prefab] = re.findall(r"\t(%d.?)\t", text)[0]
                             break
             except Exception as error:
                 print(error)
