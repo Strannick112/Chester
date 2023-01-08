@@ -109,7 +109,7 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
     @tasks.loop(seconds=0.1)
     async def on_server_log(self):
         """Следить за логами на игровом сервере"""
-        # print("dash")
+        print("dash")
         if self.file_first_poll.poll(1):
             try:
                 text = self.file_first_iterator.stdout.readline().decode(encoding="utf-8")[12:]
