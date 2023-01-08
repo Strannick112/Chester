@@ -116,8 +116,8 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
                     print(text)
                     for prefab in self.data[1].keys():
                         if prefab in text:
-                            print(re.findall(r"([%d]+?)", text)[0])
-                            self.data[1][prefab] = re.findall(r"([%d]+)", text)[0]
+                            print(re.findall(r"([\d]+)", text)[0])
+                            self.data[1][prefab] = re.findall(r"([\d]+)", text)[0]
                             break
             except Exception as error:
                 print(error)
