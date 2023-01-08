@@ -120,7 +120,7 @@ class ServerManage(commands.Cog, name="Управление сервером"):
     @tasks.loop(seconds=0.1)
     async def on_server_message(self):
         """Следить за сообщениями на игровом сервере"""
-        print("ser")
+        # print("ser")
         if self.file_poll.poll(1):
             print("message: ", sep="")
             try:
