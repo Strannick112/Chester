@@ -113,10 +113,10 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
             try:
                 text = self.file_first_iterator.stdout.readline().decode(encoding="utf-8")[12:]
                 if "There are" in text:
-                    print(text)
+                    # print(text)
                     for prefab in self.data[1].keys():
                         if prefab in text:
-                            print(re.findall(r"([\d]+)", text)[0])
+                            # print(re.findall(r"([\d]+)", text)[0])
                             self.data[1][prefab] = re.findall(r"([\d]+)", text)[0]
                             break
             except Exception as error:
