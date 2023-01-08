@@ -113,7 +113,7 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
         if self.file_first_poll.poll(1):
             # print("prefabs: ", sep="")
             try:
-                text = self.file_first_iterator.stdout.readline().decode(encoding="utf-8")[12:]
+                text = self.file_first_iterator.stdout.readline()[12:]
                 if "There are" in text:
                     # print(text)
                     for prefab in self.data[1].keys():
