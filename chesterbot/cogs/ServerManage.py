@@ -1,4 +1,3 @@
-import asyncio
 import re
 import select
 import subprocess
@@ -12,17 +11,17 @@ class ServerManage(commands.Cog, name="Управление сервером"):
         self.chester_bot = chester_bot
         self.file_iterator = subprocess.Popen(
             ['tail', '-F', main_config["path_to_chat"]],
-            # shell=True,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
-            # encoding="utf-8",
             text=True
         )
         self.file_poll = select.poll()
         self.file_poll.register(self.file_iterator.stdout)
+        self.chat_channel = None
         self.log_channel = None
 
     async def on_ready(self):
+        self.chat_channel = self.chester_bot.get_channel(main_config["game_chat_sync_channel"])
         self.log_channel = self.chester_bot.get_channel(main_config["game_log_sync_channel"])
         self.on_server_message.start()
 
@@ -120,15 +119,21 @@ class ServerManage(commands.Cog, name="Управление сервером"):
     @tasks.loop(seconds=0.1)
     async def on_server_message(self):
         """Следить за сообщениями на игровом сервере"""
-        # print("ser")
         if self.file_poll.poll(1):
-            # print("message: ", sep="")
             try:
                 text = self.file_iterator.stdout.readline()[12:]
                 # print(text)
                 if ':' in text:
                     if "[Announcement]" in text:
+                        await self.chat_channel.send(content=text)
                         return
                 await self.log_channel.send(content=text)
+                if "[Say]" in text:
+                    if re.findall(r': (.)', text) != "$":
+                        await self.chat_channel.send(content=text)
+                if "[Announcement]" in text\
+                        or "[Join Announcement]" in text\
+                        or "[Leave Announcement]" in text:
+                    await self.chat_channel.send(content=text)
             except Exception as error:
                 print(error)

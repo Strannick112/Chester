@@ -5,7 +5,6 @@ import os.path
 import re
 import select
 import subprocess
-import time
 
 from discord.ext import commands, tasks
 
@@ -39,34 +38,38 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
         }
         self.file_first_iterator = subprocess.Popen(
             ['tail', '-F', '-n1', main_config["path_to_log"]],
-            # shell=True,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
-            # encoding="utf-8",
             text=True
         )
         self.file_first_poll = select.poll()
         self.file_first_poll.register(self.file_first_iterator.stdout)
 
     async def on_ready(self):
-        self.channel = self.chester_bot.get_channel(main_config["game_log_sync_channel"])
+        self.chat_channel = self.chester_bot.get_channel(main_config["game_chat_sync_channel"])
+        self.log_channel = self.chester_bot.get_channel(main_config["game_log_sync_channel"])
         if not os.path.exists("./chesterbot/cogs/dashboard.json"):
             with codecs.open("./chesterbot/cogs/dashboard.json", "w", encoding="utf-8") as file:
-                json.dump(0, file)
+                json.dump((0, 0), file)
         with codecs.open("./chesterbot/cogs/dashboard.json", "rb", encoding="utf-8") as file:
-            self.message_id = json.load(file)
+            self.chat_message_id, self.log_message_id = json.load(file)
         try:
-            self.message = await self.channel.fetch_message(self.message_id)
+            self.chat_message = await self.log_channel.fetch_message(self.log_message_id)
+            self.log_message = await self.log_channel.fetch_message(self.log_message_id)
         except:
-            self.message = await self.channel.send(content="Доска создана, начат сбор информации...")
-            self.message_id = self.message.id
+            self.chat_message = await self.chat_channel.send(content="Доска создана, начат сбор информации...")
+            self.log_message = await self.log_channel.send(content="Доска создана, начат сбор информации...")
+            self.chat_message_id = self.chat_message.id
+            self.log_message_id = self.log_message.id
             with codecs.open("./chesterbot/cogs/dashboard.json", "w", encoding="utf-8") as file:
-                json.dump(self.message_id, file)
+                json.dump((self.chat_message_id, self.log_message_id), file)
         self.reload_data.start()
         self.on_server_log.start()
 
     async def update_dashboard(self):
-        await self.message.edit(content=self.make_dashboard())
+        dashboard = self.make_dashboard()
+        await self.log_message.edit(content=dashboard)
+        await self.chat_message.edit(content=dashboard)
 
     def make_dashboard(self):
         return \
@@ -109,16 +112,12 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
     @tasks.loop(seconds=0.1)
     async def on_server_log(self):
         """Следить за логами на игровом сервере"""
-        # print("dash")
         if self.file_first_poll.poll(1):
-            # print("prefabs: ", sep="")
             try:
                 text = self.file_first_iterator.stdout.readline()[12:]
                 if "There are" in text:
-                    # print(text)
                     for prefab in self.data[1].keys():
                         if prefab in text:
-                            # print(re.findall(r"([\d]+)", text)[0])
                             self.data[1][prefab] = re.findall(r"([\d]+)", text)[0]
                             break
             except Exception as error:
