@@ -63,6 +63,7 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
             with codecs.open("./chesterbot/cogs/dashboard.json", "w", encoding="utf-8") as file:
                 json.dump(self.message_id, file)
         self.reload_data.start()
+        self.on_server_log.start()
 
     async def update_dashboard(self):
         await self.message.edit(content=self.make_dashboard())
