@@ -55,8 +55,9 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
                 json.dump(0, file)
         with codecs.open("./chesterbot/cogs/dashboard.json", "rb", encoding="utf-8") as file:
             self.message_id = json.load(file)
-        self.message = await self.channel.fetch_message(self.message_id)
-        if self.message is None:
+        try:
+            self.message = await self.channel.fetch_message(self.message_id)
+        except:
             self.message = await self.channel.send(content="Доска создана, начат сбор информации...")
             self.message_id = self.message.id
             with codecs.open("./chesterbot/cogs/dashboard.json", "w", encoding="utf-8") as file:
