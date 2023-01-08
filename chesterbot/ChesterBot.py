@@ -25,15 +25,23 @@ class ChesterBot(commands.Bot):
             self.replies = json.load(file)
             self.replies["claim_channel_id"] = json.loads(self.replies["claim_channel_id"])
             self.replies["commands_channel_id"] = json.loads(self.replies["commands_channel_id"])
-
+        self.server_manage = ServerManage(self)
+        self.bot_manage = BotManage(self)
+        self.wipe_manage = WipeManage(self)
+        self.dashboard = DashBoard(self)
+        self.event(self.on_ready)
         super().__init__(command_prefix=main_config['prefix'], intents=intents)
+
+    async def on_ready(self):
+        await self.server_manage.on_ready()
+        await self.dashboard.on_ready()
 
     async def init(self):
         # pass
-        await self.add_cog(ServerManage(self))
-        await self.add_cog(BotManage(self))
-        await self.add_cog(WipeManage(self))
-        await self.add_cog(DashBoard(self))
+        await self.add_cog(self.server_manage)
+        await self.add_cog(self.bot_manage)
+        await self.add_cog(self.wipe_manage)
+        await self.add_cog(self.dashboard)
 
     async def start(self, token: str = main_config['token'], *, reconnect: bool = True):
         await self.init()

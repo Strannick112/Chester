@@ -21,7 +21,6 @@ class ServerManage(commands.Cog, name="Управление сервером"):
         self.file_poll = select.poll()
         self.file_poll.register(self.file_iterator.stdout)
         self.log_channel = None
-        self.chester_bot.event(self.on_ready)
 
     async def on_ready(self):
         self.log_channel = self.chester_bot.get_channel(main_config["game_log_sync_channel"])
@@ -121,7 +120,7 @@ class ServerManage(commands.Cog, name="Управление сервером"):
     @tasks.loop(seconds=0.1)
     async def on_server_message(self):
         """Следить за сообщениями на игровом сервере"""
-        print("ser")
+        # print("ser")
         if self.file_poll.poll(1):
             print("message: ", sep="")
             try:
