@@ -48,14 +48,16 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
     async def on_ready(self):
         self.chat_channel = self.chester_bot.get_channel(main_config["game_chat_sync_channel"])
         self.log_channel = self.chester_bot.get_channel(main_config["game_log_sync_channel"])
+
         if not os.path.exists("./chesterbot/cogs/dashboard.json"):
             with codecs.open("./chesterbot/cogs/dashboard.json", "w", encoding="utf-8") as file:
                 json.dump((0, 0), file)
+
         with codecs.open("./chesterbot/cogs/dashboard.json", "rb", encoding="utf-8") as file:
             self.chat_message_id, self.log_message_id = json.load(file)
 
         try:
-            self.chat_message = await self.log_channel.fetch_message(self.log_message_id)
+            self.chat_message = await self.chat_channel.fetch_message(self.log_message_id)
         except:
             self.chat_message = await self.chat_channel.send(content="Доска создана, начат сбор информации...")
             self.chat_message_id = self.chat_message.id
