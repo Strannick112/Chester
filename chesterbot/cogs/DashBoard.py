@@ -43,7 +43,7 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             # encoding="utf-8",
-            # text=True
+            text=True
         )
         self.file_first_poll = select.poll()
         self.file_first_poll.register(self.file_first_iterator.stdout)
