@@ -40,6 +40,7 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
         }
         self.file_first_iterator = subprocess.Popen(
             ['tail', '-F', '-n1', main_config["path_to_log"]],
+            shell=True,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             # encoding="utf-8",

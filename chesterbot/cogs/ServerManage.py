@@ -12,9 +12,10 @@ class ServerManage(commands.Cog, name="Управление сервером"):
         self.chester_bot = chester_bot
         self.file_iterator = subprocess.Popen(
             ['tail', '-F', main_config["path_to_chat"]],
+            shell=True,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
-            encoding="utf-8",
+            # encoding="utf-8",
             text=True
         )
         self.file_poll = select.poll()
