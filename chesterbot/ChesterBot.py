@@ -65,7 +65,8 @@ class ChesterBot(commands.Bot):
                         await self.process_commands(message)
                 # When a message
                 else:
-                    if message.channel.id == main_config["game_log_sync_channel"]:
+                    if message.channel.id == main_config["game_log_sync_channel"]\
+                            or message.channel.id == main_config["game_chat_sync_channel"]:
                         nickname = re.sub(r'\'', r"\\\\\'", message.author.display_name)
                         nickname = re.sub(r'\"', r"\\\\\"", nickname)
                         text = re.sub(r'\'', r"\\\\\'", message.content)
