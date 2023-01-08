@@ -11,11 +11,15 @@ from chesterbot.cogs import BotManage, WipeManage, ServerManage
 from chesterbot.cogs.DashBoard import DashBoard
 
 
+# from chesterbot.cogs.DashBoard import DashBoard
+
+
 class ChesterBot(commands.Bot):
     def __init__(self):
         intents = discord.Intents.default()
         intents.message_content = True
         intents.members = True
+        self.log_channel = None
 
         with codecs.open("./chesterbot/replies.json", "r", encoding="utf-8") as file:
             self.replies = json.load(file)
@@ -25,6 +29,7 @@ class ChesterBot(commands.Bot):
         super().__init__(command_prefix=main_config['prefix'], intents=intents)
 
     async def init(self):
+        # pass
         await self.add_cog(ServerManage(self))
         await self.add_cog(BotManage(self))
         await self.add_cog(WipeManage(self))

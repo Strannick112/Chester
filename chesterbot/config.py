@@ -8,6 +8,7 @@ main_config = {
 
     "game_chat_sync_channel": 0,
     "game_log_sync_channel": 0,
+    "path_to_chat": "/path/to/chat/file",
     "path_to_log": "/path/to/log/file"
 }
 
