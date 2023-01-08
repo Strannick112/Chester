@@ -111,7 +111,7 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
         if self.file_first_poll.poll(1):
             try:
                 text = self.file_first_iterator.stdout.readline().decode(encoding="utf-8")[12:]
-                if text[:9] == "There are":
+                if "There are" in text:
                     for prefab in self.data[1].keys():
                         if prefab in text:
                             self.data[1][prefab] = re.findall(r"\t(%d.?)\t", text)[0]
