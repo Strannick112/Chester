@@ -111,7 +111,7 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
         """Следить за логами на игровом сервере"""
         if self.file_first_poll.poll(1):
             try:
-                text = self.file_first_iterator.stdout.readline().decode(encoding="utf-8")[12:]
+                text = self.file_first_iterator.stdout.readline()[12:]
                 if "There are" in text:
                     print(text)
                     for prefab in self.data[1].keys():
