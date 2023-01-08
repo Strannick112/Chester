@@ -129,7 +129,7 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                 await self.log_channel.send(content=text)
                 if "[Say]" in text:
                     if re.findall(r': (.)', text)[0] != "$":
-                        await self.chat_channel.send(content=re.split(r'\)', text)[1])
+                        await self.chat_channel.send(content=re.findall(r'\) ([\w\W]+?)', text)[0])
                 if "[Announcement]" in text\
                         or "[Join Announcement]" in text\
                         or "[Leave Announcement]" in text:
