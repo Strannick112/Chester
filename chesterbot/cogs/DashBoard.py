@@ -57,7 +57,7 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
             self.chat_message_id, self.log_message_id = json.load(file)
 
         try:
-            self.chat_message = await self.chat_channel.fetch_message(self.log_message_id)
+            self.chat_message = await self.chat_channel.fetch_message(self.chat_message_id)
         except:
             self.chat_message = await self.chat_channel.send(content="Доска создана, начат сбор информации...")
             self.chat_message_id = self.chat_message.id
