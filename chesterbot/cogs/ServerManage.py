@@ -125,7 +125,6 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                 # print(text)
                 if ':' in text:
                     if "[Announcement]" in text:
-                        await self.chat_channel.send(content=text)
                         return
                 await self.log_channel.send(content=text)
                 if "[Say]" in text:
