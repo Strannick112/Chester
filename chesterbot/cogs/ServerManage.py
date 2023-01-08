@@ -125,7 +125,7 @@ class ServerManage(commands.Cog, name="Управление сервером"):
             # print("message: ", sep="")
             try:
                 text = self.file_iterator.stdout.readline()[12:]
-                print(text)
+                # print(text)
                 if ':' in text:
                     if "[Announcement]" in text:
                         return
