@@ -53,16 +53,23 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
                 json.dump((0, 0), file)
         with codecs.open("./chesterbot/cogs/dashboard.json", "rb", encoding="utf-8") as file:
             self.chat_message_id, self.log_message_id = json.load(file)
+
         try:
             self.chat_message = await self.log_channel.fetch_message(self.log_message_id)
-            self.log_message = await self.log_channel.fetch_message(self.log_message_id)
         except:
             self.chat_message = await self.chat_channel.send(content="Доска создана, начат сбор информации...")
-            self.log_message = await self.log_channel.send(content="Доска создана, начат сбор информации...")
             self.chat_message_id = self.chat_message.id
+            with codecs.open("./chesterbot/cogs/dashboard.json", "w", encoding="utf-8") as file:
+                json.dump((self.chat_message_id, self.log_message_id), file)
+
+        try:
+            self.log_message = await self.log_channel.fetch_message(self.log_message_id)
+        except:
+            self.log_message = await self.log_channel.send(content="Доска создана, начат сбор информации...")
             self.log_message_id = self.log_message.id
             with codecs.open("./chesterbot/cogs/dashboard.json", "w", encoding="utf-8") as file:
                 json.dump((self.chat_message_id, self.log_message_id), file)
+
         self.reload_data.start()
         self.on_server_log.start()
 
