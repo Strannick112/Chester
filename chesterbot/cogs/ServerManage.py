@@ -122,7 +122,7 @@ class ServerManage(commands.Cog, name="Управление сервером"):
         """Следить за сообщениями на игровом сервере"""
         # print("ser")
         if self.file_poll.poll(1):
-            print("message: ", sep="")
+            # print("message: ", sep="")
             try:
                 text = self.file_iterator.stdout.readline()[12:]
                 print(text)
