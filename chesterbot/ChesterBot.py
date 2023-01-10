@@ -67,15 +67,22 @@ class ChesterBot(commands.Bot):
                 else:
                     if message.channel.id == main_config["game_log_sync_channel"]\
                             or message.channel.id == main_config["game_chat_sync_channel"]:
-                        nickname = re.sub(r'\'', r"\\\\\'", message.author.display_name)
-                        nickname = re.sub(r'\"', r"\\\\\"", nickname)
-                        text = re.sub(r'\'', r"\\\\\'", message.content)
-                        text = re.sub(r'\"', r"\\\\\"", text)
-                        subprocess.check_output(
-                            f"""screen -S {main_config['server_main_screen_name']} -X stuff""" +
-                            f""" "c_announce(\\\"{nickname}: {text}\\\")\n\"""",
-                            shell=True
-                        )
+                        screen_list = subprocess.run(
+                            'screen -ls',
+                            shell=True,
+                            stdout=subprocess.PIPE,
+                            stdin=subprocess.PIPE
+                        ).stdout.decode('ascii')
+                        if main_config['server_main_screen_name'] in screen_list:
+                            nickname = re.sub(r'\'', r"\\\\\'", message.author.display_name)
+                            nickname = re.sub(r'\"', r"\\\\\"", nickname)
+                            text = re.sub(r'\'', r"\\\\\'", message.content)
+                            text = re.sub(r'\"', r"\\\\\"", text)
+                            subprocess.check_output(
+                                f"""screen -S {main_config['server_main_screen_name']} -X stuff""" +
+                                f""" "c_announce(\\\"{nickname}: {text}\\\")\n\"""",
+                                shell=True
+                            )
                     elif wipes.last_wipe.stoped_at == "":
                         author = message.author.__str__()
                         claim = WipeManage.make_claim(message.content, author, message.created_at.__str__())
