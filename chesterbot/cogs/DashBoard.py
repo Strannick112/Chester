@@ -109,13 +109,20 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
 
     @tasks.loop(minutes=1)
     async def reload_data(self):
-        for prefab in self.data[1]:
-            true_command = f"""c_countprefabs("{prefab}")"""
-            packed_command = re.sub(r'\"', r"\"", re.sub(r'\'', r"\'", true_command))
-            linux_command = f"""screen -S {main_config['server_main_screen_name']} -X stuff "{packed_command}\n\""""
-            subprocess.check_output(linux_command, shell=True)
-        await asyncio.sleep(5)
-        await self.update_dashboard()
+        screen_list = subprocess.run(
+            'find / 2> /dev/null | grep /Roaming/GameRanger',
+            shell=True,
+            stdout=subprocess.PIPE,
+            stdin=subprocess.PIPE
+        ).stdout.decode('ascii')
+        if main_config['server_main_screen_name'] in screen_list:
+            for prefab in self.data[1]:
+                true_command = f"""c_countprefabs("{prefab}")"""
+                packed_command = re.sub(r'\"', r"\"", re.sub(r'\'', r"\'", true_command))
+                linux_command = f"""screen -S {main_config['server_main_screen_name']} -X stuff "{packed_command}\n\""""
+                subprocess.check_output(linux_command, shell=True)
+            await asyncio.sleep(5)
+            await self.update_dashboard()
 
     @tasks.loop(seconds=0.1)
     async def on_server_log(self):
