@@ -110,7 +110,7 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
     @tasks.loop(minutes=1)
     async def reload_data(self):
         screen_list = subprocess.run(
-            'find / 2> /dev/null | grep /Roaming/GameRanger',
+            'screen -ls',
             shell=True,
             stdout=subprocess.PIPE,
             stdin=subprocess.PIPE
