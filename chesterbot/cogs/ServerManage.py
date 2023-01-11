@@ -13,7 +13,7 @@ class ServerManage(commands.Cog, name="Управление сервером"):
             ['tail', '-F', main_config["path_to_chat"]],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
-            encoding="cp1251"
+            encoding="utf-8"
         )
         self.file_poll = select.poll()
         self.file_poll.register(self.file_iterator.stdout)

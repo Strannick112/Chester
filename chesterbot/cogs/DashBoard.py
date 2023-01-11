@@ -40,7 +40,7 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
             ['tail', '-F', '-n1', main_config["path_to_log"]],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
-            encoding="cp1251"
+            encoding="utf-8"
         )
         self.file_first_poll = select.poll()
         self.file_first_poll.register(self.file_first_iterator.stdout)
