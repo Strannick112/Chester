@@ -120,7 +120,10 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
                 true_command = f"""c_countprefabs("{prefab}")"""
                 packed_command = re.sub(r'\"', r"\"", re.sub(r'\'', r"\'", true_command))
                 linux_command = f"""screen -S {main_config['server_main_screen_name']} -X stuff "{packed_command}\n\""""
-                subprocess.check_output(linux_command, shell=True)
+                try:
+                    subprocess.check_output(linux_command, shell=True)
+                except Exception as error:
+                    print(error)
             await asyncio.sleep(5)
             await self.update_dashboard()
 
