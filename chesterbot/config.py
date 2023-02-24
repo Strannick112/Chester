@@ -8,8 +8,7 @@ main_config = {
 
     "game_chat_sync_channel": 0,
     "game_log_sync_channel": 0,
-    "path_to_chat": "/path/to/chat/file",
-    "path_to_log": "/path/to/log/file",
+    "path_to_save": "/path/to/save_folder",
 
     "worlds": [
         {"public_name": "Обычный мир, поверхность", "shard_id": "1", "world_type": "overworld", "folder_name": "Shard 1"},
