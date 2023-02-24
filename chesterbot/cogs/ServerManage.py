@@ -124,10 +124,11 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                 text = self.file_iterator.stdout.readline()[12:]
                 # print(text)
                 if ':' in text:
-                    if "[Announcement]" in text\
-                            or ("There are" in text and " in the world." in text)\
-                            or "RemoteCommandInput: \"c_countprefabs(\"" in text:
+                    if "[Announcement]" in text:
                         return
+                if ("There are" in text and "in the world." in text) \
+                   or "RemoteCommandInput: \"c_countprefabs(\"" in text:
+                    return
                 await self.log_channel.send(content=text)
                 if "[Say]" in text:
                     if re.findall(r': (.)', text)[0] != "$":
