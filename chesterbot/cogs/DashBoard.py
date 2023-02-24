@@ -124,7 +124,7 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
         for group_name, group in self.data.items():
             text += group_name + ":\n\n"
             for name, prefab in group.items():
-                text += name + ": " + next(iter(prefab.values()))[0].__str__() + ";\n"
+                text += name + ": " + next(iter(prefab.values())).__str__() + ";\n"
             text += "\n"
         text += "```"
         return text
