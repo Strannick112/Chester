@@ -55,6 +55,8 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
             "Ресурсы": {
                 "Кусты камыша": {"reeds": 0},
                 "Кусты каменных фруктов": {"rock_avocado_bush": 0},
+                "Перекати-поле": {"tumbleweed": 0},
+                "Спаунеры перекати-поле": {"tumbleweedspawner": 0},
             }
         },
         "caves": {
