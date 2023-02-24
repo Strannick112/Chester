@@ -56,7 +56,6 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
                 "Кусты камыша": {"reeds": 0},
                 "Кусты каменных фруктов": {"rock_avocado_bush": 0},
             }
-
         },
         "caves": {
             "Боссы": {
@@ -124,8 +123,8 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
         text += self.public_name + "\n\n"
         for group_name, group in self.data.items():
             text += group_name + ":\n\n"
-            for name, prefab in group:
-                text += name + ": " + (prefab.values())[0].__str__() + ";\n"
+            for name, prefab in group.items():
+                text += name + ": " + next(iter(prefab.values()))[0].__str__() + ";\n"
             text += "\n"
         text += "```"
         return text
