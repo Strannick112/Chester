@@ -48,7 +48,7 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
             "Монстры":{
                 "Вольт-козы": {"lightninggoat": 0},
                 "Бифало": {"beefalo": 0},
-                "Хижины моржей:": {"walrus_camp": 0},
+                "Хижины моржей": {"walrus_camp": 0},
                 "Моржи": {"walrus": 0},
                 "Дома свиней": {"pighouse": 0},
             },
