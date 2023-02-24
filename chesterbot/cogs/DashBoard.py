@@ -192,7 +192,7 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
                         for prefab_name, prefab_info in group.items():
                             for prefab_code, prefab_count in prefab_info.items():
                                 if prefab_code in text:
-                                    self.data[group_name][prefab_name][prefab_code] = re.findall(r"([\d]+)", text)[0]
+                                    self.data[group_name][prefab_name][prefab_code] = int(re.findall(r"([\d]+)", text)[0])
                                     break
             except Exception as error:
                 print(error)
