@@ -147,8 +147,8 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
         text += self.public_name + "\n\n"
         for group_name, group in self.data.items():
             text += group_name + ":\n\n"
-            for name, prefab in group.items():
-                text += name + ": " + sum(prefab.values()).__str__() + ";\n"
+            for prefab_name, prefab_info in group.items():
+                text += prefab_name + ": " + sum(*(prefab_info.values())).__str__() + ";\n"
             text += "\n"
         text += "```"
         return text
@@ -162,16 +162,20 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
             stdin=subprocess.PIPE
         ).stdout.decode('ascii')
         if self.screen_name in screen_list:
-            for group_name, group in self.data.items():
-                for prefab_name, prefab_info in group.items():
-                    for prefab_code, prefab_count in prefab_info.items():
-                        true_command = f"""c_countprefabs("{prefab_code}")"""
-                        packed_command = re.sub(r'\"', r"\"", re.sub(r'\'', r"\'", true_command))
-                        linux_command = f"""screen -S {self.screen_name} -X stuff "{packed_command}\n\""""
-                        try:
-                            subprocess.check_output(linux_command, shell=True)
-                        except Exception as error:
-                            print(error)
+            try:
+                for group_name, group in self.data.items():
+                    for prefab_name, prefab_info in group.items():
+                        for prefab_code, prefab_count in prefab_info.items():
+                            true_command = f"""c_countprefabs("{prefab_code}")"""
+                            packed_command = re.sub(r'\"', r"\"", re.sub(r'\'', r"\'", true_command))
+                            linux_command = f"""screen -S {self.screen_name} -X stuff "{packed_command}\n\""""
+                            try:
+                                subprocess.check_output(linux_command, shell=True)
+                            except Exception as error:
+                                print(error)
+            except Exception as error:
+                print(error)
+                print(self.data)
             await asyncio.sleep(5)
             await self.update_dashboard()
 
