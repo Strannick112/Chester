@@ -9,7 +9,13 @@ main_config = {
     "game_chat_sync_channel": 0,
     "game_log_sync_channel": 0,
     "path_to_chat": "/path/to/chat/file",
-    "path_to_log": "/path/to/log/file"
+    "path_to_log": "/path/to/log/file",
+
+    "worlds": [
+        {"public_name": "Обычный мир, поверхность", "shard_id": "1", "world_type": "overworld", "folder_name": "Shard 1"},
+        {"public_name": "Обычный мир, пещеры", "shard_id": "2", "world_type": "caves", "folder_name": "Shard 2"},
+        {"public_name": "Изменённый мир, поверхность", "shard_id": "3", "world_type": "overworld", "folder_name": "Shard 3"},
+    ]
 }
 
 

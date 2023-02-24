@@ -12,32 +12,15 @@ from chesterbot import main_config
 
 
 class DashBoard(commands.Cog, name="Доска подсчёта"):
-    def __init__(self, bot):
+    def __init__(self, bot, public_name, shard_id, world_type, folder_name):
         self.chester_bot = bot
-        self.data = {
-            1: {
-                "lightninggoat": 0,
-                "beefalo": 0,
-                "walrus_camp": 0,
-                "walrus": 0,
-                "pighouse": 0,
-                "rock_avocado_bush": 0,
-                "glommer": 0,
-                "friendlyfruitfly": 0,
-                "klaus_sack": 0,
-                "dragonfly": 0,
-                "beequeenhivegrown": 0,
-                "bearger": 0,
-                "mooseegg": 0,
-                "moose": 0,
-                "mossling": 0,
-                "antlion": 0,
-                "crabking": 0,
-                "skeleton": 0,
-            }
-        }
+        self.shard_id = shard_id
+        self.public_name = public_name
+        self.path_to_log = main_config['path_to_save'] + "/" + folder_name + "/server_log.txt"
+        self.screen_name = main_config['short_server_name'] + self.shard_id.__str__()
+        self.data = DashBoard.data[world_type].copy()
         self.file_first_iterator = subprocess.Popen(
-            ['tail', '-F', '-n1', main_config["path_to_log"]],
+            ['tail', '-F', '-n1', self.path_to_log],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             encoding="utf-8"
@@ -45,15 +28,69 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
         self.file_first_poll = select.poll()
         self.file_first_poll.register(self.file_first_iterator.stdout)
 
+    data = {
+        "overworld": {
+            "Боссы": {
+                "Дружелюбная фруктовая муха": {"friendlyfruitfly": 0},
+                "Драконья муха": {"dragonfly": 0},
+                "Гломмер": {"glommer": 0},
+                "Мешок клауса": {"klaus_sack": 0},
+                "Улей пчелиной королевы": {"beequeenhivegrown": 0},
+                "Медведь-барсук": {"bearger": 0},
+                "Яйца Гусь-лусей": {"mooseegg": 0},
+                "Гусь-лусь": {"moose": 0},
+                "Лусята": {"mossling": 0},
+                "Муравьиный лев": {"antlion": 0},
+                "Король-краб": {"crabking": 0},
+                "Скелеты игроков": {"skeleton": 0},
+        },
+            "Монстры":{
+                "Вольт-козы": {"lightninggoat": 0},
+                "Бифало": {"beefalo": 0},
+                "Хижины моржей:": {"walrus_camp": 0},
+                "Моржи": {"walrus": 0},
+                "Дома свиней": {"pighouse": 0},
+            },
+            "Ресурсы": {
+                "Кусты камыша": {"reeds": 0},
+                "Кусты каменных фруктов": {"rock_avocado_bush": 0},
+            }
+
+        },
+        "caves": {
+            "Боссы": {
+                "Гриб Жабы-поганки": {"toadstool_cap": 0},
+                "Древний страж": {"minotaur": 0},
+                "Дружелюбная фруктовая муха": {"friendlyfruitfly": 0},
+                "Скелеты игроков": {"skeleton": 0},
+            },
+            "Монстры": {
+                "Проглоты": {"slurper": 0},
+                "Глубинные черви": {"worm": 0},
+                "Лобстеры": {"rocky": 0},
+                "Дома зайцев": {"rabbithouse": 0},
+            },
+            "Ресурсы": {
+                "Статуи в руинах с самоцветами": {"ruins_statue_mage": 0},
+                "Статуи в руинах без самоцветов": {"ruins_statue_mage_nogem": 0},
+                "Головы в руинах с самоцветами": {"ruins_statue_head": 0},
+                "Головы в руинах без самоцветов": {"ruins_statue_head_nogem": 0},
+                "Кусты камыша": {"reeds": 0},
+                "Сундуки в лабиринте": {"pandoraschest": 0},
+            }
+        }
+    }
+
     async def on_ready(self):
         self.chat_channel = self.chester_bot.get_channel(main_config["game_chat_sync_channel"])
         self.log_channel = self.chester_bot.get_channel(main_config["game_log_sync_channel"])
-
-        if not os.path.exists("./chesterbot/cogs/dashboard.json"):
-            with codecs.open("./chesterbot/cogs/dashboard.json", "w", encoding="utf-8") as file:
+        if not os.path.exists("./chesterbot/cogs/dashboard"):
+            os.mkdir("./chesterbot/cogs/dashboard")
+        if not os.path.exists(f"./chesterbot/cogs/dashboard/{self.shard_id}.json"):
+            with codecs.open(f"./chesterbot/cogs/dashboard/{self.shard_id}.json", "w", encoding="utf-8") as file:
                 json.dump((0, 0), file)
 
-        with codecs.open("./chesterbot/cogs/dashboard.json", "rb", encoding="utf-8") as file:
+        with codecs.open(f"./chesterbot/cogs/dashboard/{self.shard_id}.json", "rb", encoding="utf-8") as file:
             self.chat_message_id, self.log_message_id = json.load(file)
 
         try:
@@ -61,7 +98,7 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
         except:
             self.chat_message = await self.chat_channel.send(content="Доска создана, начат сбор информации...")
             self.chat_message_id = self.chat_message.id
-            with codecs.open("./chesterbot/cogs/dashboard.json", "w", encoding="utf-8") as file:
+            with codecs.open(f"./chesterbot/cogs/dashboard/{self.shard_id}.json", "w", encoding="utf-8") as file:
                 json.dump((self.chat_message_id, self.log_message_id), file)
 
         try:
@@ -69,7 +106,7 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
         except:
             self.log_message = await self.log_channel.send(content="Доска создана, начат сбор информации...")
             self.log_message_id = self.log_message.id
-            with codecs.open("./chesterbot/cogs/dashboard.json", "w", encoding="utf-8") as file:
+            with codecs.open(f"./chesterbot/cogs/dashboard/{self.shard_id}.json", "w", encoding="utf-8") as file:
                 json.dump((self.chat_message_id, self.log_message_id), file)
 
         self.reload_data.start()
@@ -80,32 +117,17 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
         await self.log_message.edit(content=dashboard)
         await self.chat_message.edit(content=dashboard)
 
+
     def make_dashboard(self):
-        return \
-            f"""```
-Вольт-коз: {self.data[1]["lightninggoat"]};
-Взрослых бифало: {self.data[1]["beefalo"]};
-Иглу: {self.data[1]["walrus_camp"]};
-Живых МакБивней: {self.data[1]["walrus"]};
-Домов свина: {self.data[1]["pighouse"]};
-Кустов каменных фруктов: {self.data[1]["rock_avocado_bush"]};
-
-Гломмер: {self.data[1]["glommer"]};
-Дружелюбная плодовая муха: {self.data[1]["friendlyfruitfly"]};
-
-Мешок клауса: {self.data[1]["klaus_sack"]};
-Драконья муха: {self.data[1]["dragonfly"]};
-Улей пчелиной матки: {self.data[1]["beequeenhivegrown"]};
-
-Медведь-барсук: {self.data[1]["bearger"]};
-Гусь-лусей: {self.data[1]["moose"]};
-Яиц гусь-луся: {self.data[1]["mooseegg"]};
-Лусят: {self.data[1]["mossling"]};
-Муравьиный лев: {self.data[1]["antlion"]};
-Король крабов: {self.data[1]["crabking"]};
-
-Скелетов игроков: {self.data[1]["skeleton"]};```
-"""
+        text = "```"
+        text += self.public_name + "\n\n"
+        for group_name, group in self.data.items():
+            text += group_name + ":\n\n"
+            for name, prefab in group:
+                text += name + ": " + (prefab.values())[0].__str__() + ";\n"
+            text += "\n"
+        text += "```"
+        return text
 
     @tasks.loop(minutes=1)
     async def reload_data(self):
@@ -115,15 +137,17 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
             stdout=subprocess.PIPE,
             stdin=subprocess.PIPE
         ).stdout.decode('ascii')
-        if main_config['server_main_screen_name'] in screen_list:
-            for prefab in self.data[1]:
-                true_command = f"""c_countprefabs("{prefab}")"""
-                packed_command = re.sub(r'\"', r"\"", re.sub(r'\'', r"\'", true_command))
-                linux_command = f"""screen -S {main_config['server_main_screen_name']} -X stuff "{packed_command}\n\""""
-                try:
-                    subprocess.check_output(linux_command, shell=True)
-                except Exception as error:
-                    print(error)
+        if self.screen_name in screen_list:
+            for group_name, group in self.data.items():
+                for prefab_name, prefab_info in group.items():
+                    for prefab_code, prefab_count in prefab_info.items():
+                        true_command = f"""c_countprefabs("{prefab_code}")"""
+                        packed_command = re.sub(r'\"', r"\"", re.sub(r'\'', r"\'", true_command))
+                        linux_command = f"""screen -S {self.screen_name} -X stuff "{packed_command}\n\""""
+                        try:
+                            subprocess.check_output(linux_command, shell=True)
+                        except Exception as error:
+                            print(error)
             await asyncio.sleep(5)
             await self.update_dashboard()
 
@@ -134,10 +158,12 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
             try:
                 text = self.file_first_iterator.stdout.readline()[12:]
                 if "There are" in text:
-                    for prefab in self.data[1].keys():
-                        if prefab in text:
-                            self.data[1][prefab] = re.findall(r"([\d]+)", text)[0]
-                            break
+                    for group_name, group in self.data.items():
+                        for prefab_name, prefab_info in group.items():
+                            for prefab_code, prefab_count in prefab_info.items():
+                                if prefab_code in text:
+                                    self.data[group_name][prefab_name][prefab_code] = re.findall(r"([\d]+)", text)[0]
+                                    break
             except Exception as error:
                 print(error)
 
