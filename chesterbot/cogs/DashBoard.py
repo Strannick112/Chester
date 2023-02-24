@@ -53,9 +53,6 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
                 "Дома свиней": {"pighouse": 0},
                 "Щупальца": {"tentacle": 0},
                 "Шахматы": {"knight": 0, "bishop": 0, "rook": 0},
-                # "Шахматный конь": {"knight": 0},
-                # "Шахматный слон": {"bishop": 0},
-                # "Шахматная ладья": {"rook": 0},
                 "Енотокоты": {"catcoon": 0},
             },
             "Ресурсы": {
@@ -84,9 +81,6 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
                     "bishop_nightmare": 0,
                     "rook_nightmare": 0,
                 },
-                # "Повреждённый шахматный конь": {"knight_nightmare": 0},
-                # "Повреждённый шахматный слон": {"bishop_nightmare": 0},
-                # "Повреждённая шахматная ладья": {"rook_nightmare": 0},
             },
             "Ресурсы": {
                 "Статуи в руинах": {
@@ -95,10 +89,6 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
                     "ruins_statue_head": 0,
                     "ruins_statue_head_nogem": 0,
                 },
-                # "Статуи в руинах с самоцветами": {"ruins_statue_mage": 0},
-                # "Статуи в руинах без самоцветов": {"ruins_statue_mage_nogem": 0},
-                # "Головы в руинах с самоцветами": {"ruins_statue_head": 0},
-                # "Головы в руинах без самоцветов": {"ruins_statue_head_nogem": 0},
                 "Кусты камыша": {"reeds": 0},
                 "Сундуки в лабиринте": {"pandoraschest": 0},
             }
