@@ -19,6 +19,7 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
         self.path_to_log = main_config['path_to_save'] + "/" + folder_name + "/server_log.txt"
         self.screen_name = main_config['short_server_name'] + self.shard_id.__str__()
         self.data = DashBoard.data[world_type].copy()
+        self.__cog_name__ += self.screen_name
         self.file_first_iterator = subprocess.Popen(
             ['tail', '-F', '-n1', self.path_to_log],
             stdout=subprocess.PIPE,

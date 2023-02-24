@@ -10,7 +10,7 @@ class ServerManage(commands.Cog, name="Управление сервером"):
     def __init__(self, chester_bot: ChesterBot):
         self.chester_bot = chester_bot
         self.file_iterator = subprocess.Popen(
-            ['tail', '-F', main_config['path_to_save'] + "/" + main_config['world'][0]['folder_name'] + "/server_log.txt"],
+            ['tail', '-F', main_config['path_to_save'] + "/" + main_config['worlds'][0]['folder_name'] + "/server_log.txt"],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             encoding="utf-8"
