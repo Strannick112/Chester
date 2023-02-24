@@ -51,6 +51,12 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
                 "Хижины моржей": {"walrus_camp": 0},
                 "Моржи": {"walrus": 0},
                 "Дома свиней": {"pighouse": 0},
+                "Щупальца": {"tentacle": 0},
+                "Шахматы": {"knight": 0, "bishop": 0, "rook": 0},
+                # "Шахматный конь": {"knight": 0},
+                # "Шахматный слон": {"bishop": 0},
+                # "Шахматная ладья": {"rook": 0},
+                "Енотокоты": {"catcoon", 0}
             },
             "Ресурсы": {
                 "Кусты камыша": {"reeds": 0},
@@ -61,7 +67,6 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
         },
         "caves": {
             "Боссы": {
-                "Гриб Жабы-поганки": {"toadstool_cap": 0},
                 "Древний страж": {"minotaur": 0},
                 "Дружелюбная фруктовая муха": {"friendlyfruitfly": 0},
                 "Скелеты игроков": {"skeleton": 0},
@@ -71,12 +76,29 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
                 "Глубинные черви": {"worm": 0},
                 "Лобстеры": {"rocky": 0},
                 "Дома зайцев": {"rabbithouse": 0},
+                "Логова мотыльков": {"dustmothden": 0},
+                "Обезьяньи тотемы": {"monkeybarrel": 0},
+                "Щупальца": {"tentacle": 0},
+                "Повреждённых шахмат на охране руин": {
+                    "knight_nightmare": 0,
+                    "bishop_nightmare": 0,
+                    "rook_nightmare": 0
+                },
+                # "Повреждённый шахматный конь": {"knight_nightmare": 0},
+                # "Повреждённый шахматный слон": {"bishop_nightmare": 0},
+                # "Повреждённая шахматная ладья": {"rook_nightmare": 0},
             },
             "Ресурсы": {
-                "Статуи в руинах с самоцветами": {"ruins_statue_mage": 0},
-                "Статуи в руинах без самоцветов": {"ruins_statue_mage_nogem": 0},
-                "Головы в руинах с самоцветами": {"ruins_statue_head": 0},
-                "Головы в руинах без самоцветов": {"ruins_statue_head_nogem": 0},
+                "Статуи в руинах": {
+                    "ruins_statue_mage": 0,
+                    "ruins_statue_mage_nogem": 0,
+                    "ruins_statue_head": 0,
+                    "ruins_statue_head_nogem": 0
+                },
+                # "Статуи в руинах с самоцветами": {"ruins_statue_mage": 0},
+                # "Статуи в руинах без самоцветов": {"ruins_statue_mage_nogem": 0},
+                # "Головы в руинах с самоцветами": {"ruins_statue_head": 0},
+                # "Головы в руинах без самоцветов": {"ruins_statue_head_nogem": 0},
                 "Кусты камыша": {"reeds": 0},
                 "Сундуки в лабиринте": {"pandoraschest": 0},
             }
@@ -126,7 +148,7 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
         for group_name, group in self.data.items():
             text += group_name + ":\n\n"
             for name, prefab in group.items():
-                text += name + ": " + next(iter(prefab.values())).__str__() + ";\n"
+                text += name + ": " + sum(prefab.values()).__str__() + ";\n"
             text += "\n"
         text += "```"
         return text
