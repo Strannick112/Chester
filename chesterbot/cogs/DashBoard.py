@@ -148,13 +148,7 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
         for group_name, group in self.data.items():
             text += group_name + ":\n\n"
             for prefab_name, prefab_info in group.items():
-                try:
-                    text += prefab_name + ": " + (sum(prefab_info.values()).__str__()) + ";\n"
-                except Exception as error:
-                    print(error)
-                    print(prefab_name)
-                    print(prefab_info.values())
-                    print((sum(prefab_info.values()).__str__()))
+                text += prefab_name + ": " + (sum(prefab_info.values()).__str__()) + ";\n"
             text += "\n"
         text += "```"
         return text
