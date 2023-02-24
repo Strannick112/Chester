@@ -125,7 +125,7 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                 # print(text)
                 if ':' in text:
                     if "[Announcement]" in text\
-                            or ("There are " in text and " in the world." in text)\
+                            or ("There are" in text and " in the world." in text)\
                             or "RemoteCommandInput: \"c_countprefabs(\"" in text:
                         return
                 await self.log_channel.send(content=text)
