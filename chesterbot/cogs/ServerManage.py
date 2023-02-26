@@ -122,20 +122,23 @@ class ServerManage(commands.Cog, name="Управление сервером"):
         if self.file_poll.poll(1):
             try:
                 text = self.file_iterator.stdout.readline()[12:]
-                # print(text)
                 if ':' in text:
                     if "[Announcement]" in text:
                         return
                 if ("There are" in text and "in the world." in text) \
                    or "RemoteCommandInput: \"c_countprefabs(\"" in text:
                     return
-                await self.log_channel.send(content=text)
+                await self.log_channel.send(content=("```" + text + "```"))
                 if "[Say]" in text:
                     if re.findall(r': (.)', text)[0] != "$":
-                        await self.chat_channel.send(content=re.findall(r'\) ([\w\W]*)', text)[0])
+                        await self.chat_channel.send(content=("```" + re.findall(r'\) ([\w\W]*)', text)[0] + "```"))
+                        return
                 if "[Announcement]" in text\
                         or "[Join Announcement]" in text\
                         or "[Leave Announcement]" in text:
-                    await self.chat_channel.send(content=text)
+                    await self.chat_channel.send(content=("```" + text + "```"))
+                    return
             except Exception as error:
                 print(error)
+                return
+        return
