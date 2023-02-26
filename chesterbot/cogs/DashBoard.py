@@ -110,6 +110,7 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
         try:
             self.chat_message = await self.chat_channel.fetch_message(self.chat_message_id)
         except:
+            await self.chat_channel.guild.me.edit(nick=main_config["official_nickname"])
             self.chat_message = await self.chat_channel.send(content="Доска создана, начат сбор информации...")
             self.chat_message_id = self.chat_message.id
             with codecs.open(f"./chesterbot/cogs/dashboard/{self.shard_id}.json", "w", encoding="utf-8") as file:
@@ -118,6 +119,7 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
         try:
             self.log_message = await self.log_channel.fetch_message(self.log_message_id)
         except:
+            await self.log_channel.guild.me.edit(nick=main_config["official_nickname"])
             self.log_message = await self.log_channel.send(content="Доска создана, начат сбор информации...")
             self.log_message_id = self.log_message.id
             with codecs.open(f"./chesterbot/cogs/dashboard/{self.shard_id}.json", "w", encoding="utf-8") as file:

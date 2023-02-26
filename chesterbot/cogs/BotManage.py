@@ -27,8 +27,10 @@ class BotManage(commands.Cog, name="Управление ботом"):
                 with codecs.open("./chesterbot/replies.json", "w", encoding="utf-8") as file:
                     file.write(re.sub('(' + reply + r'": ")([\w\W].+?)"', r'\1' + new_text + '"', old_text))
                 self.chester_bot.reload_replies()
+                await ctx.guild.me.edit(nick=main_config["official_nickname"])
                 await ctx.reply(self.chester_bot.__replies['change_replies_success'])
         except Exception:
+            await ctx.guild.me.edit(nick=main_config["official_nickname"])
             await ctx.reply(self.__replies['change_replies_fail'])
             return False
         else:
@@ -47,6 +49,7 @@ class BotManage(commands.Cog, name="Управление ботом"):
             if len(cut) == 0:
                 break
             else:
+                await ctx.guild.me.edit(nick=main_config["official_nickname"])
                 await ctx.reply(f"```{cut}```")
             page_number += 1
 

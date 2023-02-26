@@ -128,15 +128,20 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                 if ("There are" in text and "in the world." in text) \
                    or "RemoteCommandInput: \"c_countprefabs(\"" in text:
                     return
+                await self.log_channel.guild.me.edit(nick=main_config["official_nickname"])
                 await self.log_channel.send(content=("```" + text + "```"))
                 if "[Say]" in text:
                     if re.findall(r': (.)', text)[0] != "$":
-                        await self.chat_channel.send(content=re.findall(r'\) ([\w\W]*)', text)[0])
+                        nick, message = re.split(r': ', re.findall(r'\) ([\w\W]*)', text)[0], maxsplit=1)
+                        await self.chat_channel.guild.me.edit(nick=nick)
+                        await self.chat_channel.send(content=message)
                         return
                 if "[Announcement]" in text\
                         or "[Join Announcement]" in text\
                         or "[Leave Announcement]" in text:
-                    await self.chat_channel.send(content=text)
+                    nick, message = re.split(r': ', text, maxsplit=1)
+                    await self.chat_channel.guild.me.edit(nick=nick)
+                    await self.chat_channel.send(content=message)
                     return
             except Exception as error:
                 print(error)

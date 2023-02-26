@@ -59,7 +59,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                         else:
                             if claim.status == Status.executed:
                                 await msg.add_reaction(self.__replies['claim_items_executed'])
-
+        await ctx.guild.me.edit(nick=main_config["official_nickname"])
         await ctx.reply(self.__replies['checkout_marks_on_executed_claims_success'])
         return True
 
@@ -92,9 +92,11 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                             await msg.add_reaction()
             wipes.last_wipe.claims[cur_user].delete()
             del wipes.last_wipe.claims[cur_user]
+            await ctx.guild.me.edit(nick=main_config["official_nickname"])
             await ctx.reply(self.__replies['delete_claim_success'])
             return True
         else:
+            await ctx.guild.me.edit(nick=main_config["official_nickname"])
             await ctx.reply(self.__replies["delete_claim_fail"])
             return False
 
@@ -121,10 +123,12 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                 if len(cut) == 0:
                     break
                 else:
+                    await ctx.guild.me.edit(nick=main_config["official_nickname"])
                     await ctx.reply(f"```{cut}```")
                 page_number += 1
             return True
         else:
+            await ctx.guild.me.edit(nick=main_config["official_nickname"])
             await ctx.reply(self.__replies["get_claim_fail"])
             return False
 
@@ -135,23 +139,28 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
         if user_name in wipes.last_wipe.claims:
             cur_claim = wipes.last_wipe.claims[user_name]
             if cur_claim.status == Status.not_approved:
+                await ctx.guild.me.edit(nick=main_config["official_nickname"])
                 await ctx.reply(self.__replies['give_items_fail_not_approved'])
                 await ctx.message.add_reaction(self.__replies['claim_error'])
                 return False
             if cur_claim.status == Status.executed:
+                await ctx.guild.me.edit(nick=main_config["official_nickname"])
                 await ctx.reply(self.__replies['give_items_fail_executed'])
                 await ctx.message.add_reaction(self.__replies['claim_error'])
                 return False
             if cur_claim.give_items(ctx.message.created_at.__str__()):
+                await ctx.guild.me.edit(nick=main_config["official_nickname"])
                 await ctx.reply(self.__replies['give_items_success'])
                 await ctx.message.add_reaction(self.__replies['claim_items_executed'])
                 await self.mark_claim_executed(user_name)
                 return True
             else:
+                await ctx.guild.me.edit(nick=main_config["official_nickname"])
                 await ctx.reply(self.__replies['give_items_fail'])
                 await ctx.message.add_reaction(self.__replies['claim_error'])
                 return False
         else:
+            await ctx.guild.me.edit(nick=main_config["official_nickname"])
             await ctx.reply(self.__replies['give_items_fail_who_are_you'])
             await ctx.message.add_reaction(self.__replies['claim_error'])
             return False
@@ -175,6 +184,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                                 if reaction.__str__() == self.__replies['claim_items_executed']:
                                     if reaction.me:
                                         await msg.remove_reaction(self.__replies['claim_items_executed'], self.bot.user)
+            await ctx.guild.me.edit(nick=main_config["official_nickname"])
             await ctx.reply(self.__replies['rollback_claims_success'])
             return True
         else:
@@ -195,6 +205,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                                 if reaction.__str__() == self.__replies['claim_items_executed']:
                                     if reaction.me:
                                         await msg.remove_reaction(self.__replies['claim_items_executed'], self.bot.user)
+        await ctx.guild.me.edit(nick=main_config["official_nickname"])
         await ctx.reply(self.__replies['rollback_claims_success'])
         return True
 
@@ -229,9 +240,11 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                             continue
                     if to_approve['approved_twice'] and not to_approve['executed']:
                         await msg.add_reaction(self.__replies['claim_is_overdue'])
+            await ctx.guild.me.edit(nick=main_config["official_nickname"])
             await ctx.reply(self.__replies['start_success'])
             return True
         if wipes.last_wipe.started_at != "":
+            await ctx.guild.me.edit(nick=main_config["official_nickname"])
             await ctx.reply(self.__replies['start_fail'])
             return False
 
@@ -240,6 +253,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
     async def stop_wipe(self, ctx):
         """Закрывает набор заявок от игроков"""
         if wipes.last_wipe.stoped_at == "":
+            await ctx.guild.me.edit(nick=main_config["official_nickname"])
             await ctx.reply(self.__replies['stop_success'])
             cur_time = ctx.message.created_at.__str__()
             wipes.last_wipe.stoped_at = cur_time
@@ -274,6 +288,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                         await msg.add_reaction(self.__replies['claim_full_approved'])
             return True
         if wipes.last_wipe.stoped_at != "":
+            await ctx.guild.me.edit(nick=main_config["official_nickname"])
             await ctx.reply(self.__replies['stop_fail'])
             return False
 
