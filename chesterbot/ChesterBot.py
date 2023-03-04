@@ -33,6 +33,7 @@ class ChesterBot(commands.Bot):
         super().__init__(command_prefix=main_config['prefix'], intents=intents)
 
     async def on_ready(self):
+        await self.user.edit(username="Chester")
         await self.server_manage.on_ready()
         for dashboard in self.dashboards:
             await dashboard.on_ready()
@@ -78,8 +79,14 @@ class ChesterBot(commands.Bot):
                         if main_config['server_main_screen_name'] in screen_list:
                             nickname = re.sub(r'\'', r"\\\\\'", message.author.display_name)
                             nickname = re.sub(r'\"', r"\\\\\"", nickname)
+                            nickname = re.sub(r'$', r"\\\\\$", nickname)
+                            nickname = re.sub(r'>', r"\\\\\>", nickname)
+                            nickname = re.sub(r'<', r"\\\\\<", nickname)
                             text = re.sub(r'\'', r"\\\\\'", message.content)
                             text = re.sub(r'\"', r"\\\\\"", text)
+                            text = re.sub(r'$', r"\\\\\$", text)
+                            text = re.sub(r'>', r"\\\\\>", text)
+                            text = re.sub(r'<', r"\\\\\<", text)
                             subprocess.check_output(
                                 f"""screen -S {main_config['server_main_screen_name']} -X stuff""" +
                                 f""" "c_announce(\\\"{nickname}: {text}\\\")\n\"""",
