@@ -79,7 +79,7 @@ class ChesterBot(commands.Bot):
                         if main_config['server_main_screen_name'] in screen_list:
                             nickname = re.sub(r'\'', r"\\\\\'", message.author.display_name)
                             nickname = re.sub(r'\"', r"\\\\\"", nickname)
-                            nickname = re.sub(r'\$', r"\\$", nickname)
+                            nickname = re.sub(r'\$', r"\\\\\$", nickname)
                             nickname = re.sub(r'>', r"\\\\\>", nickname)
                             nickname = re.sub(r'<', r"\\\\\<", nickname)
                             nickname = re.sub(r'\\', r"\\\\\\\\", nickname)
