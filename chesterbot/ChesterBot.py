@@ -82,15 +82,15 @@ class ChesterBot(commands.Bot):
                             nickname = re.sub(r'\$', r"\\\\\$", nickname)
                             nickname = re.sub(r'>', r"\\\\\>", nickname)
                             nickname = re.sub(r'<', r"\\\\\<", nickname)
-                            nickname = re.sub(r'\\', r"\\\\\<", nickname)
-                            nickname = re.sub(r'/', r"\\\\\<", nickname)
+                            nickname = re.sub(r'\\', r"\\\\\\", nickname)
+                            nickname = re.sub(r'/', r"\\\\\/", nickname)
                             text = re.sub(r'\'', r"\\\\\'", message.content)
                             text = re.sub(r'\"', r"\\\\\"", text)
                             text = re.sub(r'\$', r"\\\\\$", text)
                             text = re.sub(r'>', r"\\\\\>", text)
                             text = re.sub(r'<', r"\\\\\<", text)
-                            text = re.sub(r'\\', r"\\\\\<", text)
-                            text = re.sub(r'/', r"\\\\\<", text)
+                            text = re.sub(r'\\', r"\\\\\\", text)
+                            text = re.sub(r'/', r"\\\\\/", text)
                             subprocess.check_output(
                                 f"""screen -S {main_config['server_main_screen_name']} -X stuff""" +
                                 f""" "c_announce(\\\"{nickname}: {text}\\\")\n\"""",
