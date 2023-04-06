@@ -52,7 +52,7 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
                 "Моржи": {"walrus": 0},
                 "Дома свиней": {"pighouse": 0},
                 "Дома мермов": {"mermhouse": 0},
-                "Мермов": {"merm": 0},
+                "Мермы": {"merm": 0},
                 "Щупальца": {"tentacle": 0},
                 "Шахматы": {"knight": 0, "bishop": 0, "rook": 0},
                 "Енотокоты": {"catcoon": 0},
