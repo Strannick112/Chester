@@ -11,9 +11,6 @@ from chesterbot.cogs import BotManage, WipeManage, ServerManage
 from chesterbot.cogs.DashBoard import DashBoard
 
 
-# from chesterbot.cogs.DashBoard import DashBoard
-
-
 class ChesterBot(commands.Bot):
     def __init__(self):
         intents = discord.Intents.default()

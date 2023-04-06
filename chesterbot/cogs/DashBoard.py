@@ -51,6 +51,8 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
                 "Хижины моржей": {"walrus_camp": 0},
                 "Моржи": {"walrus": 0},
                 "Дома свиней": {"pighouse": 0},
+                "Дома мермов": {"mermhouse": 0},
+                "Мермов": {"merm": 0},
                 "Щупальца": {"tentacle": 0},
                 "Шахматы": {"knight": 0, "bishop": 0, "rook": 0},
                 "Енотокоты": {"catcoon": 0},
