@@ -56,6 +56,8 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
                 "Щупальца": {"tentacle": 0},
                 "Шахматы": {"knight": 0, "bishop": 0, "rook": 0},
                 "Енотокоты": {"catcoon": 0},
+                "Дикие улья": {"beehive": 0},
+                "Улья пчёл-убийц": {"wasphive": 0},
             },
             "Ресурсы": {
                 "Кусты камыша": {"reeds": 0},
