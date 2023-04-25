@@ -103,5 +103,5 @@ class ChesterBot(commands.Bot):
 
     async def on_member_join(self, member):
         if self.default_role is None:
-            self.default_role = discord.utils.get(member.server.roles, id=main_config["default_role_id"])
+            self.default_role = discord.utils.get(member.guild.roles, id=main_config["default_role_id"])
         await member.add_roles(self.default_role)
