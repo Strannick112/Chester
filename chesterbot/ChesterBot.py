@@ -102,7 +102,6 @@ class ChesterBot(commands.Bot):
                             await message.add_reaction(self.replies['claim_accepted_is_ok'])
 
     async def on_member_join(self, member):
-        if main_config['default_role_id'] != "":
-            if self.default_role is None:
-                self.default_role = discord.utils.get(member.guild.roles, id=main_config["default_role_id"])
-            await member.add_roles(self.default_role)
+        if self.default_role is None:
+            self.default_role = discord.utils.get(member.guild.roles, id=main_config["default_role_id"])
+        await member.add_roles(self.default_role)
