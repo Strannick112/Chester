@@ -5,6 +5,7 @@ main_config = {
     'short_server_name': 'SN',
     'server_main_screen_name': 'Server_Main_Screen_Name',
     'master_role': 'Master_Role',
+    'default_role_id': 'Default_Role_id',
 
     "game_chat_sync_channel": 0,
     "game_log_sync_channel": 0,

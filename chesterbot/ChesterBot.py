@@ -16,7 +16,7 @@ class ChesterBot(commands.Bot):
         intents = discord.Intents.default()
         intents.message_content = True
         intents.members = True
-        self.log_channel = None
+        self.default_role = None
 
         with codecs.open("./chesterbot/replies.json", "r", encoding="utf-8") as file:
             self.replies = json.load(file)
@@ -100,3 +100,8 @@ class ChesterBot(commands.Bot):
                             wipes.last_wipe.claims[author] = claim
                             wipes.last_wipe.claims[author].save()
                             await message.add_reaction(self.replies['claim_accepted_is_ok'])
+
+    async def on_member_join(self, member):
+        if self.default_role is None:
+            self.default_role = discord.utils.get(member.server.roles, id=main_config["default_role_id"])
+        await member.add_roles(self.default_role)
