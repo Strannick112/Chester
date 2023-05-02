@@ -58,12 +58,16 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
                 "Енотокоты": {"catcoon": 0},
                 "Дикие улья": {"beehive": 0},
                 "Улья пчёл-убийц": {"wasphive": 0},
+                "Смертоносные светлоцветы": {"lunarthrall_plant": 0},
             },
             "Ресурсы": {
                 "Кусты камыша": {"reeds": 0},
                 "Кусты каменных фруктов": {"rock_avocado_bush": 0},
                 "Перекати-поле": {"tumbleweed": 0},
                 "Спаунеры перекати-поле": {"tumbleweedspawner": 0},
+                "Приманкоцветы": {"lureplant": 0},
+                "Разломы": {"lunarrift_portal": 0},
+                "Кристаллы разлома": {"lunarrift_crystal_big": 0},
             }
         },
         "caves": {
