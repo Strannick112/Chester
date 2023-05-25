@@ -2,6 +2,7 @@ import re
 import select
 import subprocess
 
+import discord
 from discord.ext import commands, tasks
 from chesterbot import main_config, ChesterBot
 
@@ -18,11 +19,19 @@ class ServerManage(commands.Cog, name="Управление сервером"):
         self.file_poll = select.poll()
         self.file_poll.register(self.file_iterator.stdout)
         self.chat_channel = None
+        self.chat_webhook = None
         self.log_channel = None
+        self.log_webhook = None
 
     async def on_ready(self):
         self.chat_channel = self.chester_bot.get_channel(main_config["game_chat_sync_channel"])
+        self.chat_webhook = discord.utils.get(await self.chat_channel.webhooks(), name='Chat')
+        if self.chat_webhook is None:
+            self.chat_webhook = await self.chat_channel.create_webhook(name='Chat')
         self.log_channel = self.chester_bot.get_channel(main_config["game_log_sync_channel"])
+        self.log_webhook = discord.utils.get(await self.log_channel.webhooks(), name='Log')
+        if self.log_webhook is None:
+            self.log_webhook = await self.log_channel.create_webhook(name='Log')
         self.on_server_message.start()
 
     @commands.command(name=main_config['short_server_name'] + "_restart_server")
@@ -128,19 +137,25 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                 if ("There are" in text and "in the world." in text) \
                    or "RemoteCommandInput: \"c_countprefabs(\"" in text:
                     return
-                await self.log_channel.send(content=("```" + text + "```"))
+                await self.log_webhook.send(content=("```" + text + "```"), username="Чарли")
                 if "[Say]" in text:
                     if re.findall(r': (.)', text)[0] != "$":
                         if "@admin" in text:
-                            await self.chat_channel.send(
-                                content=re.sub(r'@admin', self.chester_bot.replies['admin_role_id'], re.findall(r'\) ([\w\W]*)', text)[0]).strip())
+                            await self.chat_webhook.send(
+                                content=re.sub(
+                                    r'@админ',
+                                    self.chester_bot.replies['admin_role_id'],
+                                    re.findall(r'\) ([\w\W]*)', text)[0]
+                                ).strip(),
+                                username="Чарли"
+                            )
                         else:
-                            await self.chat_channel.send(content=re.findall(r'\) ([\w\W]*)', text)[0])
+                            await self.chat_webhook.send(content=re.findall(r'\) ([\w\W]*)', text)[0], username="Чарли")
                         return
                 if "[Announcement]" in text\
                         or "[Join Announcement]" in text\
                         or "[Leave Announcement]" in text:
-                    await self.chat_channel.send(content=re.sub(r'@admin', self.chester_bot.replies['admin_role_id'], text))
+                    await self.chat_webhook.send(content=text, username="Чарли")
                     return
             except Exception as error:
                 print(error)
