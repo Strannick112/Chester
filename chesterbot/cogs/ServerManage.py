@@ -132,10 +132,11 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                 if "[Say]" in text:
                     if re.findall(r': (.)', text)[0] != "$":
                         if "@admin" in text:
+                            await self.chat_channel.webhooks()
                             await self.chat_channel.send(
-                                content=re.sub(r'@admin', self.chester_bot.replies['admin_role_id'], re.findall(r'\) ([\w\W]*)', text)[0]).strip())
+                                content=re.sub(r'@админ', self.chester_bot.replies['admin_role_id'], re.findall(r'\) ([\w\W]*)', text)[0]).strip())
                         else:
-                            await self.chat_channel.send(content=re.findall(r'\) ([\w\W]*)', text)[0])
+                            await self.chat_channel.send(content=re.findall(r'\) ([\w\W]*)', text)[0],)
                         return
                 if "[Announcement]" in text\
                         or "[Join Announcement]" in text\
