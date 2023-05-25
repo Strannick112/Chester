@@ -140,7 +140,7 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                 if "[Announcement]" in text\
                         or "[Join Announcement]" in text\
                         or "[Leave Announcement]" in text:
-                    await self.chat_channel.send(content=text)
+                    await self.chat_channel.send(content=re.sub(r'@admin', self.chester_bot.replies['admin_role_id'], text))
                     return
             except Exception as error:
                 print(error)
