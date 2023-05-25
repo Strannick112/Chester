@@ -131,6 +131,8 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                 await self.log_channel.send(content=("```" + text + "```"))
                 if "[Say]" in text:
                     if re.findall(r': (.)', text)[0] != "$":
+                        if text == "@admin":
+                            await self.chat_channel.send(content="");
                         await self.chat_channel.send(content=re.findall(r'\) ([\w\W]*)', text)[0])
                         return
                 if "[Announcement]" in text\
