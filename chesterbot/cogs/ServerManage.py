@@ -133,7 +133,7 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                     if re.findall(r': (.)', text)[0] != "$":
                         if "@admin" in text:
                             await self.chat_channel.send(
-                                content=re.sub(r'@admin', '<@&1020024836036251738>', re.findall(r'\) ([\w\W]*)', text)[0]).strip())
+                                content=re.sub(r'@admin', self.chester_bot.replies['admin_role_id'], re.findall(r'\) ([\w\W]*)', text)[0]).strip())
                         else:
                             await self.chat_channel.send(content=re.findall(r'\) ([\w\W]*)', text)[0])
                         return
