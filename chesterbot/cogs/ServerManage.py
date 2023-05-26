@@ -141,12 +141,16 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                         or "[Join Announcement]" in text\
                         or "[Leave Announcement]" in text:
                     await self.chat_channel.send(content=text)
+                    await self.log_channel.send(content=text)
                     return
 
+                if "[Whisper]" in text:
+                    await self.log_channel.send(content=("```" + text + "```"))
+
                 if "[Say]" in text:
-                    player_info, _, message = [word.strip() for word in text.partition(':')]
-                    player_name = re.findall(r'\) ([\w\W]*)', player_info)[0]
-                    await self.log_webhook.send(content=("```" + message + "```"), username=player_info)
+                    raw_player_info, _, message = [word.strip() for word in text.partition(':')]
+                    _, player_name = raw_player_info.rsplit(separator=' ', maxsplit=1)
+                    await self.log_channel.send(content=("```" + text + "```"))
                     if message[0] != "$":
                         if "@admin" in message:
                             await self.chat_webhook.send(
