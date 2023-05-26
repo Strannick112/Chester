@@ -137,27 +137,27 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                 if ("There are" in text and "in the world." in text) \
                    or "RemoteCommandInput: \"c_countprefabs(\"" in text:
                     return
-                player_name, _, text = [word.strip() for word in text.partition(':')]
-                await self.log_webhook.send(content=("```" + text + "```"), username=player_name)
-                if "[Say]" in text:
-                    if re.findall(r': (.)', text)[0] != "$":
-                        if "@admin" in text:
-                            await self.chat_webhook.send(
-                                content=re.sub(
-                                    r'@админ',
-                                    self.chester_bot.replies['admin_role_id'],
-                                    re.findall(r'\) ([\w\W]*)', text)[0]
-                                ).strip(),
-                                username=player_name
-                            )
-                        else:
-                            await self.chat_webhook.send(content=re.findall(r'\) ([\w\W]*)', text)[0], username=player_name)
-                        return
                 if "[Announcement]" in text\
                         or "[Join Announcement]" in text\
                         or "[Leave Announcement]" in text:
-                    await self.chat_webhook.send(content=text, username=player_name)
+                    await self.chat_channel.send(content=text)
                     return
+
+                if "[Say]" in text:
+                    player_info, _, message = [word.strip() for word in text.partition(':')]
+                    player_name = re.findall(r'\) ([\w\W]*)', player_info)[0]
+                    await self.log_webhook.send(content=("```" + message + "```"), username=player_info)
+                    if message[0] != "$":
+                        if "@admin" in message:
+                            await self.chat_webhook.send(
+                                content=re.sub(r'@админ', self.chester_bot.replies['admin_role_id'], message).strip(),
+                                username=player_name
+                            )
+                        else:
+                            await self.chat_webhook.send(content=message, username=player_name)
+                        return
+                await self.log_channel.send(content=text)
+
             except Exception as error:
                 print(error)
                 return
