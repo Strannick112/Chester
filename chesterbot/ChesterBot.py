@@ -57,7 +57,7 @@ class ChesterBot(commands.Bot):
             self.replies["commands_channel_id"] = json.loads(self.replies["commands_channel_id"])
 
     async def on_message(self, message):
-        if message.author != self.user:
+        if not message.author.bot:
             if len(message.content) > 0:
                 # When command
                 if message.content[0] == main_config['prefix']:
