@@ -137,7 +137,8 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                 if ("There are" in text and "in the world." in text) \
                    or "RemoteCommandInput: \"c_countprefabs(\"" in text:
                     return
-                await self.log_webhook.send(content=("```" + text + "```"), username="Чарли")
+                player_name, _, text = [word.strip() for word in text.partition(':')]
+                await self.log_webhook.send(content=("```" + text + "```"), username=player_name)
                 if "[Say]" in text:
                     if re.findall(r': (.)', text)[0] != "$":
                         if "@admin" in text:
@@ -147,15 +148,15 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                                     self.chester_bot.replies['admin_role_id'],
                                     re.findall(r'\) ([\w\W]*)', text)[0]
                                 ).strip(),
-                                username="Чарли"
+                                username=player_name
                             )
                         else:
-                            await self.chat_webhook.send(content=re.findall(r'\) ([\w\W]*)', text)[0], username="Чарли")
+                            await self.chat_webhook.send(content=re.findall(r'\) ([\w\W]*)', text)[0], username=player_name)
                         return
                 if "[Announcement]" in text\
                         or "[Join Announcement]" in text\
                         or "[Leave Announcement]" in text:
-                    await self.chat_webhook.send(content=text, username="Чарли")
+                    await self.chat_webhook.send(content=text, username=player_name)
                     return
             except Exception as error:
                 print(error)
