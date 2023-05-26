@@ -25,7 +25,6 @@ class ServerManage(commands.Cog, name="Управление сервером"):
 
     async def on_ready(self):
         self.chat_channel = self.chester_bot.get_channel(main_config["game_chat_sync_channel"])
-        await self.chat_channel.webhooks()
         self.chat_webhook = discord.utils.get(await self.chat_channel.webhooks(), name='Chat')
         if self.chat_webhook is None:
             self.chat_webhook = await self.chat_channel.create_webhook(name='Chat')
