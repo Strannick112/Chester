@@ -141,7 +141,7 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                         or "[Join Announcement]" in text\
                         or "[Leave Announcement]" in text:
                     await self.chat_channel.send(content=text)
-                    await self.log_channel.send(content=text)
+                    await self.log_channel.send(content=("```" + text + "```"))
                     return
 
                 if "[Whisper]" in text:
