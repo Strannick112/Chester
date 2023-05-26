@@ -149,7 +149,7 @@ class ServerManage(commands.Cog, name="Управление сервером"):
 
                 if "[Say]" in text:
                     raw_player_info, _, message = [word.strip() for word in text.partition(':')]
-                    _, player_name = raw_player_info.rsplit(separator=' ', maxsplit=1)
+                    _, player_name = raw_player_info.rsplit(' ', 1)
                     await self.log_channel.send(content=("```" + text + "```"))
                     if message[0] != "$":
                         if "@admin" in message:
