@@ -152,15 +152,15 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                     _, player_name = raw_player_info.rsplit(' ', 1)
                     await self.log_channel.send(content=("```" + text + "```"))
                     if message[0] != "$":
-                        if "@admin" in message:
+                        if "@админ" in message:
                             await self.chat_webhook.send(
                                 content=re.sub(r'@админ', self.chester_bot.replies['admin_role_id'], message).strip(),
                                 username=player_name
                             )
                         else:
                             await self.chat_webhook.send(content=message, username=player_name)
-                        return
-                await self.log_channel.send(content=text)
+                    return
+                await self.log_channel.send(content=("```" + text + "```"))
 
             except Exception as error:
                 print(error)
