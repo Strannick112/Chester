@@ -153,12 +153,11 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
             packed_command = re.sub(r'\"', r"\"", re.sub(r'\'', r"\'", true_command))
             linux_command = f"""screen -S {self.screen_name} -X stuff "{packed_command}\n\""""
             print("Sended command: ", linux_command)
-            count_prefab_tasks[prefab_code] = asyncio.create_task(
+            self.simple_data[prefab_code] = await asyncio.create_task(
                 self.chester_bot.console_dst_checker.check(
                     linux_command, r"There are\s+([\d])+\s+[\w\W]+" + prefab_code, self.shard_id, self.screen_name
                 )
             )
-        self.simple_data = await asyncio.gather(*count_prefab_tasks)
 
         await asyncio.sleep(5)
         await self.update_dashboard()
