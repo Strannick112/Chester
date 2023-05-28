@@ -48,9 +48,9 @@ class ConsoleDSTChecker:
         if text := file_iter.readline()[12:-1]:
             for keys, command in commands.items():
                 try:
-                    if re.findall(keys, text):
+                    if result := re.findall(keys, text):
                         if not command.done():
-                            command.set_result(text)
+                            command.set_result(result[0])
                         break
                 except Exception as error:
                     print(error)
