@@ -32,10 +32,11 @@ except ModuleNotFoundError as err:
 
 for world in main_config["worlds"]:
     world["file_log_iter"] = codecs.open(
-        main_config['path_to_save'] + "/" + world["folder_name"] + "/server_log.txt", "r"
+        main_config['path_to_save'] + "/" + world["folder_name"] + "/server_log.txt", "r", encoding="utf-8"
     )
     world["file_log_iter"].seek(0, 2)
     world["file_chat_iter"] = codecs.open(
-        main_config['path_to_save'] + "/" + world["folder_name"] + "/server_chat_log.txt", "r"
+        main_config['path_to_save'] + "/" + world["folder_name"] + "/server_chat_log.txt", "r", encoding="utf-8"
     )
+    print(world["file_chat_iter"].readline())
     world["file_chat_iter"].seek(0, 2)
