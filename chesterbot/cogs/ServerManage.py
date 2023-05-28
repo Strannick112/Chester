@@ -159,7 +159,7 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                                     self.chester_bot.replies["unknown"]
                                 )
                             )
-                        print(avatar_url)
+                        print("avatar_url: ", avatar_url)
                         if "@админ" in message:
                             await self.chat_webhook.send(
                                 content=re.sub(r'@админ', self.chester_bot.replies['admin_role_id'], message).strip(),
