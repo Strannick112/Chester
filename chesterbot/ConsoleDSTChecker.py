@@ -47,6 +47,7 @@ class ConsoleDSTChecker:
                     if command["shard_id"] == shard_id:
                         if re.findall(reg_answer, text) is not None:
                             command["future"].set_result(text)
+                            print("The text in __checker: ", text)
                             break
             except Exception as error:
                 print(error)

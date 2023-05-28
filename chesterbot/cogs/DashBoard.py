@@ -150,6 +150,7 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
                     command_output = await self.chester_bot.console_dst_checker.check(
                         linux_command, r"There are [\w\W]+ " + prefab_code, self.shard_id, self.screen_name
                     )
+                    print("The text in reload_data: ", command_output)
                     prefab_count = int(re.findall(r"([\d]+)", command_output)[0])
             await asyncio.sleep(5)
             await self.update_dashboard()
