@@ -144,6 +144,7 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                     raw_player_info, _, message = [word.strip() for word in text.partition(':')]
                     _, ku_id, player_name = raw_player_info.rsplit(' ', 2)
                     ku_id = ku_id[1:-1]
+                    print(ku_id)
                     await self.log_channel.send(content=("```" + text + "```"))
                     if message[0] != "$":
                         avatar_url = \
@@ -155,6 +156,7 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                                     self.chester_bot.replies["unknown"]
                                 )
                             )
+                        print(avatar_url)
                         if "@админ" in message:
                             await self.chat_webhook.send(
                                 content=re.sub(r'@админ', self.chester_bot.replies['admin_role_id'], message).strip(),
