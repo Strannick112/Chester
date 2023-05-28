@@ -153,7 +153,7 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                             self.chester_bot.replies.get(
                                 await self.chester_bot.console_dst_checker.check(
                                     "c_listplayers()",
-                                    ku_id+r"\s+[\w\W]+?\s+\<(\w+)\>\s+",
+                                    ku_id+r"[\w\W]+?\<(\w+)\>",
                                     main_config["worlds"][0]["shard_id"],
                                     self.screen_name,
                                     self.chester_bot.replies["unknown"]
