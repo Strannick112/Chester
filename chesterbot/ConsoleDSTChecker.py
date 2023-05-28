@@ -4,11 +4,13 @@ import subprocess
 
 from discord.ext import tasks
 
+from chesterbot import ChesterBot
+
 
 class ConsoleDSTChecker:
     __commands =  {}
-    __loop = asyncio.get_event_loop()
-    def __init__(self, worlds):
+    def __init__(self, loop, worlds):
+        self.__loop = loop
         self.worlds = worlds
 
     async def on_ready(self):
