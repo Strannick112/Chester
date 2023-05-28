@@ -15,7 +15,7 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
         self.shard_id = world["shard_id"]
         self.public_name = world["public_name"]
         self.screen_name = main_config['short_server_name'] + self.shard_id.__str__()
-        self.data = DashBoard.data[world["world_type"]].copy()
+        self.data = DashBoard.__data[world["world_type"]].copy()
         self.simple_data = {}
         for group_name, group in self.data.items():
             for prefab_name, prefab_info in group.items():
@@ -23,7 +23,7 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
                     self.simple_data[prefab_code] = prefab_count
         self.__cog_name__ += self.screen_name
 
-    data = {
+    __data = {
         "overworld": {
             "Боссы": {
                 "Дружелюбная фруктовая муха": {"friendlyfruitfly": 0},
