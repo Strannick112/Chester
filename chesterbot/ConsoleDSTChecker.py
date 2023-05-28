@@ -49,7 +49,7 @@ class ConsoleDSTChecker:
     async def __checker(self, commands, file_log_iter):
         """Следить за логами на игровом сервере"""
         try:
-            if text := file_log_iter.readline()[12:-1]:
+            if text := file_log_iter.readline()[12:]:
                 for keys, command in commands.items():
                     try:
                         print("The command is: ", command)
