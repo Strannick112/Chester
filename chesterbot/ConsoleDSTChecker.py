@@ -1,6 +1,8 @@
 import asyncio
 import re
 import subprocess
+import sys
+import traceback
 
 from discord.ext import tasks
 
@@ -48,3 +50,4 @@ class ConsoleDSTChecker:
                             break
             except Exception as error:
                 print(error)
+                print(repr(traceback.extract_tb(sys.exception().__traceback__)))
