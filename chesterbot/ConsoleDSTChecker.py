@@ -24,7 +24,7 @@ class ConsoleDSTChecker:
             self.__checker.start(self.__all_commands[world["shard_id"]], world["file_iter"])
             # self.__checker.start(world["shard_id"], world["file_poll"], world["file_iterator"])
 
-    async def check(self, command: str, reg_answer: str, shard_id: int, screen_name: str):
+    async def check(self, command: str, reg_answer: str, shard_id: int, screen_name: str, default_answer: int):
         screen_list = subprocess.run(
             'screen -ls',
             shell=True,
@@ -37,7 +37,9 @@ class ConsoleDSTChecker:
                     self.__all_commands[shard_id][reg_answer] = self.__loop.create_future()
                     asyncio.ensure_future(self.__all_commands[shard_id][reg_answer])
                     subprocess.check_output(command, shell=True)
-                    return await self.__all_commands[shard_id][reg_answer]
+                    with asyncio.timeout(30):
+                        return await self.__all_commands[shard_id][reg_answer]
+                    return default_answer
                 except Exception as error:
                     print(error)
                 break
