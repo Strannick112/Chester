@@ -149,10 +149,12 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
                     true_command = f"""c_countprefabs("{prefab_code}")"""
                     packed_command = re.sub(r'\"', r"\"", re.sub(r'\'', r"\'", true_command))
                     linux_command = f"""screen -S {self.screen_name} -X stuff "{packed_command}\n\""""
-                    self.data[group_name][prefab_name][prefab_code] = await asyncio.create_task(
-                        self.chester_bot.console_dst_checker.check(
-                            linux_command, r"There are\s+([\d])+\s+" + prefab_code + "[\w\W]+",
-                            self.shard_id, self.screen_name, prefab_count
+                    self.data[group_name][prefab_name][prefab_code] = int(
+                        await asyncio.create_task(
+                            self.chester_bot.console_dst_checker.check(
+                                linux_command, r"There are\s+([\d])+\s+" + prefab_code + "[\w\W]+",
+                                self.shard_id, self.screen_name, prefab_count
+                            )
                         )
                     )
                     # print(prefab_code, ": ", prefab_count)
