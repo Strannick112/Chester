@@ -48,17 +48,21 @@ class ConsoleDSTChecker:
     @tasks.loop(seconds=0.1)
     async def __checker(self, commands, file_log_iter):
         """Следить за логами на игровом сервере"""
-        if text := file_log_iter.readline()[12:-1]:
-            for keys, command in commands.items():
-                try:
-                    if result := re.findall(keys, text):
-                        if not command.done():
-                            command.set_result(result[0])
-                        break
-                except Exception as error:
-                    print(error)
-                    print("The command is: ", command)
-                    print("The shard id is: ", keys)
-                    print("The text in __checker: ", text)
-                    print("The result if finding: ", re.findall(keys, text))
-                    print(repr(traceback.extract_tb(sys.exception().__traceback__)))
+        try:
+            if text := file_log_iter.readline()[12:-1]:
+                for keys, command in commands.items():
+                    try:
+                        if result := re.findall(keys, text):
+                            if not command.done():
+                                command.set_result(result[0])
+                            break
+                    except Exception as error:
+                        print(error)
+                        print("The command is: ", command)
+                        print("The shard id is: ", keys)
+                        print("The text in __checker: ", text)
+                        print("The result if finding: ", re.findall(keys, text))
+                        print(repr(traceback.extract_tb(sys.exception().__traceback__)))
+        except Exception as error:
+            print(error)
+            print(repr(traceback.extract_tb(sys.exception().__traceback__)))
