@@ -40,7 +40,7 @@ class ConsoleDSTChecker:
                 break
 
     @tasks.loop(seconds=0.1)
-    async def __checker(self, shard_id, file_poll, file_iter):
+    async def __checker(self, shard_id, file_iter):
         """Следить за логами на игровом сервере"""
         if text := file_iter.readline()[12:-1]:
             print("meaw")
