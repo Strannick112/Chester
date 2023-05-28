@@ -23,7 +23,7 @@ class ConsoleDSTChecker:
         for world in self.worlds:
             self.__checker.start(self.__all_commands[world["shard_id"]], world["file_log_iter"])
 
-    async def check(self, command: str, reg_answer: str, shard_id: int, screen_name: str, default_answer: int):
+    async def check(self, command: str, reg_answer: str, shard_id: int, screen_name: str, default_answer: int, timeout: int):
         screen_list = subprocess.run(
             'screen -ls',
             shell=True,
@@ -37,7 +37,7 @@ class ConsoleDSTChecker:
                     asyncio.ensure_future(self.__all_commands[shard_id][reg_answer])
                     subprocess.call(command, shell=True)
                     try:
-                        return await asyncio.wait_for(self.__all_commands[shard_id][reg_answer], 30)
+                        return await asyncio.wait_for(self.__all_commands[shard_id][reg_answer], timeout)
                     except asyncio.TimeoutError:
                         return default_answer
                 except Exception as error:

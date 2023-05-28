@@ -155,7 +155,8 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                                 ku_id + r"[\w\W]+?\<(\w+)\>",
                                 main_config["worlds"][0]["shard_id"],
                                 self.screen_name,
-                                "unknown"
+                                "unknown",
+                                5
                             )
                         print("output_command: ", output_command)
                         avatar_url = self.chester_bot.replies.get(output_command)

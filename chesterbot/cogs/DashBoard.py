@@ -153,7 +153,7 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
                         await asyncio.create_task(
                             self.chester_bot.console_dst_checker.check(
                                 linux_command, r"There are\s+([\d])+\s+" + prefab_code + "[\w\W]+",
-                                self.shard_id, self.screen_name, prefab_count
+                                self.shard_id, self.screen_name, prefab_count, 30
                             )
                         )
                     )
