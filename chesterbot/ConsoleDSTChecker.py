@@ -30,10 +30,10 @@ class ConsoleDSTChecker:
         for world in self.worlds:
             if world["shard_id"] == shard_id and screen_name in screen_list:
                 try:
-                    self.__commands[reg_answer] = {"future": self.__loop.create_future(), "shard_id": shard_id}
-                    asyncio.ensure_future(self.__commands[reg_answer]["future"])
+                    self.__commands[(reg_answer, shard_id)] = self.__loop.create_future()
+                    asyncio.ensure_future(self.__commands[(reg_answer, shard_id)])
                     subprocess.check_output(command, shell=True)
-                    return await self.__commands[reg_answer]["future"]
+                    return await self.__commands[(reg_answer, shard_id)]
                 except Exception as error:
                     print(error)
                 break
@@ -46,18 +46,18 @@ class ConsoleDSTChecker:
             try:
                 text = file_iter.stdout.readline()[12:]
                 print("Commands is: ", self.__commands)
-                for reg_answer, command in self.__commands.items():
+                for keys, command in self.__commands.items():
                     if command["shard_id"] == shard_id:
                         print("The command is: ", command)
-                        print("The shard id is: ", shard_id)
-                        print("The reg_answer is: ", reg_answer)
+                        print("The shard id is: ", keys[1])
+                        print("The reg_answer is: ", keys[0])
                         print("The text in __checker: ", text)
-                        print("The result if finding: ", re.findall(reg_answer, text))
-                        if re.findall(reg_answer, text):
+                        print("The result if finding: ", re.findall(keys[0], text))
+                        if re.findall(keys[0], text):
                             # print("The result if finding: ", re.findall(reg_answer, text))
                             # print("The reg_answer is: ", reg_answer)
                             print("SUCCESS!")
-                            command["future"].set_result(text)
+                            command.set_result(text)
                             # print(command["future"].result())
                             # print("The text in __checker: ", text)
                             break
