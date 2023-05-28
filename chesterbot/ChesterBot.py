@@ -34,9 +34,10 @@ class ChesterBot(commands.Bot):
     async def on_ready(self):
         await self.user.edit(username="Chester")
         await self.server_manage.on_ready()
+        await self.console_dst_checker.on_ready(self.loop)
         for dashboard in self.dashboards:
             await dashboard.on_ready()
-        await self.console_dst_checker.on_ready(self.loop)
+
 
     async def init(self):
         # pass
