@@ -125,7 +125,6 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
 
     async def update_dashboard(self):
         dashboard = self.make_dashboard()
-        print(dashboard)
         await self.log_message.edit(content=dashboard)
         await asyncio.sleep(random.randint(3, 10))
         await self.chat_message.edit(content=dashboard)
@@ -156,6 +155,7 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
                             self.shard_id, self.screen_name, prefab_count
                         )
                     )
-                    print(prefab_code, ": ", prefab_count)
+                    # print(prefab_code, ": ", prefab_count)
+            print(self.data)
             await asyncio.sleep(random.randint(3, 10))
             await self.update_dashboard()
