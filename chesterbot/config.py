@@ -38,5 +38,4 @@ for world in main_config["worlds"]:
     world["file_chat_iter"] = codecs.open(
         main_config['path_to_save'] + "/" + world["folder_name"] + "/server_chat_log.txt", "r", encoding="utf-8"
     )
-    print(world["file_chat_iter"].readline())
     world["file_chat_iter"].seek(0, 2)
