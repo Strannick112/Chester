@@ -49,7 +49,7 @@ class ConsoleDSTChecker:
             # print("meaw")
             try:
                 # print("Commands is: ", self.__commands)
-                for keys, command in commands:
+                for keys, command in commands.items():
                         # print("The command is: ", command)
                         # print("The shard id is: ", keys[1])
                         # print("The reg_answer is: ", keys[0])
