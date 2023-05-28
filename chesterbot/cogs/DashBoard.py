@@ -153,5 +153,6 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
                             linux_command, r"There are\s+([\d])+\s+" + prefab_code + "[\w\W]+", self.shard_id, self.screen_name
                         )
                     )
+                    print(prefab_code, ": ", prefab_count)
             await asyncio.sleep(5)
             await self.update_dashboard()

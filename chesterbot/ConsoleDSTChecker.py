@@ -46,29 +46,16 @@ class ConsoleDSTChecker:
     async def __checker(self, commands, file_iter):
         """Следить за логами на игровом сервере"""
         if text := file_iter.readline()[12:-1]:
-            # print("meaw")
-
-                # print("Commands is: ", self.__commands)
-                for keys, command in commands.items():
-                    try:
-                        # print("The command is: ", command)
-                        # print("The shard id is: ", keys[1])
-                        # print("The reg_answer is: ", keys[0])
-                        # print("The text in __checker: ", text)
-                        # print("The result if finding: ", re.findall(keys[0], text))
-                        if re.findall(keys, text):
-                            # print("The result if finding: ", re.findall(reg_answer, text))
-                            # print("The reg_answer is: ", reg_answer)
-                            # print("SUCCESS!")
-                            if not command.done():
-                                command.set_result(text)
-                            # print(command["future"].result())
-                            # print("The text in __checker: ", text)
-                            break
-                    except Exception as error:
-                        print(error)
-                        print("The command is: ", command)
-                        print("The shard id is: ", keys)
-                        print("The text in __checker: ", text)
-                        print("The result if finding: ", re.findall(keys, text))
-                        print(repr(traceback.extract_tb(sys.exception().__traceback__)))
+            for keys, command in commands.items():
+                try:
+                    if re.findall(keys, text):
+                        if not command.done():
+                            command.set_result(text)
+                        break
+                except Exception as error:
+                    print(error)
+                    print("The command is: ", command)
+                    print("The shard id is: ", keys)
+                    print("The text in __checker: ", text)
+                    print("The result if finding: ", re.findall(keys, text))
+                    print(repr(traceback.extract_tb(sys.exception().__traceback__)))
