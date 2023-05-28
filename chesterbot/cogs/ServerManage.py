@@ -151,7 +151,7 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                     if message[0] != "$":
                         output_command = \
                             await self.chester_bot.console_dst_checker.check(
-                                "c_listplayers()",
+                                f"""screen -S {self.screen_name} -X stuff "c_listplayers()\n\"""",
                                 ku_id + r"[\w\W]+?\<(\w+)\>",
                                 main_config["worlds"][0]["shard_id"],
                                 self.screen_name,
