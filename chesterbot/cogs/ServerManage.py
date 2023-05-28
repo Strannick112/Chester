@@ -157,19 +157,19 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                                 self.screen_name,
                                 self.chester_bot.replies["unknown"]
                             )
-                        print(output_command)
+                        print("output_command: ", output_command)
                         avatar_url = self.chester_bot.replies.get(output_command)
                         print("avatar_url: ", avatar_url)
                         if "@админ" in message:
                             await self.chat_webhook.send(
                                 content=re.sub(r'@админ', self.chester_bot.replies['admin_role_id'], message).strip(),
                                 username=player_name,
-                                avatar_url=avatar_url if avatar_url is None else self.chester_bot.replies["unknown"]
+                                avatar_url=avatar_url if avatar_url is not None else self.chester_bot.replies["unknown"]
                             )
                         else:
                             await self.chat_webhook.send(
                                 content=message, username=player_name,
-                                avatar_url=avatar_url if avatar_url is None else self.chester_bot.replies["unknown"]
+                                avatar_url=avatar_url if avatar_url is not None else self.chester_bot.replies["unknown"]
                             )
                     return
                 await self.log_channel.send(content=("```" + text + "```"))
