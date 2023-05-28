@@ -46,8 +46,8 @@ class ConsoleDSTChecker:
             try:
                 text = file_iter.stdout.readline()[12:]
                 for reg_answer, command in self.__commands.items():
-
                     if command["shard_id"] == shard_id:
+                        print("The command is: ", command)
                         print("The shard id is: ", shard_id)
                         print("The reg_answer is: ", reg_answer)
                         print("The text in __checker: ", text)
