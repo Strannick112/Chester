@@ -158,10 +158,14 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                         if "@админ" in message:
                             await self.chat_webhook.send(
                                 content=re.sub(r'@админ', self.chester_bot.replies['admin_role_id'], message).strip(),
-                                username=player_name
+                                username=player_name,
+                                avatar_url=self.chester_bot.replies["unknown"]
                             )
                         else:
-                            await self.chat_webhook.send(content=message, username=player_name)
+                            await self.chat_webhook.send(
+                                content=message, username=player_name,
+                                avatar_url=self.chester_bot.replies["unknown"]
+                            )
                     return
                 await self.log_channel.send(content=("```" + text + "```"))
 
