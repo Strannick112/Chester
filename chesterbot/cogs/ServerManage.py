@@ -157,6 +157,7 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                                 self.screen_name,
                                 self.chester_bot.replies["unknown"]
                             )
+                        print(output_command)
                         avatar_url = self.chester_bot.replies.get(output_command)
                         print("avatar_url: ", avatar_url)
                         if "@админ" in message:
