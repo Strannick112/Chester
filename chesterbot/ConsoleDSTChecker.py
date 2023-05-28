@@ -37,9 +37,10 @@ class ConsoleDSTChecker:
                     self.__all_commands[shard_id][reg_answer] = self.__loop.create_future()
                     asyncio.ensure_future(self.__all_commands[shard_id][reg_answer])
                     subprocess.check_output(command, shell=True)
-                    with asyncio.timeout(30):
-                        return await self.__all_commands[shard_id][reg_answer]
-                    return default_answer
+                    try:
+                        return await asyncio.wait_for(self.__all_commands[shard_id][reg_answer], 30)
+                    finally:
+                        return default_answer
                 except Exception as error:
                     print(error)
                 break
