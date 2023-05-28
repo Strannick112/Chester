@@ -156,6 +156,6 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
                         )
                     )
                     # print(prefab_code, ": ", prefab_count)
-            print(self.data)
+            # print(self.data)
             await asyncio.sleep(random.randint(3, 10))
             await self.update_dashboard()
