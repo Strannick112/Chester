@@ -32,6 +32,7 @@ except ModuleNotFoundError as err:
 
 for world in main_config["worlds"]:
     world["file_iter"] = codecs.open(main_config['path_to_save'] + "/" + world["folder_name"] + "/server_log.txt", "r")
+    world["file_iter"].seek(0, 2)
     # world["file_iterator"] = subprocess.Popen(
     #     ['tail', '-F', '-n1', main_config['path_to_save'] + "/" + world["folder_name"] + "/server_log.txt"],
     #     stdout=subprocess.PIPE,
