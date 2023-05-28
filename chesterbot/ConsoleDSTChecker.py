@@ -45,7 +45,7 @@ class ConsoleDSTChecker:
                 text = file_iter.stdout.readline()[12:]
                 for reg_answer, command in self.__commands.items():
                     if command["shard_id"] == shard_id:
-                        if re.findall(reg_answer, text)[0] is not None:
+                        if re.findall(reg_answer, text) is not None:
                             command["future"].set_result(text)
                             break
             except Exception as error:
