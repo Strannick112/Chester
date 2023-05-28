@@ -14,14 +14,14 @@ class ConsoleDSTChecker:
     def __init__(self, worlds):
         self.__loop = None
         self.worlds = worlds
-        self.__commands = {}
+        self.__all_commands = {}
         for world in worlds:
-            self.__commands[world["shard_id"]] = {}
+            self.__all_commands[world["shard_id"]] = {}
 
     async def on_ready(self, loop):
         self.__loop = loop
         for world in self.worlds:
-            self.__checker.start(self.__commands[world["shard_id"]], world["file_iter"])
+            self.__checker.start(self.__all_commands[world["shard_id"]], world["file_iter"])
             # self.__checker.start(world["shard_id"], world["file_poll"], world["file_iterator"])
 
     async def check(self, command: str, reg_answer: str, shard_id: int, screen_name: str):
@@ -34,10 +34,10 @@ class ConsoleDSTChecker:
         for world in self.worlds:
             if world["shard_id"] == shard_id and screen_name in screen_list:
                 try:
-                    self.__commands[shard_id][reg_answer] = self.__loop.create_future()
-                    asyncio.ensure_future(self.__commands[shard_id][reg_answer])
+                    self.__all_commands[shard_id][reg_answer] = self.__loop.create_future()
+                    asyncio.ensure_future(self.__all_commands[shard_id][reg_answer])
                     subprocess.check_output(command, shell=True)
-                    return await self.__commands[shard_id][reg_answer]
+                    return await self.__all_commands[shard_id][reg_answer]
                 except Exception as error:
                     print(error)
                 break
