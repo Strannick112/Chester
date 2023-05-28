@@ -42,6 +42,7 @@ class ConsoleDSTChecker:
                         return default_answer
                 except Exception as error:
                     print(error)
+                    print(repr(traceback.extract_tb(sys.exception().__traceback__)))
                 break
 
     @tasks.loop(seconds=0.1)
