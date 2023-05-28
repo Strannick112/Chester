@@ -125,6 +125,7 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
 
     async def update_dashboard(self):
         dashboard = self.make_dashboard()
+        print(dashboard)
         await self.log_message.edit(content=dashboard)
         await asyncio.sleep(random.randint(3, 10))
         await self.chat_message.edit(content=dashboard)
@@ -152,7 +153,7 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
                     prefab_count = await asyncio.create_task(
                         self.chester_bot.console_dst_checker.check(
                             linux_command, r"There are\s+([\d])+\s+" + prefab_code + "[\w\W]+",
-                            self.shard_id, self.screen_name, "0"
+                            self.shard_id, self.screen_name, prefab_count
                         )
                     )
                     print(prefab_code, ": ", prefab_count)
