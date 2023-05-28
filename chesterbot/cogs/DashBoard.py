@@ -155,7 +155,7 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
             print("Sended command: ", linux_command)
             self.simple_data[prefab_code] = await asyncio.create_task(
                 self.chester_bot.console_dst_checker.check(
-                    linux_command, r"There are\s+([\d])+\s+[\w\W]+" + prefab_code, self.shard_id, self.screen_name
+                    linux_command, r"There are\s+([\d])+\s+" + prefab_code + "[\w\W]+", self.shard_id, self.screen_name
                 )
             )
 
