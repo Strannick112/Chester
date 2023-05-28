@@ -7,6 +7,7 @@ import discord
 from discord.ext import commands
 
 from chesterbot import main_config, wipes
+from chesterbot.ConsoleDSTChecker import ConsoleDSTChecker
 from chesterbot.cogs import BotManage, WipeManage, ServerManage
 from chesterbot.cogs.DashBoard import DashBoard
 
@@ -17,6 +18,7 @@ class ChesterBot(commands.Bot):
         intents.message_content = True
         intents.members = True
         self.default_role = None
+        self.console_dst_checker = ConsoleDSTChecker(main_config["worlds"])
 
         with codecs.open("./chesterbot/replies.json", "r", encoding="utf-8") as file:
             self.replies = json.load(file)
@@ -25,7 +27,7 @@ class ChesterBot(commands.Bot):
         self.server_manage = ServerManage(self)
         self.bot_manage = BotManage(self)
         self.wipe_manage = WipeManage(self)
-        self.dashboards = tuple(DashBoard(self, **world) for world in main_config['worlds'])
+        self.dashboards = tuple(DashBoard(self, world) for world in main_config['worlds'])
         self.event(self.on_ready)
         super().__init__(command_prefix=main_config['prefix'], intents=intents)
 
@@ -34,6 +36,7 @@ class ChesterBot(commands.Bot):
         await self.server_manage.on_ready()
         for dashboard in self.dashboards:
             await dashboard.on_ready()
+        await self.console_dst_checker.on_ready()
 
     async def init(self):
         # pass

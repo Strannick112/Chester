@@ -3,8 +3,6 @@ import codecs
 import json
 import os.path
 import re
-import select
-import subprocess
 
 from discord.ext import commands, tasks
 
@@ -12,22 +10,13 @@ from chesterbot import main_config
 
 
 class DashBoard(commands.Cog, name="Доска подсчёта"):
-    def __init__(self, bot, public_name, shard_id, world_type, folder_name):
+    def __init__(self, bot, world):
         self.chester_bot = bot
-        self.shard_id = shard_id
-        self.public_name = public_name
-        self.path_to_log = main_config['path_to_save'] + "/" + folder_name + "/server_log.txt"
+        self.shard_id = world["shard_id"]
+        self.public_name = world["public_name"]
         self.screen_name = main_config['short_server_name'] + self.shard_id.__str__()
-        self.data = DashBoard.data[world_type].copy()
+        self.data = DashBoard.data[world["world_type"]].copy()
         self.__cog_name__ += self.screen_name
-        self.file_first_iterator = subprocess.Popen(
-            ['tail', '-F', '-n1', self.path_to_log],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            encoding="utf-8"
-        )
-        self.file_first_poll = select.poll()
-        self.file_first_poll.register(self.file_first_iterator.stdout)
 
     data = {
         "overworld": {
@@ -132,7 +121,6 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
                 json.dump((self.chat_message_id, self.log_message_id), file)
 
         self.reload_data.start()
-        self.on_server_log.start()
 
     async def update_dashboard(self):
         dashboard = self.make_dashboard()
@@ -153,39 +141,15 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
 
     @tasks.loop(minutes=1)
     async def reload_data(self):
-        screen_list = subprocess.run(
-            'screen -ls',
-            shell=True,
-            stdout=subprocess.PIPE,
-            stdin=subprocess.PIPE
-        ).stdout.decode('ascii')
-        if self.screen_name in screen_list:
-            for group_name, group in self.data.items():
-                for prefab_name, prefab_info in group.items():
-                    for prefab_code, prefab_count in prefab_info.items():
-                        true_command = f"""c_countprefabs("{prefab_code}")"""
-                        packed_command = re.sub(r'\"', r"\"", re.sub(r'\'', r"\'", true_command))
-                        linux_command = f"""screen -S {self.screen_name} -X stuff "{packed_command}\n\""""
-                        try:
-                            subprocess.check_output(linux_command, shell=True)
-                        except Exception as error:
-                            print(error)
+        for group_name, group in self.data.items():
+            for prefab_name, prefab_info in group.items():
+                for prefab_code, prefab_count in prefab_info.items():
+                    true_command = f"""c_countprefabs("{prefab_code}")"""
+                    packed_command = re.sub(r'\"', r"\"", re.sub(r'\'', r"\'", true_command))
+                    linux_command = f"""screen -S {self.screen_name} -X stuff "{packed_command}\n\""""
+                    command_output = await self.chester_bot.console_dst_checker.check(
+                        linux_command, r"There are [\w\W]+ " + prefab_code, self.shard_id, self.screen_name
+                    )
+                    prefab_count = int(re.findall(r"([\d]+)", command_output)[0])
             await asyncio.sleep(5)
             await self.update_dashboard()
-
-    @tasks.loop(seconds=0.1)
-    async def on_server_log(self):
-        """Следить за логами на игровом сервере"""
-        if self.file_first_poll.poll(1):
-            try:
-                text = self.file_first_iterator.stdout.readline()[12:]
-                if "There are" in text:
-                    for group_name, group in self.data.items():
-                        for prefab_name, prefab_info in group.items():
-                            for prefab_code, prefab_count in prefab_info.items():
-                                if prefab_code in text:
-                                    self.data[group_name][prefab_name][prefab_code] = int(re.findall(r"([\d]+)", text)[0])
-                                    break
-            except Exception as error:
-                print(error)
-

@@ -1,3 +1,6 @@
+import select
+import subprocess
+
 main_config = {
     'token': 'token',
     'prefix': '$',
@@ -24,3 +27,14 @@ try:
     from chesterbot.config_local import *
 except ModuleNotFoundError as err:
     pass
+
+
+for world in main_config["worlds"]:
+    world["file_iterator"] = subprocess.Popen(
+        ['tail', '-F', '-n1', main_config['path_to_save'] + "/" + world["folder_name"] + "/server_log.txt"],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        encoding="utf-8"
+    )
+    world["file_poll"] = select.poll()
+    world["file_poll"].register(world["file_iterator"].stdout)
