@@ -60,7 +60,8 @@ class ConsoleDSTChecker:
                             # print("The result if finding: ", re.findall(reg_answer, text))
                             # print("The reg_answer is: ", reg_answer)
                             # print("SUCCESS!")
-                            command.set_result(text)
+                            if not command.done():
+                                command.set_result(text)
                             # print(command["future"].result())
                             # print("The text in __checker: ", text)
                             break
