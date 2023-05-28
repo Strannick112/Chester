@@ -31,6 +31,7 @@ class ConsoleDSTChecker:
             if world["shard_id"] == shard_id and screen_name in screen_list:
                 try:
                     self.__commands[reg_answer] = {"future": self.__loop.create_future(), "shard_id": shard_id}
+                    asyncio.ensure_future(self.__commands[reg_answer]["future"])
                     subprocess.check_output(command, shell=True)
                     return await self.__commands[reg_answer]["future"]
                 except Exception as error:
