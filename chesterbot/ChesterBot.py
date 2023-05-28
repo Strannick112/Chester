@@ -18,7 +18,7 @@ class ChesterBot(commands.Bot):
         intents.message_content = True
         intents.members = True
         self.default_role = None
-        self.console_dst_checker = ConsoleDSTChecker(self.loop, main_config["worlds"])
+        self.console_dst_checker = ConsoleDSTChecker(main_config["worlds"])
 
         with codecs.open("./chesterbot/replies.json", "r", encoding="utf-8") as file:
             self.replies = json.load(file)
@@ -36,7 +36,7 @@ class ChesterBot(commands.Bot):
         await self.server_manage.on_ready()
         for dashboard in self.dashboards:
             await dashboard.on_ready()
-        await self.console_dst_checker.on_ready()
+        await self.console_dst_checker.on_ready(self.loop)
 
     async def init(self):
         # pass

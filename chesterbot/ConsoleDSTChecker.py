@@ -9,11 +9,12 @@ from chesterbot import ChesterBot
 
 class ConsoleDSTChecker:
     __commands =  {}
-    def __init__(self, loop, worlds):
-        self.__loop = loop
+    def __init__(self, worlds):
+        self.__loop = None
         self.worlds = worlds
 
-    async def on_ready(self):
+    async def on_ready(self, loop):
+        self.__loop = loop
         for world in self.worlds:
             self.__checker.start(world["shard_id"], world["file_poll"], world["file_iterator"])
 
