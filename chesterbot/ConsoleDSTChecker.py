@@ -18,7 +18,8 @@ class ConsoleDSTChecker:
     async def on_ready(self, loop):
         self.__loop = loop
         for world in self.worlds:
-            self.__checker.start(world["shard_id"], world["file_poll"], world["file_iterator"])
+            self.__checker.start(world["shard_id"], world["file_iter"])
+            # self.__checker.start(world["shard_id"], world["file_poll"], world["file_iterator"])
 
     async def check(self, command: str, reg_answer: str, shard_id: int, screen_name: str):
         screen_list = subprocess.run(
@@ -41,10 +42,9 @@ class ConsoleDSTChecker:
     @tasks.loop(seconds=0.1)
     async def __checker(self, shard_id, file_poll, file_iter):
         """Следить за логами на игровом сервере"""
-        if file_poll.poll(1):
+        if text := file_iter.readline()[12:-1]:
             print("meaw")
             try:
-                text = file_iter.stdout.readline()[12:]
                 print("Commands is: ", self.__commands)
                 for keys, command in self.__commands.items():
                     if keys[1] == shard_id:
