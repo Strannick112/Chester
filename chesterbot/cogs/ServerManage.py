@@ -11,16 +11,7 @@ from chesterbot import main_config, ChesterBot
 class ServerManage(commands.Cog, name="Управление сервером"):
     def __init__(self, chester_bot: ChesterBot):
         self.chester_bot = chester_bot
-        self.file_iterator = subprocess.Popen(
-            ['tail', '-F', main_config['path_to_save'] + "/" + main_config['worlds'][0]['folder_name'] + "/server_chat_log.txt"],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            encoding="utf-8"
-        )
-        self.file_poll = select.poll()
-        self.file_poll.register(self.file_iterator.stdout)
         self.avatars = {}
-
         self.chat_channel = None
         self.chat_webhook = None
         self.log_channel = None
@@ -131,9 +122,8 @@ class ServerManage(commands.Cog, name="Управление сервером"):
     @tasks.loop(seconds=0.1)
     async def on_server_message(self):
         """Следить за сообщениями на игровом сервере"""
-        if self.file_poll.poll(1):
+        if text := main_config["file_chat_iter"].readline()[12:-1]:
             try:
-                text = self.file_iterator.stdout.readline()[12:]
                 if ':' in text:
                     if "[Announcement]" in text:
                         return
@@ -152,19 +142,29 @@ class ServerManage(commands.Cog, name="Управление сервером"):
 
                 if "[Say]" in text:
                     raw_player_info, _, message = [word.strip() for word in text.partition(':')]
-                    _, player_name = raw_player_info.rsplit(' ', 1)
+                    _, ku_id, player_name = raw_player_info.rsplit(' ', 2)
+                    ku_id = ku_id[1:-1]
                     await self.log_channel.send(content=("```" + text + "```"))
                     if message[0] != "$":
+                        avatar_url = \
+                            self.chester_bot.replies.get(
+                                await self.chester_bot.console_dst_checker.check(
+                                    "c_listplayers()",
+                                    ku_id+r"\s+[\w\W]+?\s+\<(\w+)\>\s+",
+                                    main_config["worlds"][0]["shard_id"],
+                                    self.chester_bot.replies["unknown"]
+                                )
+                            )
                         if "@админ" in message:
                             await self.chat_webhook.send(
                                 content=re.sub(r'@админ', self.chester_bot.replies['admin_role_id'], message).strip(),
                                 username=player_name,
-                                avatar_url=self.chester_bot.replies["unknown"]
+                                avatar_url=avatar_url if avatar_url is None else self.chester_bot.replies["unknown"]
                             )
                         else:
                             await self.chat_webhook.send(
                                 content=message, username=player_name,
-                                avatar_url=self.chester_bot.replies["unknown"]
+                                avatar_url=avatar_url if avatar_url is None else self.chester_bot.replies["unknown"]
                             )
                     return
                 await self.log_channel.send(content=("```" + text + "```"))

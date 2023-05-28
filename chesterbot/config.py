@@ -31,13 +31,11 @@ except ModuleNotFoundError as err:
 
 
 for world in main_config["worlds"]:
-    world["file_iter"] = codecs.open(main_config['path_to_save'] + "/" + world["folder_name"] + "/server_log.txt", "r")
-    world["file_iter"].seek(0, 2)
-    # world["file_iterator"] = subprocess.Popen(
-    #     ['tail', '-F', '-n1', main_config['path_to_save'] + "/" + world["folder_name"] + "/server_log.txt"],
-    #     stdout=subprocess.PIPE,
-    #     stderr=subprocess.PIPE,
-    #     encoding="utf-8"
-    # )
-    # world["file_poll"] = select.poll()
-    # world["file_poll"].register(world["file_iterator"].stdout)
+    world["file_log_iter"] = codecs.open(
+        main_config['path_to_save'] + "/" + world["folder_name"] + "/server_log.txt", "r"
+    )
+    world["file_log_iter"].seek(0, 2)
+    world["file_chat_iter"] = codecs.open(
+        main_config['path_to_save'] + "/" + world["folder_name"] + "/server_chat_log.txt", "r"
+    )
+    world["file_chat_iter"].seek(0, 2)
