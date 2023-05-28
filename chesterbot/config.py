@@ -30,6 +30,7 @@ except ModuleNotFoundError as err:
 
 
 for world in main_config["worlds"]:
+    print("folder_name: ", world["folder_name"])
     world["file_iterator"] = subprocess.Popen(
         ['tail', '-F', '-n1', main_config['path_to_save'] + "/" + world["folder_name"] + "/server_log.txt"],
         stdout=subprocess.PIPE,
