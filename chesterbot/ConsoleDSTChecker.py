@@ -56,7 +56,7 @@ class ConsoleDSTChecker:
                         # print("The reg_answer is: ", keys[0])
                         # print("The text in __checker: ", text)
                         # print("The result if finding: ", re.findall(keys[0], text))
-                        if re.findall(keys[0], text):
+                        if re.findall(keys, text):
                             # print("The result if finding: ", re.findall(reg_answer, text))
                             # print("The reg_answer is: ", reg_answer)
                             # print("SUCCESS!")
