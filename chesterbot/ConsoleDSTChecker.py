@@ -47,9 +47,10 @@ class ConsoleDSTChecker:
         """Следить за логами на игровом сервере"""
         if text := file_iter.readline()[12:-1]:
             # print("meaw")
-            try:
+
                 # print("Commands is: ", self.__commands)
                 for keys, command in commands.items():
+                    try:
                         # print("The command is: ", command)
                         # print("The shard id is: ", keys[1])
                         # print("The reg_answer is: ", keys[0])
@@ -63,6 +64,7 @@ class ConsoleDSTChecker:
                             # print(command["future"].result())
                             # print("The text in __checker: ", text)
                             break
-            except Exception as error:
-                print(error)
-                print(repr(traceback.extract_tb(sys.exception().__traceback__)))
+                    except Exception as error:
+                        print(error)
+                        print(command)
+                        print(repr(traceback.extract_tb(sys.exception().__traceback__)))
