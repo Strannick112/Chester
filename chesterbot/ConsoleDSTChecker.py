@@ -22,7 +22,6 @@ class ConsoleDSTChecker:
         self.__loop = loop
         for world in self.worlds:
             self.__checker.start(self.__all_commands[world["shard_id"]], world["file_iter"])
-            # self.__checker.start(world["shard_id"], world["file_poll"], world["file_iterator"])
 
     async def check(self, command: str, reg_answer: str, shard_id: int, screen_name: str, default_answer: int):
         screen_list = subprocess.run(

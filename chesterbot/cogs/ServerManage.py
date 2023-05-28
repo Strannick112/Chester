@@ -1,3 +1,4 @@
+import os
 import re
 import select
 import subprocess
@@ -18,6 +19,8 @@ class ServerManage(commands.Cog, name="Управление сервером"):
         )
         self.file_poll = select.poll()
         self.file_poll.register(self.file_iterator.stdout)
+        self.avatars = {}
+
         self.chat_channel = None
         self.chat_webhook = None
         self.log_channel = None

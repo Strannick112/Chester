@@ -26,5 +26,25 @@
     "claim_deleted": "<:3nekoprison:870276755460608040>",
     "claim_channel_id": "[880077986072780830, 1023193192209846383]",
     "commands_channel_id": "[1025151299391586304, 1025743931947896844, 1021843197942579320]",
-    "admin_role_id": "<@&1020024836036251738>"
+    "admin_role_id": "<@&1020024836036251738>",
+
+    "unknown": "https://media.discordapp.net/attachments/871824345780080690/1112422709352206336/unknown.png",
+    "walter": "https://media.discordapp.net/attachments/871824345780080690/1112422709616443502/Walter.png",
+    "wanda": "https://media.discordapp.net/attachments/871824345780080690/1112422709910056960/Wanda.png",
+    "warly": "https://media.discordapp.net/attachments/871824345780080690/1112422710165897276/Warly.png",
+    "waxwell": "https://media.discordapp.net/attachments/871824345780080690/1112422709071183933/Maxwell.png",
+    "webber": "https://media.discordapp.net/attachments/871824345780080690/1112422710421762158/Webber.png",
+    "wendy": "https://media.discordapp.net/attachments/871824345780080690/1112422710665023509/Wendy.png",
+    "wes": "https://media.discordapp.net/attachments/871824345780080690/1112422710950244362/Wes.png",
+    "wickerbottom": "https://media.discordapp.net/attachments/871824345780080690/1112422711260614726/Wickerbottom.png",
+    "wigfrid": "https://media.discordapp.net/attachments/871824345780080690/1112422711499698326/Wigfrid.png",
+    "willow": "https://media.discordapp.net/attachments/871824345780080690/1112422803426267248/Willow.png",
+    "wilson": "https://media.discordapp.net/attachments/871824345780080690/1112422803673718784/Wilson.png",
+    "winona": "https://media.discordapp.net/attachments/871824345780080690/1112422803925368842/Winona.png",
+    "wolfgang": "https://media.discordapp.net/attachments/871824345780080690/1112422804227366913/Wolfgang.png",
+    "wonkey": "https://media.discordapp.net/attachments/871824345780080690/1112422804462239875/Wonkey.png",
+    "woodie": "https://media.discordapp.net/attachments/871824345780080690/1112422804713918495/Woodie.png",
+    "wormwood": "https://media.discordapp.net/attachments/871824345780080690/1112422804990722048/Wormwood.png",
+    "wortox": "https://media.discordapp.net/attachments/871824345780080690/1112422805435338883/Wortox.png",
+    "wurt": "https://media.discordapp.net/attachments/871824345780080690/1112422805649236150/Wurt.png"
 }
