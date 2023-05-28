@@ -16,11 +16,6 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
         self.public_name = world["public_name"]
         self.screen_name = main_config['short_server_name'] + self.shard_id.__str__()
         self.data = DashBoard.__data[world["world_type"]].copy()
-        self.simple_data = {}
-        for group_name, group in self.data.items():
-            for prefab_name, prefab_info in group.items():
-                for prefab_code, prefab_count in prefab_info.items():
-                    self.simple_data[prefab_code] = prefab_count
         self.__cog_name__ += self.screen_name
 
     __data = {
@@ -146,18 +141,19 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
 
     @tasks.loop(minutes=1)
     async def reload_data(self):
-        count_prefab_tasks = {}
-
-        for prefab_code, prefab_count in self.simple_data.items():
-            true_command = f"""c_countprefabs("{prefab_code}")"""
-            packed_command = re.sub(r'\"', r"\"", re.sub(r'\'', r"\'", true_command))
-            linux_command = f"""screen -S {self.screen_name} -X stuff "{packed_command}\n\""""
-            print("Sended command: ", linux_command)
-            self.simple_data[prefab_code] = await asyncio.create_task(
-                self.chester_bot.console_dst_checker.check(
-                    linux_command, r"There are\s+([\d])+\s+" + prefab_code + "[\w\W]+", self.shard_id, self.screen_name
-                )
-            )
-
-        await asyncio.sleep(5)
-        await self.update_dashboard()
+        for group_name, group in self.data.items():
+            for prefab_name, prefab_info in group.items():
+                for prefab_code, prefab_count in prefab_info.items():
+                    true_command = f"""c_countprefabs("{prefab_code}")"""
+                    packed_command = re.sub(r'\"', r"\"", re.sub(r'\'', r"\'", true_command))
+                    linux_command = f"""screen -S {self.screen_name} -X stuff "{packed_command}\n\""""
+                    print("")
+                    command_output = await asyncio.create_task(
+                        self.chester_bot.console_dst_checker.check(
+                            linux_command, r"There are\s+([\d])+\s+" + prefab_code + "[\w\W]+", self.shard_id, self.screen_name
+                        )
+                    )
+                    print("The text in reload_data: ", command_output)
+                    prefab_count = int(re.findall(r"([\d]+)", command_output)[0])
+            await asyncio.sleep(5)
+            await self.update_dashboard()
