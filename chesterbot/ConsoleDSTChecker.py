@@ -39,7 +39,7 @@ class ConsoleDSTChecker:
                     subprocess.check_output(command, shell=True)
                     try:
                         return await asyncio.wait_for(self.__all_commands[shard_id][reg_answer], 30)
-                    finally:
+                    except asyncio.TimeoutError:
                         return default_answer
                 except Exception as error:
                     print(error)
