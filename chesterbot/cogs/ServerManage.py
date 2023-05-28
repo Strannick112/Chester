@@ -12,6 +12,7 @@ class ServerManage(commands.Cog, name="Управление сервером"):
     def __init__(self, chester_bot: ChesterBot):
         self.chester_bot = chester_bot
         self.avatars = {}
+        self.screen_name = main_config['short_server_name'] + main_config["worlds"][0]["shard_id"]
         self.chat_channel = None
         self.chat_webhook = None
         self.log_channel = None
@@ -153,6 +154,7 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                                     "c_listplayers()",
                                     ku_id+r"\s+[\w\W]+?\s+\<(\w+)\>\s+",
                                     main_config["worlds"][0]["shard_id"],
+                                    self.screen_name,
                                     self.chester_bot.replies["unknown"]
                                 )
                             )
