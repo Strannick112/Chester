@@ -46,6 +46,7 @@ class ConsoleDSTChecker:
             try:
                 text = file_iter.stdout.readline()[12:]
                 for reg_answer, command in self.__commands.items():
+
                     if command["shard_id"] == shard_id:
                         print("The shard id is: ", shard_id)
                         print("The reg_answer is: ", reg_answer)
@@ -54,6 +55,7 @@ class ConsoleDSTChecker:
                         if re.findall(reg_answer, text):
                             # print("The result if finding: ", re.findall(reg_answer, text))
                             # print("The reg_answer is: ", reg_answer)
+                            print("SUCCESS!")
                             command["future"].set_result(text)
                             # print(command["future"].result())
                             # print("The text in __checker: ", text)
