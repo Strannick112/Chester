@@ -2,6 +2,7 @@ import asyncio
 import codecs
 import json
 import os.path
+import random
 import re
 
 from discord.ext import commands, tasks
@@ -154,5 +155,5 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
                         )
                     )
                     print(prefab_code, ": ", prefab_count)
-            await asyncio.sleep(5)
+            await asyncio.sleep(random.randint(3, 10))
             await self.update_dashboard()
