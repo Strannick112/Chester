@@ -148,7 +148,7 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
                     packed_command = re.sub(r'\"', r"\"", re.sub(r'\'', r"\'", true_command))
                     linux_command = f"""screen -S {self.screen_name} -X stuff "{packed_command}\n\""""
                     command_output = await self.chester_bot.console_dst_checker.check(
-                        linux_command, r"There are [\w\W]+ " + prefab_code, self.shard_id, self.screen_name
+                        linux_command, r"There are\s+([\d])+\s+[\w\W]+" + prefab_code, self.shard_id, self.screen_name
                     )
                     print("The text in reload_data: ", command_output)
                     prefab_count = int(re.findall(r"([\d]+)", command_output)[0])
