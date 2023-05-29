@@ -38,7 +38,6 @@ class ConsoleDSTChecker:
                     subprocess.call(command, shell=True)
                     try:
                         result = await asyncio.wait_for(self.__all_commands[shard_id][reg_answer], timeout)
-                        print("result: ", result)
                         return result
                     except Exception as error:
                         print(error)
@@ -57,10 +56,6 @@ class ConsoleDSTChecker:
                 for keys, command in commands.items():
                     try:
                         if not command.done():
-                            print("The command is: ", command)
-                            print("The shard id is: ", keys)
-                            print("The text in __checker: ", text)
-                            print("The result if finding: ", re.findall(keys, text))
                             if result := re.findall(keys, text):
                                 command.set_result(result[0])
                             break
