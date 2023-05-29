@@ -123,54 +123,58 @@ class ServerManage(commands.Cog, name="Управление сервером"):
     @tasks.loop(seconds=0.1)
     async def on_server_message(self):
         """Следить за сообщениями на игровом сервере"""
-        if text := main_config["worlds"][0]["file_chat_iter"].readline()[12:-1]:
-            try:
-                if ':' in text:
-                    if "[Announcement]" in text:
+        try:
+            if text := main_config["worlds"][0]["file_chat_iter"].readline()[12:-1]:
+                try:
+                    if ':' in text:
+                        if "[Announcement]" in text:
+                            return
+                    if ("There are" in text and "in the world." in text) \
+                       or "RemoteCommandInput: \"c_countprefabs(\"" in text:
                         return
-                if ("There are" in text and "in the world." in text) \
-                   or "RemoteCommandInput: \"c_countprefabs(\"" in text:
-                    return
-                if "[Announcement]" in text\
-                        or "[Join Announcement]" in text\
-                        or "[Leave Announcement]" in text:
-                    await self.chat_channel.send(content=text)
-                    await self.log_channel.send(content=("```" + text + "```"))
-                    return
+                    if "[Announcement]" in text\
+                            or "[Join Announcement]" in text\
+                            or "[Leave Announcement]" in text:
+                        await self.chat_channel.send(content=text)
+                        await self.log_channel.send(content=("```" + text + "```"))
+                        return
 
-                if "[Whisper]" in text:
-                    await self.log_channel.send(content=("```" + text + "```"))
+                    if "[Whisper]" in text:
+                        await self.log_channel.send(content=("```" + text + "```"))
 
-                if "[Say]" in text:
-                    raw_player_info, _, message = [word.strip() for word in text.partition(':')]
-                    _, ku_id, player_name = raw_player_info.rsplit(' ', 2)
-                    ku_id = ku_id[1:-1]
-                    await self.log_channel.send(content=("```" + text + "```"))
-                    if message[0] != "$":
-                        command_output = await self.chester_bot.console_dst_checker.check(
-                            f"""screen -S {self.screen_name} -X stuff "c_listplayers()\n\"""",
-                            ku_id + r"[\w\W]+?\<(\w+)\>",
-                            main_config["worlds"][0]["shard_id"],
-                            self.screen_name,
-                            "unknown",
-                            3
-                        )
-                        avatar_url = self.chester_bot.replies.get(command_output)
-                        if "@админ" in message:
-                            await self.chat_webhook.send(
-                                content=re.sub(r'@админ', self.chester_bot.replies['admin_role_id'], message).strip(),
-                                username=player_name,
-                                avatar_url=avatar_url if avatar_url is not None else self.chester_bot.replies["unknown"]
+                    if "[Say]" in text:
+                        raw_player_info, _, message = [word.strip() for word in text.partition(':')]
+                        _, ku_id, player_name = raw_player_info.rsplit(' ', 2)
+                        ku_id = ku_id[1:-1]
+                        await self.log_channel.send(content=("```" + text + "```"))
+                        if message[0] != "$":
+                            command_output = await self.chester_bot.console_dst_checker.check(
+                                f"""screen -S {self.screen_name} -X stuff "c_listplayers()\n\"""",
+                                ku_id + r"[\w\W]+?\<(\w+)\>",
+                                main_config["worlds"][0]["shard_id"],
+                                self.screen_name,
+                                "unknown",
+                                3
                             )
-                        else:
-                            await self.chat_webhook.send(
-                                content=message, username=player_name,
-                                avatar_url=avatar_url if avatar_url is not None else self.chester_bot.replies["unknown"]
-                            )
-                    return
-                await self.log_channel.send(content=("```" + text + "```"))
+                            avatar_url = self.chester_bot.replies.get(command_output)
+                            if "@админ" in message:
+                                await self.chat_webhook.send(
+                                    content=re.sub(r'@админ', self.chester_bot.replies['admin_role_id'], message).strip(),
+                                    username=player_name,
+                                    avatar_url=avatar_url if avatar_url is not None else self.chester_bot.replies["unknown"]
+                                )
+                            else:
+                                await self.chat_webhook.send(
+                                    content=message, username=player_name,
+                                    avatar_url=avatar_url if avatar_url is not None else self.chester_bot.replies["unknown"]
+                                )
+                        return
+                    await self.log_channel.send(content=("```" + text + "```"))
 
-            except Exception as error:
-                print(error)
-                return
-        return
+                except Exception as error:
+                    print(error)
+                    return
+            return
+        except Exception as error:
+            print(error)
+            return
