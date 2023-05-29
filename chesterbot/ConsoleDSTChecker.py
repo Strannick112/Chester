@@ -41,7 +41,6 @@ class ConsoleDSTChecker:
                         return result
                     except Exception as error:
                         print(error)
-                        print(repr(traceback.extract_tb(sys.exception().__traceback__)))
                         return default_answer
                 except Exception as error:
                     print(error)
@@ -67,7 +66,5 @@ class ConsoleDSTChecker:
                         print("The shard id is: ", keys)
                         print("The text in __checker: ", text)
                         print("The result if finding: ", re.findall(keys, text))
-                        print(repr(traceback.extract_tb(sys.exception().__traceback__)))
         except Exception as error:
             print(error)
-            print(repr(traceback.extract_tb(sys.exception().__traceback__)))
