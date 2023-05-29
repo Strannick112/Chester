@@ -40,7 +40,9 @@ class ConsoleDSTChecker:
                         result = await asyncio.wait_for(self.__all_commands[shard_id][reg_answer], timeout)
                         print("result: ", result)
                         return result
-                    finally:
+                    except Exception as error:
+                        print(error)
+                        print(repr(traceback.extract_tb(sys.exception().__traceback__)))
                         return default_answer
                 except Exception as error:
                     print(error)
