@@ -45,7 +45,7 @@ class ConsoleDSTChecker:
                     print(repr(traceback.extract_tb(sys.exception().__traceback__)))
                 break
 
-    @tasks.loop(seconds=0.1)
+    @tasks.loop(seconds=0.01)
     async def __checker(self, commands, file_log_iter):
         """Следить за логами на игровом сервере"""
         try:
