@@ -147,16 +147,17 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                     ku_id = ku_id[1:-1]
                     await self.log_channel.send(content=("```" + text + "```"))
                     if message[0] != "$":
-                        avatar_url = self.chester_bot.replies.get(
-                            await self.chester_bot.console_dst_checker.check(
-                                f"""screen -S {self.screen_name} -X stuff "c_listplayers()\n\"""",
-                                ku_id + r"[\w\W]+?\<(\w+)\>",
-                                main_config["worlds"][0]["shard_id"],
-                                self.screen_name,
-                                "unknown",
-                                5
-                            )
+                        command_output = await self.chester_bot.console_dst_checker.check(
+                            f"""screen -S {self.screen_name} -X stuff "c_listplayers()\n\"""",
+                            ku_id + r"[\w\W]+?\<(\w+)\>",
+                            main_config["worlds"][0]["shard_id"],
+                            self.screen_name,
+                            "unknown",
+                            3
                         )
+                        print("command_output: ", command_output)
+                        avatar_url = self.chester_bot.replies.get(command_output)
+                        print("avatar_url: ", avatar_url)
                         if "@админ" in message:
                             await self.chat_webhook.send(
                                 content=re.sub(r'@админ', self.chester_bot.replies['admin_role_id'], message).strip(),
