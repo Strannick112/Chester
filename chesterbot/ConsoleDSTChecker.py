@@ -52,12 +52,12 @@ class ConsoleDSTChecker:
             if text := file_log_iter.readline()[12:]:
                 for keys, command in commands.items():
                     try:
-                        print("The command is: ", command)
-                        print("The shard id is: ", keys)
-                        print("The text in __checker: ", text)
-                        print("The result if finding: ", re.findall(keys, text))
-                        if result := re.findall(keys, text):
-                            if not command.done():
+                        if not command.done():
+                            print("The command is: ", command)
+                            print("The shard id is: ", keys)
+                            print("The text in __checker: ", text)
+                            print("The result if finding: ", re.findall(keys, text))
+                            if result := re.findall(keys, text):
                                 command.set_result(result[0])
                             break
                     except Exception as error:
