@@ -47,8 +47,8 @@ class ConsoleDSTChecker:
                     print(error)
                     print(repr(traceback.extract_tb(sys.exception().__traceback__)))
                 break
-            else:
-                return default_answer
+        else:
+            return default_answer
 
     @tasks.loop(seconds=0.01)
     async def __checker(self, commands, file_log_iter):
