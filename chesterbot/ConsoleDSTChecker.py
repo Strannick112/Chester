@@ -24,29 +24,24 @@ class ConsoleDSTChecker:
             self.__checker.start(self.__all_commands[world["shard_id"]], world["file_log_iter"])
 
     async def check(self, command: str, reg_answer: str, shard_id: int, screen_name: str, default_answer: int, timeout: int):
-        screen_list = subprocess.run(
-            'screen -ls',
-            shell=True,
-            stdout=subprocess.PIPE,
-            stdin=subprocess.PIPE
-        ).stdout.decode('ascii')
-        for world in self.worlds:
-            if world["shard_id"] == shard_id and screen_name in screen_list:
-                try:
+        try:
+            screen_list = subprocess.run(
+                'screen -ls',
+                shell=True,
+                stdout=subprocess.PIPE,
+                stdin=subprocess.PIPE
+            ).stdout.decode('ascii')
+            for world in self.worlds:
+                if world["shard_id"] == shard_id and screen_name in screen_list:
                     self.__all_commands[shard_id][reg_answer] = self.__loop.create_future()
                     asyncio.ensure_future(self.__all_commands[shard_id][reg_answer])
                     subprocess.call(command, shell=True)
-                    try:
-                        result = await asyncio.wait_for(self.__all_commands[shard_id][reg_answer], timeout)
-                        return result
-                    except Exception as error:
-                        print(error)
-                        return default_answer
-                except Exception as error:
-                    print(error)
-                    print(repr(traceback.extract_tb(sys.exception().__traceback__)))
-                break
-        else:
+                    result = await asyncio.wait_for(self.__all_commands[shard_id][reg_answer], timeout)
+                    return result
+            else:
+                return default_answer
+        except Exception as error:
+            print(error)
             return default_answer
 
     @tasks.loop(seconds=0.01)
