@@ -142,9 +142,11 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                     await self.log_channel.send(content=("```" + text + "```"))
 
                 if "[Say]" in text:
-                    raw_player_info, _, message = [word.strip() for word in text.partition(':')]
-                    _, ku_id, player_name = raw_player_info.rsplit(' ', 2)
-                    ku_id = ku_id[1:-1]
+                    # raw_player_info, _, message = [word.strip() for word in text.partition(':')]
+                    # _, ku_id, player_name = raw_player_info.rsplit(' ', 2)
+                    # ku_id = ku_id[1:-1]
+                    ku_id, player_name, message = re.findall(r"\[Say\]\s\(([\w\W]+?)\)\s([\w\W]+):([\w\W]+)", text)[0]
+
                     await self.log_channel.send(content=("```" + text + "```"))
                     if message[0] != "$":
                         avatar_url = self.chester_bot.replies.get(
