@@ -123,8 +123,8 @@ class ServerManage(commands.Cog, name="Управление сервером"):
     @tasks.loop(seconds=0.1)
     async def on_server_message(self):
         """Следить за сообщениями на игровом сервере"""
-        if text := main_config["worlds"][0]["file_chat_iter"].readline()[12:-1]:
-            try:
+        try:
+            if text := main_config["worlds"][0]["file_chat_iter"].readline()[12:-1]:
                 if ':' in text:
                     if "[Announcement]" in text:
                         return
@@ -142,7 +142,7 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                     await self.log_channel.send(content=("```" + text + "```"))
 
                 if "[Say]" in text:
-                    ku_id, player_name, message = re.findall(r"\[Say\]\s\(([\w\W]+?)\)\s([\w\W]+):([\w\W]+)", text)[0]
+                    ku_id, player_name, message = re.findall(r"\[Say]\s\(([\w\W]+?)\)\s([\w\W]+):([\w\W]+)", text)[0]
 
                     await self.log_channel.send(content=("```" + text + "```"))
                     if message[0] != "$":
@@ -169,8 +169,7 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                             )
                     return
                 await self.log_channel.send(content=("```" + text + "```"))
-
-            except Exception as error:
-                print(error)
-                return
+        except Exception as error:
+            print(error)
+            return
         return

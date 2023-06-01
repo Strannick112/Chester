@@ -1,12 +1,8 @@
 import asyncio
 import re
 import subprocess
-import sys
-import traceback
 
 from discord.ext import tasks
-
-from chesterbot import ChesterBot
 
 
 class ConsoleDSTChecker:
