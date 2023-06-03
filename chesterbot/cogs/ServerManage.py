@@ -42,7 +42,7 @@ class ServerManage(commands.Cog, name="Управление сервером"):
             await interaction.response.send_message("Перезагрузка сервера принята к исполнению")
             return await restart()
         button.callback = restart_callback
-        view = View()
+        view = View(timeout=-1)
         view.add_item(button)
         await ctx.send("Команды управления игровым сервером", view=view)
 
