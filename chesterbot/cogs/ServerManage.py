@@ -153,7 +153,7 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                 if "[Leave Announcement]" in text:
                     await self.log_channel.send(content=("```" + text + "```"))
                     await self.chat_webhook.send(
-                        content=self.chester_bot.replies["exit_phrase"], username=text[20:],
+                        content=self.chester_bot.replies["exit_phrase"], username=text[20:] + " ",
                         avatar_url=self.chester_bot.replies["exit_picture"]
                     )
                     return
