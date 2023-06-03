@@ -3,7 +3,7 @@ from discord import ButtonStyle, Interaction
 from discord.ui import View
 
 from chesterbot import main_config
-from chesterbot.cogs.server_manage import stop, soft_stop, restart, soft_restart
+from chesterbot.cogs.server_manage.commands import restart, stop, soft_stop, soft_restart
 
 
 class ServerManageView(View):
