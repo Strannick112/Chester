@@ -1,3 +1,3 @@
 from .BotManage import BotManage
 from .WipeManage import WipeManage
-from .ServerManage import ServerManage
+from chesterbot.cogs.server_manage import ServerManage

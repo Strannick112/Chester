@@ -4,12 +4,10 @@ import re
 import subprocess
 
 import discord
-from discord import ButtonStyle
 from discord.ext import commands, tasks
-from discord.ui import Button, View
 
 from chesterbot import main_config, ChesterBot
-from chesterbot.cogs.server_manage import restart, soft_restart, soft_stop, start, stop
+from chesterbot.cogs.server_manage import restart, soft_restart, soft_stop, start, stop, ServerManageView
 
 
 class ServerManage(commands.Cog, name="Управление сервером"):
@@ -37,39 +35,7 @@ class ServerManage(commands.Cog, name="Управление сервером"):
     @commands.command(name=main_config['short_server_name'] + "_buttons")
     @commands.has_role(main_config['master_role'])
     async def buttons(self, ctx):
-        async def start_callback(interaction):
-            await interaction.response.send_message("Запуск сервера принят к исполнению")
-            return await start()
-        async def stop_callback(interaction):
-            await interaction.response.send_message("Остановка сервера принята к исполнению")
-            return await stop()
-        async def soft_stop_callback(interaction):
-            await interaction.response.send_message("Остановка сервера через 1 минуту принята к исполнению")
-            return await soft_stop()
-        async def restart_callback(interaction):
-            await interaction.response.send_message("Перезагрузка сервера принята к исполнению")
-            return await restart()
-        async def soft_restart_callback(interaction):
-            await interaction.response.send_message("Перезагрузка сервера через 1 минуту принята к исполнению")
-            return await soft_restart()
-
-        start_button = Button(label="Запуск сервера", style=ButtonStyle.green)
-        start_button.callback = restart_callback
-        stop_button = Button(label="Остановка сервера", style=ButtonStyle.red)
-        stop_button.callback = stop_callback
-        soft_stop_button = Button(label="Остановка сервера через 1 минуту", style=ButtonStyle.red)
-        soft_stop_button.callback = soft_stop_callback
-        restart_button = Button(label="Перезапуск сервера", style=ButtonStyle.green)
-        restart_button.callback = restart_callback
-        soft_restart_button = Button(label="Перезапуск сервера через 1 минуту", style=ButtonStyle.green)
-        soft_restart_button.callback = soft_restart_callback
-        view = View(timeout=-1)
-        view.add_item(start_button)
-        view.add_item(stop_button)
-        view.add_item(soft_stop_button)
-        view.add_item(restart_button)
-        view.add_item(soft_restart_button)
-        await ctx.send("Команды управления игровым сервером", view=view)
+        await ctx.send("Команды управления игровым сервером", view=ServerManageView())
 
     @commands.command(name=main_config['short_server_name'] + "_restart_server")
     @commands.has_role(main_config['master_role'])
