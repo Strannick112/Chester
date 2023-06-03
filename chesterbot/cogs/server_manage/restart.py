@@ -3,7 +3,7 @@ import subprocess
 from chesterbot import main_config
 
 
-async def restart(*args, **kwargs):
+async def restart():
     try:
         print(
             subprocess.check_output(

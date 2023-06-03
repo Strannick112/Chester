@@ -38,7 +38,10 @@ class ServerManage(commands.Cog, name="Управление сервером"):
     @commands.has_role(main_config['master_role'])
     async def buttons(self, ctx):
         button = Button(label="Перезагрузка сервера")
-        button.callback = restart
+        async def restart_callback(interaction):
+            await interaction.response.send_message("Перезагрузка сервера принята к исполнению")
+            return await restart()
+        button.callback = restart_callback
         view = View()
         view.add_item(button)
         await ctx.send("Команды управления игровым сервером", view=view)
