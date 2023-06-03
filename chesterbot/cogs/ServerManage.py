@@ -146,7 +146,7 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                 if "[Announcement]" in text:
                     await self.log_channel.send(content=("```" + text + "```"))
                     await self.chat_webhook.send(
-                        content=text[14:],
+                        content=text[14:], username="Announcement",
                         avatar_url=self.chester_bot.replies["announcement_picture"]
                     )
                     return
