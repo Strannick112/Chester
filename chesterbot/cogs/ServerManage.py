@@ -138,22 +138,35 @@ class ServerManage(commands.Cog, name="Управление сервером"):
         """Следить за сообщениями на игровом сервере"""
         try:
             if text := main_config["file_chat_iter"].readline()[12:-1]:
+                # Блокирование цикла обратной связи
                 if ':' in text:
                     if "[Announcement]" in text:
                         return
-                if ("There are" in text and "in the world." in text) \
-                   or "RemoteCommandInput: \"c_countprefabs(\"" in text:
-                    return
-                if "[Announcement]" in text\
-                        or "[Join Announcement]" in text\
-                        or "[Leave Announcement]" in text:
-                    await self.chat_channel.send(content=text)
+                # Обработка вариантов
+                if "[Announcement]" in text:
                     await self.log_channel.send(content=("```" + text + "```"))
+                    await self.chat_channel.send(content=text)
+                    await self.chat_webhook.send(
+                        content=text[14:],
+                        avatar_url=self.chester_bot.replies["announcement_picture"]
+                    )
                     return
-
+                if "[Leave Announcement]" in text:
+                    await self.log_channel.send(content=("```" + text + "```"))
+                    await self.chat_webhook.send(
+                        content=self.chester_bot.replies["exit_phrase"], username=text[20:],
+                        avatar_url=self.chester_bot.replies["exit_picture"]
+                    )
+                    return
+                if "[Join Announcement]" in text:
+                    await self.log_channel.send(content=("```" + text + "```"))
+                    await self.chat_webhook.send(
+                        content=self.chester_bot.replies["enter_phrase"], username=text[19:],
+                        avatar_url=self.chester_bot.replies["enter_picture"]
+                    )
+                    return
                 if "[Whisper]" in text:
                     await self.log_channel.send(content=("```" + text + "```"))
-
                 if "[Say]" in text:
                     ku_id, player_name, message = re.findall(r"\[Say]\s\(([\w\W]+?)\)\s([\w\W]+):([\w\W]+)", text)[0]
 

@@ -46,5 +46,11 @@
     "woodie": "https://media.discordapp.net/attachments/871824345780080690/1112422804713918495/Woodie.png",
     "wormwood": "https://media.discordapp.net/attachments/871824345780080690/1112422804990722048/Wormwood.png",
     "wortox": "https://media.discordapp.net/attachments/871824345780080690/1112422805435338883/Wortox.png",
-    "wurt": "https://media.discordapp.net/attachments/871824345780080690/1112422805649236150/Wurt.png"
+    "wurt": "https://media.discordapp.net/attachments/871824345780080690/1112422805649236150/Wurt.png",
+
+    "enter_phrase": "Решил, что он крутой, и зашел на сервер попытать счастья",
+    "enter_picture": "https://media.discordapp.net/attachments/871824345780080690/1112854891812114472/Join_Announcement.png",
+    "exit_phrase": "Сбежал с криками",
+    "exit_picture": "https://media.discordapp.net/attachments/871824345780080690/1112854891568836699/Leave_Announcement.png",
+    "announcement_picture": "https://cdn.discordapp.com/avatars/490844320874889216/f225363f8d96733c9177500057f91d8a.webp",
 }
