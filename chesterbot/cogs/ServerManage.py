@@ -10,6 +10,7 @@ from discord.ext import commands, tasks
 from discord.ui import Button, View
 
 from chesterbot import main_config, ChesterBot
+from chesterbot.cogs.server_manage.restart import restart
 
 
 class ServerManage(commands.Cog, name="Управление сервером"):
@@ -38,7 +39,7 @@ class ServerManage(commands.Cog, name="Управление сервером"):
     @commands.has_role(main_config['master_role'])
     async def buttons(self, ctx):
         button = Button(label="Перезагрузка сервера")
-        button.callback = self.restart_server
+        button.callback = restart
         view = View()
         view.add_item(button)
         await ctx.send("Команды управления игровым сервером", view=view)
@@ -47,16 +48,7 @@ class ServerManage(commands.Cog, name="Управление сервером"):
     @commands.has_role(main_config['master_role'])
     async def restart_server(self, ctx):
         """Перезапускает сервер сразу"""
-        try:
-            print(
-                subprocess.check_output(
-                    f"""screen -dmS "restart_server" {main_config['short_server_name']}_restart.sh""",
-                    shell=True
-                )
-            )
-            return True
-        finally:
-            return False
+        return await restart()
 
     @commands.command(name=main_config['short_server_name'] + "_soft_restart_server")
     @commands.has_role(main_config['master_role'])
