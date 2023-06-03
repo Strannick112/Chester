@@ -54,7 +54,7 @@ class ServerManage(commands.Cog, name="Управление сервером"):
             return await soft_restart()
 
         start_button = Button(label="Запуск сервера", style=ButtonStyle.green)
-        start_button.callback = start_callback
+        start_button.callback = restart_callback
         stop_button = Button(label="Остановка сервера", style=ButtonStyle.red)
         stop_button.callback = stop_callback
         soft_stop_button = Button(label="Остановка сервера через 1 минуту", style=ButtonStyle.red)
