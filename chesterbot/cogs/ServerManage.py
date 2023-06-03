@@ -125,7 +125,7 @@ class ServerManage(commands.Cog, name="Управление сервером"):
     @tasks.loop(seconds=15)
     async def __chat_file_check(self):
         size_of_chat_file = os.path.getsize(main_config['full_path_to_server_chat_log_file'])
-        if size_of_chat_file > main_config["file_chat_size"]:
+        if size_of_chat_file < main_config["file_chat_size"]:
             main_config["file_chat_iter"].close()
             main_config["file_chat_iter"] = codecs.open(
                 main_config["full_path_to_server_chat_log_file"], "r", encoding="utf-8"

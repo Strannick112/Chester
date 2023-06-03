@@ -47,7 +47,7 @@ class ConsoleDSTChecker:
     @tasks.loop(seconds=15)
     async def __log_file_check(self, world):
         size_of_log_file = os.path.getsize(world['full_path_to_server_log_file'])
-        if size_of_log_file > world["file_log_size"]:
+        if size_of_log_file < world["file_log_size"]:
             world["file_log_iter"].close()
             world["file_log_iter"] = codecs.open(world["full_path_to_server_log_file"], "r", encoding="utf-8")
             world["file_log_iter"].seek(0, 2)
