@@ -15,6 +15,7 @@ async def restart():
     finally:
         return False
 
+
 async def soft_restart():
     """Перезапускает сервер через 1 минуту"""
     try:
@@ -27,6 +28,7 @@ async def soft_restart():
         return True
     finally:
         return False
+
 
 async def soft_stop():
     """Останавливает сервер через 1 минуту"""
@@ -41,6 +43,7 @@ async def soft_stop():
     finally:
         return False
 
+
 async def start():
     """Запускает сервер"""
     try:
@@ -53,6 +56,7 @@ async def start():
         return True
     finally:
         return False
+
 
 async def stop():
     """Останавливает сервер сразу"""
