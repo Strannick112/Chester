@@ -19,7 +19,7 @@ class ConsoleDSTChecker:
     async def on_ready(self, loop):
         self.__loop = loop
         for world in self.worlds:
-            self.__checker.start(self.__all_commands[world["shard_id"]], world["file_log_iter"])
+            self.__checker.start(self.__all_commands[world["shard_id"]], world)
             self.__log_file_check.start(world)
 
 
@@ -54,10 +54,10 @@ class ConsoleDSTChecker:
         world["file_log_size"] = size_of_log_file
 
     @tasks.loop(seconds=0.01)
-    async def __checker(self, commands, file_log_iter):
+    async def __checker(self, commands, world):
         """Следить за логами на игровом сервере"""
         try:
-            if text := file_log_iter.readline()[12:]:
+            if text := world["file_log_iter"].readline()[12:]:
                 for keys, command in commands.items():
                     try:
                         if not command.done():
