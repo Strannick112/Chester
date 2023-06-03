@@ -8,8 +8,9 @@ from discord.ext import commands
 
 from chesterbot import main_config, wipes
 from chesterbot.ConsoleDSTChecker import ConsoleDSTChecker
-from chesterbot.cogs import BotManage, WipeManage, ServerManage
+from chesterbot.cogs import BotManage, WipeManage
 from chesterbot.cogs.DashBoard import DashBoard
+from chesterbot.cogs.server_manage import ServerManage
 
 
 class ChesterBot(commands.Bot):

@@ -7,7 +7,8 @@ import discord
 from discord.ext import commands, tasks
 
 from chesterbot import main_config, ChesterBot
-from chesterbot.cogs.server_manage import restart, soft_restart, soft_stop, start, stop, ServerManageView
+from chesterbot.cogs.server_manage.ServerManageView import ServerManageView
+from chesterbot.cogs.server_manage.commands import restart, soft_restart, soft_stop, start, stop
 
 
 class ServerManage(commands.Cog, name="Управление сервером"):
