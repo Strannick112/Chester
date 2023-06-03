@@ -5,7 +5,10 @@ import select
 import subprocess
 
 import discord
+from discord import ButtonStyle
 from discord.ext import commands, tasks
+from discord.ui import Button, View
+
 from chesterbot import main_config, ChesterBot
 
 
@@ -30,6 +33,15 @@ class ServerManage(commands.Cog, name="Управление сервером"):
             self.log_webhook = await self.log_channel.create_webhook(name='Log')
         self.on_server_message.start()
         self.__chat_file_check.start()
+
+    @commands.command(name=main_config['short_server_name'] + "_buttons")
+    @commands.has_role(main_config['master_role'])
+    async def buttons(self, ctx):
+        button = Button(label="Перезагрузка сервера")
+        button.callback = self.restart_server
+        view = View()
+        view.add_item(button)
+        await ctx.send("Команды управления игровым сервером", view=view)
 
     @commands.command(name=main_config['short_server_name'] + "_restart_server")
     @commands.has_role(main_config['master_role'])
