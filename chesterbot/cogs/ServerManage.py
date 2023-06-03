@@ -137,7 +137,7 @@ class ServerManage(commands.Cog, name="Управление сервером"):
     async def on_server_message(self):
         """Следить за сообщениями на игровом сервере"""
         try:
-            if text := main_config["worlds"][0]["file_chat_iter"].readline()[12:-1]:
+            if text := main_config["file_chat_iter"].readline()[12:-1]:
                 if ':' in text:
                     if "[Announcement]" in text:
                         return
