@@ -1,7 +1,6 @@
 import codecs
 import os
 import re
-import select
 import subprocess
 
 import discord
@@ -10,7 +9,7 @@ from discord.ext import commands, tasks
 from discord.ui import Button, View
 
 from chesterbot import main_config, ChesterBot
-from chesterbot.cogs.server_manage.restart import restart
+from chesterbot.cogs.server_manage import restart
 
 
 class ServerManage(commands.Cog, name="Управление сервером"):
