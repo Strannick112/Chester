@@ -1,3 +1,4 @@
+import codecs
 import os
 import re
 import select
@@ -28,6 +29,7 @@ class ServerManage(commands.Cog, name="Управление сервером"):
         if self.log_webhook is None:
             self.log_webhook = await self.log_channel.create_webhook(name='Log')
         self.on_server_message.start()
+        self.__chat_file_check.start()
 
     @commands.command(name=main_config['short_server_name'] + "_restart_server")
     @commands.has_role(main_config['master_role'])
@@ -119,6 +121,17 @@ class ServerManage(commands.Cog, name="Управление сервером"):
             f""" "{text}\n\"""",
             shell=True
         )
+
+    @tasks.loop(seconds=15)
+    async def __chat_file_check(self):
+        size_of_chat_file = os.path.getsize(main_config['full_path_to_server_chat_log_file'])
+        if size_of_chat_file > main_config["file_chat_size"]:
+            main_config["file_chat_iter"].close()
+            main_config["file_chat_iter"] = codecs.open(
+                main_config["full_path_to_server_chat_log_file"], "r", encoding="utf-8"
+            )
+            main_config["file_chat_iter"].seek(0, 2)
+        main_config["file_chat_size"] = size_of_chat_file
 
     @tasks.loop(seconds=0.1)
     async def on_server_message(self):

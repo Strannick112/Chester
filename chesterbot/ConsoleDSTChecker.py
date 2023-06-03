@@ -1,4 +1,6 @@
 import asyncio
+import codecs
+import os
 import re
 import subprocess
 
@@ -18,6 +20,8 @@ class ConsoleDSTChecker:
         self.__loop = loop
         for world in self.worlds:
             self.__checker.start(self.__all_commands[world["shard_id"]], world["file_log_iter"])
+            self.__log_file_check.start(world)
+
 
     async def check(self, command: str, reg_answer: str, shard_id: int, screen_name: str, default_answer: int, timeout: int):
         try:
@@ -39,6 +43,15 @@ class ConsoleDSTChecker:
         except Exception as error:
             print(error)
             return default_answer
+
+    @tasks.loop(seconds=15)
+    async def __log_file_check(self, world):
+        size_of_log_file = os.path.getsize(world['full_path_to_server_log_file'])
+        if size_of_log_file > world["file_log_size"]:
+            world["file_log_iter"].close()
+            world["file_log_iter"] = codecs.open(world["full_path_to_server_log_file"], "r", encoding="utf-8")
+            world["file_log_iter"].seek(0, 2)
+        world["file_log_size"] = size_of_log_file
 
     @tasks.loop(seconds=0.01)
     async def __checker(self, commands, file_log_iter):
