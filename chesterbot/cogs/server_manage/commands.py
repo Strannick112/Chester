@@ -1,3 +1,4 @@
+import re
 import subprocess
 
 from chesterbot import main_config
@@ -83,3 +84,36 @@ async def soft_world_regenerate():
         return True
     finally:
         return False
+
+
+async def send_message_to_game(author, text):
+    try:
+        screen_list = subprocess.run(
+            'screen -ls',
+            shell=True,
+            stdout=subprocess.PIPE,
+            stdin=subprocess.PIPE
+        ).stdout.decode('ascii')
+        if main_config['server_main_screen_name'] in screen_list:
+            nickname = re.sub(r'\'', r"\\\\\'", author)
+            nickname = re.sub(r'\"', r"\\\\\"", nickname)
+            nickname = re.sub(r'\$', r"\\\\\$", nickname)
+            nickname = re.sub(r'>', r"\\\\\>", nickname)
+            nickname = re.sub(r'<', r"\\\\\<", nickname)
+            nickname = re.sub(r'/', r"\\\\\/", nickname)
+            text = re.sub(r'\'', r"\\\\\'", text)
+            text = re.sub(r'\"', r"\\\\\"", text)
+            text = re.sub(r'\$', r"\\\\\$", text)
+            text = re.sub(r'>', r"\\\\\>", text)
+            text = re.sub(r'<', r"\\\\\<", text)
+            text = re.sub(r'/', r"\\\\\/", text)
+            subprocess.check_output(
+                f"""screen -S {main_config['server_main_screen_name']} -X stuff""" +
+                f""" "c_announce(\\\"{nickname}: {text}\\\")\n\"""",
+                shell=True
+            )
+        return True
+    finally:
+        return False
+
+

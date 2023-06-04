@@ -2,9 +2,11 @@ import datetime
 import json
 import re
 
+import discord
 from discord.ext import commands
 
 from chesterbot import wipes, main_config
+from chesterbot.cogs.server_manage.commands import send_message_to_game
 from chesterbot.wipes import Wipe
 from chesterbot.wipes.Claim import Claim
 from chesterbot.wipes.Item import Item
@@ -14,16 +16,23 @@ from chesterbot.wipes.Status import Status
 
 class WipeManage(commands.Cog, name="Управление вайпами"):
     def __init__(self, chester_bot):
-        self.bot = chester_bot
+        self.chester_bot = chester_bot
         self.__replies = chester_bot.replies
+        self.command_channel = None
+        self.command_webhook = None
 
+    async def on_ready(self):
+        self.command_channel = self.chester_bot.get_channel(main_config["command_channel"])
+        self.command_webhook = discord.utils.get(await self.command_channel.webhooks(), name='Command')
+        if self.command_webhook is None:
+            self.command_webhook = await self.command_channel.create_webhook(name='Command')
     @commands.command(name=main_config['short_server_name'] + "_checkout_marks_on_executed_claims")
     @commands.has_role(main_config['master_role'])
     async def checkout_marks_on_executed_claims(self, ctx):
         """Синхронизирует реакции под всеми сообщениями с заявками, хранящимися у бота"""
         for user_name, claim in wipes.last_wipe.claims.items():
             for channel_id in self.__replies['claim_channel_id']:
-                async for msg in self.bot \
+                async for msg in self.chester_bot \
                         .get_channel(channel_id) \
                         .history(
                     after=datetime.datetime.strptime(wipes.last_wipe.started_at, '%Y-%m-%d %H:%M:%S.%f%z')
@@ -48,14 +57,14 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
 
                         if has_reactions['claim_full_approved']:
                             if claim.status not in (Status.approved, Status.executed):
-                                msg.remove_reaction(self.__replies['claim_full_approved'], self.bot.user)
+                                msg.remove_reaction(self.__replies['claim_full_approved'], self.chester_bot.user)
                         else:
                             if claim.status in (Status.approved, Status.executed):
                                 await msg.add_reaction(self.__replies['claim_full_approved'])
 
                         if has_reactions['claim_items_executed']:
                             if claim.status != Status.executed:
-                                await msg.remove_reaction(self.__replies['claim_items_executed'], self.bot.user)
+                                await msg.remove_reaction(self.__replies['claim_items_executed'], self.chester_bot.user)
                         else:
                             if claim.status == Status.executed:
                                 await msg.add_reaction(self.__replies['claim_items_executed'])
@@ -79,12 +88,12 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                     cur_user = user_name
         if cur_user in wipes.last_wipe.claims:
             for channel_id in self.__replies['claim_channel_id']:
-                async for msg in self.bot \
+                async for msg in self.chester_bot \
                         .get_channel(channel_id) \
                         .history(
                     after=datetime.datetime.strptime(wipes.last_wipe.started_at, '%Y-%m-%d %H:%M:%S.%f%z')
                 ):
-                    if msg.author == self.bot.user:
+                    if msg.author == self.chester_bot.user:
                         continue
                     if msg.author == cur_user:
                         if (claim := self.make_claim(msg.content, msg.author, msg.created_at)) is not None \
@@ -129,31 +138,39 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
             return False
 
     @commands.command(name=main_config['short_server_name'] + "_give_items")
-    async def give_items(self, ctx):
+    async def give_items(self, ctx, author=None, created_at=None):
         """Выдает игроку предметы на сервере по оставленной и подтверждённой заявке"""
-        user_name = ctx.author.__str__()
+        if author is None:
+            user_name = ctx.author.__str__()
+        else:
+            user_name = author
         if user_name in wipes.last_wipe.claims:
             cur_claim = wipes.last_wipe.claims[user_name]
             if cur_claim.status == Status.not_approved:
-                await ctx.reply(self.__replies['give_items_fail_not_approved'])
-                await ctx.message.add_reaction(self.__replies['claim_error'])
+                (await self.command_webhook.send(context=cur_claim.player.discord_nickname + ", " + self.__replies['give_items_fail_not_approved']))\
+                    .add_reaction(self.__replies['claim_error'])
+                await send_message_to_game("Chester_bot", cur_claim.player.dst_nickname + ", " + self.__replies['give_items_fail_not_approved'])
                 return False
             if cur_claim.status == Status.executed:
-                await ctx.reply(self.__replies['give_items_fail_executed'])
-                await ctx.message.add_reaction(self.__replies['claim_error'])
+                (await self.command_webhook.send(context=cur_claim.player.discord_nickname + ", " + self.__replies['give_items_fail_executed'])) \
+                    .add_reaction(self.__replies['claim_error'])
+                await send_message_to_game("Chester_bot", cur_claim.player.dst_nickname + ", " + self.__replies['give_items_fail_executed'])
                 return False
-            if cur_claim.give_items(ctx.message.created_at.__str__()):
-                await ctx.reply(self.__replies['give_items_success'])
-                await ctx.message.add_reaction(self.__replies['claim_items_executed'])
+            if cur_claim.give_items(created_at if created_at is not None else ctx.message.created_at.__str__()):
+                (await self.command_webhook.send(context=cur_claim.player.discord_nickname + ", " + self.__replies['give_items_success'])) \
+                    .add_reaction(self.__replies['claim_items_executed'])
+                await send_message_to_game("Chester_bot", cur_claim.player.dst_nickname + ", " + self.__replies['give_items_success'])
                 await self.mark_claim_executed(user_name)
                 return True
             else:
-                await ctx.reply(self.__replies['give_items_fail'])
-                await ctx.message.add_reaction(self.__replies['claim_error'])
+                (await self.command_webhook.send(context=cur_claim.player.discord_nickname + ", " + self.__replies['give_items_fail'])) \
+                    .add_reaction(self.__replies['claim_error'])
+                await send_message_to_game("Chester_bot", cur_claim.player.dst_nickname + ", " + self.__replies['give_items_fail'])
                 return False
         else:
-            await ctx.reply(self.__replies['give_items_fail_who_are_you'])
-            await ctx.message.add_reaction(self.__replies['claim_error'])
+            (await self.command_webhook.send(context=self.__replies['give_items_fail_who_are_you'])) \
+                .add_reaction(self.__replies['claim_error'])
+            await send_message_to_game("Chester_bot", self.__replies['give_items_fail_who_are_you'])
             return False
 
     @commands.command(name=main_config['short_server_name'] + "_rollback_claim")
@@ -167,14 +184,14 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
             claim = wipes.last_wipe.claims[user_name]
             if claim.rollback_claim():
                 for channel_id in self.__replies['claim_channel_id']:
-                    async for msg in self.bot.get_channel(channel_id).history(
+                    async for msg in self.chester_bot.get_channel(channel_id).history(
                             after=datetime.datetime.strptime(wipes.last_wipe.started_at, '%Y-%m-%d %H:%M:%S.%f%z')
                     ):
                         if msg.author.__str__() == user_name:
                             for reaction in msg.reactions:
                                 if reaction.__str__() == self.__replies['claim_items_executed']:
                                     if reaction.me:
-                                        await msg.remove_reaction(self.__replies['claim_items_executed'], self.bot.user)
+                                        await msg.remove_reaction(self.__replies['claim_items_executed'], self.chester_bot.user)
             await ctx.reply(self.__replies['rollback_claims_success'])
             return True
         else:
@@ -187,14 +204,14 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
         for user_name, claim in wipes.last_wipe.claims.items():
             if claim.rollback_claim():
                 for channel_id in self.__replies['claim_channel_id']:
-                    async for msg in self.bot.get_channel(channel_id).history(
+                    async for msg in self.chester_bot.get_channel(channel_id).history(
                             after=datetime.datetime.strptime(wipes.last_wipe.started_at, '%Y-%m-%d %H:%M:%S.%f%z')
                     ):
                         if msg.author.__str__() == user_name:
                             for reaction in msg.reactions:
                                 if reaction.__str__() == self.__replies['claim_items_executed']:
                                     if reaction.me:
-                                        await msg.remove_reaction(self.__replies['claim_items_executed'], self.bot.user)
+                                        await msg.remove_reaction(self.__replies['claim_items_executed'], self.chester_bot.user)
         await ctx.reply(self.__replies['rollback_claims_success'])
         return True
 
@@ -210,12 +227,12 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
             )
             wipes.last_wipe.save()
             for channel_id in self.__replies['claim_channel_id']:
-                async for msg in self.bot \
+                async for msg in self.chester_bot \
                         .get_channel(channel_id) \
                         .history(
                     after=datetime.datetime.strptime(wipes.last_wipe.started_at, '%Y-%m-%d %H:%M:%S.%f%z')
                 ):
-                    if msg.author == self.bot.user:
+                    if msg.author == self.chester_bot.user:
                         continue
                     to_approve = {'approved_twice': False, 'executed': False}
                     for reaction in msg.reactions:
@@ -245,12 +262,12 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
             wipes.last_wipe.stoped_at = cur_time
             wipes.last_wipe.save()
             for channel_id in self.__replies['claim_channel_id']:
-                async for msg in self.bot \
+                async for msg in self.chester_bot \
                         .get_channel(channel_id) \
                         .history(
                     after=datetime.datetime.strptime(wipes.last_wipe.started_at, '%Y-%m-%d %H:%M:%S.%f%z')
                 ):
-                    if msg.author == self.bot.user:
+                    if msg.author == self.chester_bot.user:
                         continue
                     if msg.author.__str__() not in wipes.last_wipe.claims.keys():
                         continue
@@ -262,7 +279,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                             continue
                         if reaction.__str__() == self.__replies['claim_admin_approved_is_ok']:
                             async for user in reaction.users():
-                                if user == self.bot.user:
+                                if user == self.chester_bot.user:
                                     continue
                                 for role in user.roles:
                                     if main_config['master_role'] == role.name:
@@ -299,7 +316,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
 
     async def mark_claim_executed(self, user_name: str):
         for channel_id in self.__replies['claim_channel_id']:
-            async for msg in self.bot \
+            async for msg in self.chester_bot \
                     .get_channel(channel_id) \
                     .history(
                 after=datetime.datetime.strptime(wipes.last_wipe.started_at, '%Y-%m-%d %H:%M:%S.%f%z')

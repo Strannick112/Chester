@@ -11,6 +11,7 @@ from chesterbot.ConsoleDSTChecker import ConsoleDSTChecker
 from chesterbot.cogs import BotManage, WipeManage
 from chesterbot.cogs.DashBoard import DashBoard
 from chesterbot.cogs.server_manage import ServerManage
+from chesterbot.cogs.server_manage.commands import send_message_to_game
 
 
 class ChesterBot(commands.Bot):
@@ -38,6 +39,7 @@ class ChesterBot(commands.Bot):
         await self.console_dst_checker.on_ready(self.loop)
         for dashboard in self.dashboards:
             await dashboard.on_ready()
+        await self.wipe_manage.on_ready()
 
 
     async def init(self):
@@ -72,32 +74,7 @@ class ChesterBot(commands.Bot):
                 else:
                     if message.channel.id == main_config["game_log_sync_channel"]\
                             or message.channel.id == main_config["game_chat_sync_channel"]:
-                        screen_list = subprocess.run(
-                            'screen -ls',
-                            shell=True,
-                            stdout=subprocess.PIPE,
-                            stdin=subprocess.PIPE
-                        ).stdout.decode('ascii')
-                        if main_config['server_main_screen_name'] in screen_list:
-                            nickname = re.sub(r'\'', r"\\\\\'", message.author.display_name)
-                            nickname = re.sub(r'\"', r"\\\\\"", nickname)
-                            nickname = re.sub(r'\$', r"\\\\\$", nickname)
-                            nickname = re.sub(r'>', r"\\\\\>", nickname)
-                            nickname = re.sub(r'<', r"\\\\\<", nickname)
-                            # nickname = re.sub(r'\\', r"\\\\\\\\", nickname)
-                            nickname = re.sub(r'/', r"\\\\\/", nickname)
-                            text = re.sub(r'\'', r"\\\\\'", message.content)
-                            text = re.sub(r'\"', r"\\\\\"", text)
-                            text = re.sub(r'\$', r"\\\\\$", text)
-                            text = re.sub(r'>', r"\\\\\>", text)
-                            text = re.sub(r'<', r"\\\\\<", text)
-                            # text = re.sub(r'\\', r"\\\\\\\\", text)
-                            text = re.sub(r'/', r"\\\\\/", text)
-                            subprocess.check_output(
-                                f"""screen -S {main_config['server_main_screen_name']} -X stuff""" +
-                                f""" "c_announce(\\\"{nickname}: {text}\\\")\n\"""",
-                                shell=True
-                            )
+                        await send_message_to_game(message.author.display_name, message.content)
                     elif wipes.last_wipe.stoped_at == "":
                         author = message.author.__str__()
                         claim = WipeManage.make_claim(message.content, author, message.created_at.__str__())
