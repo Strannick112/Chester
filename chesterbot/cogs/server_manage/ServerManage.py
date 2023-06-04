@@ -150,12 +150,7 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                                 avatar_url=avatar_url if avatar_url is not None else self.chester_bot.replies["unknown"]
                             )
                         elif "@дай_предметы" in message:
-                            message = await self.chester_bot.wipe_manage.command_webhook.send(
-                                content="Игрок с ником " + player_name + " просит выдать вещи"
-                            )
-                            await self.chester_bot.wipe_manage.give_items(
-                                message, player_name, message.created_at.__str__()
-                            )
+                            await self.chester_bot.wipe_manage.give_items_from_game(player_name)
                         else:
                             await self.chat_webhook.send(
                                 content=message, username=player_name,
