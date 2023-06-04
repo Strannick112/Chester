@@ -70,3 +70,16 @@ async def stop():
         return True
     finally:
         return False
+
+
+async def soft_world_regenerate():
+    """Останавливает сервер сразу"""
+    try:
+        subprocess.check_output(
+            f"""screen -S {main_config['server_main_screen_name']} -X stuff""" +
+            f""" "c_regenerateworld()\n\"""",
+            shell=True
+        )
+        return True
+    finally:
+        return False

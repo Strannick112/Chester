@@ -3,7 +3,7 @@ from discord import ButtonStyle, Interaction
 from discord.ui import View
 
 from chesterbot import main_config
-from chesterbot.cogs.server_manage.commands import restart, stop, soft_stop, soft_restart
+from chesterbot.cogs.server_manage.commands import restart, stop, soft_stop, soft_restart, soft_world_regenerate
 
 
 class ServerManageView(View):
@@ -31,6 +31,11 @@ class ServerManageView(View):
     async def soft_restart_callback(self, interaction, button):
         await soft_restart()
         await interaction.response.send_message("Перезагрузка сервера через 1 минуту принята к исполнению")
+
+    @discord.ui.button(label="Пересоздание игрового мира", style=ButtonStyle.red)
+    async def soft_world_regenerate_callback(self, interaction, button):
+        await soft_world_regenerate()
+        await interaction.response.send_message("Пересоздание игрового мира принято к исполнению")
 
     async def interaction_check(self, interaction: Interaction, /) -> bool:
         for role in interaction.user.roles:
