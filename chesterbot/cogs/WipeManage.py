@@ -167,8 +167,8 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
             cur_claim = wipes.last_wipe.claims[user_name]
             if cur_claim.status == Status.not_approved:
                 await message.reply(
-                    content="[" + main_config["server_name"] + "] @" +
-                            cur_claim.player.discord_nickname + " , " +
+                    content="[" + main_config["server_name"] + "] <@" +
+                            cur_claim.player.discord_nickname + ">, " +
                             self.__replies['give_items_fail_not_approved']
                 )
                 await message.add_reaction(self.__replies['claim_error'])
@@ -176,8 +176,8 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                 return False
             if cur_claim.status == Status.executed:
                 await message.reply(
-                    content="[" + main_config["server_name"] + "] @" +
-                            cur_claim.player.discord_nickname + " , " +
+                    content="[" + main_config["server_name"] + "] <@" +
+                            cur_claim.player.discord_nickname + ">, " +
                             self.__replies['give_items_fail_executed']
                 )
                 await message.add_reaction(self.__replies['claim_error'])
@@ -185,8 +185,8 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                 return False
             if cur_claim.give_items(created_at if created_at is not None else message.created_at.__str__()):
                 await message.reply(
-                    content="[" + main_config["server_name"] + "] @" +
-                            cur_claim.player.discord_nickname + " , " +
+                    content="[" + main_config["server_name"] + "] <@" +
+                            cur_claim.player.discord_nickname + ">, " +
                             self.__replies['give_items_success']
                 )
                 await message.add_reaction(self.__replies['claim_items_executed'])
@@ -195,8 +195,8 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                 return True
             else:
                 await message.reply(
-                    content="[" + main_config["server_name"] + "] @" +
-                            cur_claim.player.discord_nickname + " , " +
+                    content="[" + main_config["server_name"] + "] <@" +
+                            cur_claim.player.discord_nickname + ">, " +
                             self.__replies['give_items_fail']
                 )
                 await message.add_reaction(self.__replies['claim_error'])
