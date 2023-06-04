@@ -148,7 +148,9 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                 )
                 return
         else:
-            (await self.command_webhook.send(content=self.__replies['give_items_fail_who_are_you'], wait=True)) \
+            (await message.reply(
+                content=self.__replies['give_items_fail_who_are_you'],
+                wait=True)) \
                 .add_reaction(self.__replies['claim_error'])
             await send_message_to_game("Chester_bot", self.__replies['give_items_fail_who_are_you'])
 
@@ -162,37 +164,46 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
         if user_name in wipes.last_wipe.claims:
             cur_claim = wipes.last_wipe.claims[user_name]
             if cur_claim.status == Status.not_approved:
-                (await self.command_webhook.send(
+                (await ctx.reply(
                     content="[" + main_config["server_name"] + "]" +
                             cur_claim.player.discord_nickname + ", " +
-                            self.__replies['give_items_fail_not_approved'], wait=True)
+                            self.__replies['give_items_fail_not_approved'],
+                    wait=True)
                  ).add_reaction(self.__replies['claim_error'])
                 await send_message_to_game("Chester_bot", cur_claim.player.dst_nickname + ", " + self.__replies['give_items_fail_not_approved'])
                 return False
             if cur_claim.status == Status.executed:
-                (await self.command_webhook.send(content="[" + main_config["server_name"] + "]" +
-                                                         cur_claim.player.discord_nickname + ", " +
-                                                         self.__replies['give_items_fail_executed'], wait=True))\
+                (await ctx.reply(
+                    content="[" + main_config["server_name"] + "]" +
+                        cur_claim.player.discord_nickname + ", " +
+                        self.__replies['give_items_fail_executed'],
+                    wait=True))\
                     .add_reaction(self.__replies['claim_error'])
                 await send_message_to_game("Chester_bot", cur_claim.player.dst_nickname + ", " + self.__replies['give_items_fail_executed'])
                 return False
             if cur_claim.give_items(created_at if created_at is not None else ctx.message.created_at.__str__()):
-                (await self.command_webhook.send(content="[" + main_config["server_name"] + "]" +
-                                                         cur_claim.player.discord_nickname + ", " +
-                                                         self.__replies['give_items_success'], wait=True)) \
+                (await ctx.reply(
+                    content="[" + main_config["server_name"] + "]" +
+                        cur_claim.player.discord_nickname + ", " +
+                        self.__replies['give_items_success'],
+                    wait=True)) \
                     .add_reaction(self.__replies['claim_items_executed'])
                 await send_message_to_game("Chester_bot", cur_claim.player.dst_nickname + ", " + self.__replies['give_items_success'])
                 await self.mark_claim_executed(user_name)
                 return True
             else:
-                (await self.command_webhook.send(content="[" + main_config["server_name"] + "]" +
-                                                         cur_claim.player.discord_nickname + ", " +
-                                                         self.__replies['give_items_fail'], wait=True)) \
+                (await ctx.reply(
+                    content="[" + main_config["server_name"] + "]" +
+                        cur_claim.player.discord_nickname + ", " +
+                        self.__replies['give_items_fail'],
+                    wait=True)) \
                     .add_reaction(self.__replies['claim_error'])
                 await send_message_to_game("Chester_bot", cur_claim.player.dst_nickname + ", " + self.__replies['give_items_fail'])
                 return False
         else:
-            (await self.command_webhook.send(content=self.__replies['give_items_fail_who_are_you'], wait=True)) \
+            (await ctx.reply(
+                content=self.__replies['give_items_fail_who_are_you'],
+                wait=True)) \
                 .add_reaction(self.__replies['claim_error'])
             await send_message_to_game("Chester_bot", self.__replies['give_items_fail_who_are_you'])
             return False
