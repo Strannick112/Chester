@@ -152,7 +152,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
             await message.reply(
                 content=self.__replies['give_items_fail_who_are_you'],
             )
-            message.add_reaction(self.__replies['claim_error'])
+            await message.add_reaction(self.__replies['claim_error'])
             await send_message_to_game("Chester_bot", self.__replies['give_items_fail_who_are_you'])
 
     @commands.command(name=main_config['short_server_name'] + "_give_items")
@@ -171,7 +171,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                             cur_claim.player.discord_nickname + " , " +
                             self.__replies['give_items_fail_not_approved']
                 )
-                message.add_reaction(self.__replies['claim_error'])
+                await message.add_reaction(self.__replies['claim_error'])
                 await send_message_to_game("Chester_bot", cur_claim.player.dst_nickname + ", " + self.__replies['give_items_fail_not_approved'])
                 return False
             if cur_claim.status == Status.executed:
@@ -180,7 +180,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                             cur_claim.player.discord_nickname + " , " +
                             self.__replies['give_items_fail_executed']
                 )
-                message.add_reaction(self.__replies['claim_error'])
+                await message.add_reaction(self.__replies['claim_error'])
                 await send_message_to_game("Chester_bot", cur_claim.player.dst_nickname + ", " + self.__replies['give_items_fail_executed'])
                 return False
             if cur_claim.give_items(created_at if created_at is not None else message.created_at.__str__()):
@@ -189,7 +189,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                             cur_claim.player.discord_nickname + " , " +
                             self.__replies['give_items_success']
                 )
-                message.add_reaction(self.__replies['claim_items_executed'])
+                await message.add_reaction(self.__replies['claim_items_executed'])
                 await send_message_to_game("Chester_bot", cur_claim.player.dst_nickname + ", " + self.__replies['give_items_success'])
                 await self.mark_claim_executed(user_name)
                 return True
@@ -199,14 +199,14 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                             cur_claim.player.discord_nickname + " , " +
                             self.__replies['give_items_fail']
                 )
-                message.add_reaction(self.__replies['claim_error'])
+                await message.add_reaction(self.__replies['claim_error'])
                 await send_message_to_game("Chester_bot", cur_claim.player.dst_nickname + ", " + self.__replies['give_items_fail'])
                 return False
         else:
             await message.reply(
                 content=self.__replies['give_items_fail_who_are_you']
             )
-            message.add_reaction(self.__replies['claim_error'])
+            await message.add_reaction(self.__replies['claim_error'])
             await send_message_to_game("Chester_bot", self.__replies['give_items_fail_who_are_you'])
             return False
 
