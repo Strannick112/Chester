@@ -3,6 +3,7 @@ import json
 import re
 
 import discord
+from discord import WebhookMessage
 from discord.ext import commands
 
 from chesterbot import wipes, main_config
@@ -161,50 +162,51 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
             user_name = ctx.author.__str__()
         else:
             user_name = author
+        message = ctx if type(ctx) is WebhookMessage else ctx.message
         if user_name in wipes.last_wipe.claims:
             cur_claim = wipes.last_wipe.claims[user_name]
             if cur_claim.status == Status.not_approved:
-                await ctx.reply(
-                    content="[" + main_config["server_name"] + "]" +
-                            cur_claim.player.discord_nickname + ", " +
+                await message.reply(
+                    content="[" + main_config["server_name"] + "] @" +
+                            cur_claim.player.discord_nickname + " , " +
                             self.__replies['give_items_fail_not_approved']
                 )
-                ctx.message.add_reaction(self.__replies['claim_error'])
+                message.add_reaction(self.__replies['claim_error'])
                 await send_message_to_game("Chester_bot", cur_claim.player.dst_nickname + ", " + self.__replies['give_items_fail_not_approved'])
                 return False
             if cur_claim.status == Status.executed:
-                await ctx.reply(
-                    content="[" + main_config["server_name"] + "]" +
-                            cur_claim.player.discord_nickname + ", " +
+                await message.reply(
+                    content="[" + main_config["server_name"] + "] @" +
+                            cur_claim.player.discord_nickname + " , " +
                             self.__replies['give_items_fail_executed']
                 )
-                ctx.message.add_reaction(self.__replies['claim_error'])
+                message.add_reaction(self.__replies['claim_error'])
                 await send_message_to_game("Chester_bot", cur_claim.player.dst_nickname + ", " + self.__replies['give_items_fail_executed'])
                 return False
-            if cur_claim.give_items(created_at if created_at is not None else ctx.message.created_at.__str__()):
-                await ctx.reply(
-                    content="[" + main_config["server_name"] + "]" +
-                            cur_claim.player.discord_nickname + ", " +
+            if cur_claim.give_items(created_at if created_at is not None else message.created_at.__str__()):
+                await message.reply(
+                    content="[" + main_config["server_name"] + "] @" +
+                            cur_claim.player.discord_nickname + " , " +
                             self.__replies['give_items_success']
                 )
-                ctx.message.add_reaction(self.__replies['claim_items_executed'])
+                message.add_reaction(self.__replies['claim_items_executed'])
                 await send_message_to_game("Chester_bot", cur_claim.player.dst_nickname + ", " + self.__replies['give_items_success'])
                 await self.mark_claim_executed(user_name)
                 return True
             else:
-                await ctx.reply(
-                    content="[" + main_config["server_name"] + "]" +
-                            cur_claim.player.discord_nickname + ", " +
+                await message.reply(
+                    content="[" + main_config["server_name"] + "] @" +
+                            cur_claim.player.discord_nickname + " , " +
                             self.__replies['give_items_fail']
                 )
-                ctx.message.add_reaction(self.__replies['claim_error'])
+                message.add_reaction(self.__replies['claim_error'])
                 await send_message_to_game("Chester_bot", cur_claim.player.dst_nickname + ", " + self.__replies['give_items_fail'])
                 return False
         else:
-            await ctx.reply(
+            await message.reply(
                 content=self.__replies['give_items_fail_who_are_you']
             )
-            ctx.message.add_reaction(self.__replies['claim_error'])
+            message.add_reaction(self.__replies['claim_error'])
             await send_message_to_game("Chester_bot", self.__replies['give_items_fail_who_are_you'])
             return False
 
