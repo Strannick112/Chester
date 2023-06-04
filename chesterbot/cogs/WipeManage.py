@@ -150,7 +150,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
         else:
             await message.reply(
                 content=self.__replies['give_items_fail_who_are_you'],
-                wait=True)
+            )
             message.add_reaction(self.__replies['claim_error'])
             await send_message_to_game("Chester_bot", self.__replies['give_items_fail_who_are_you'])
 
@@ -167,7 +167,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                 await ctx.reply(
                     content="[" + main_config["server_name"] + "]" +
                             cur_claim.player.discord_nickname + ", " +
-                            self.__replies['give_items_fail_not_approved'],
+                            self.__replies['give_items_fail_not_approved']
                 )
                 ctx.message.add_reaction(self.__replies['claim_error'])
                 await send_message_to_game("Chester_bot", cur_claim.player.dst_nickname + ", " + self.__replies['give_items_fail_not_approved'])
@@ -176,7 +176,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                 await ctx.reply(
                     content="[" + main_config["server_name"] + "]" +
                             cur_claim.player.discord_nickname + ", " +
-                            self.__replies['give_items_fail_executed'],
+                            self.__replies['give_items_fail_executed']
                 )
                 ctx.message.add_reaction(self.__replies['claim_error'])
                 await send_message_to_game("Chester_bot", cur_claim.player.dst_nickname + ", " + self.__replies['give_items_fail_executed'])
@@ -185,7 +185,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                 await ctx.reply(
                     content="[" + main_config["server_name"] + "]" +
                             cur_claim.player.discord_nickname + ", " +
-                            self.__replies['give_items_success'],
+                            self.__replies['give_items_success']
                 )
                 ctx.message.add_reaction(self.__replies['claim_items_executed'])
                 await send_message_to_game("Chester_bot", cur_claim.player.dst_nickname + ", " + self.__replies['give_items_success'])
@@ -195,14 +195,14 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                 await ctx.reply(
                     content="[" + main_config["server_name"] + "]" +
                             cur_claim.player.discord_nickname + ", " +
-                            self.__replies['give_items_fail'],
+                            self.__replies['give_items_fail']
                 )
                 ctx.message.add_reaction(self.__replies['claim_error'])
                 await send_message_to_game("Chester_bot", cur_claim.player.dst_nickname + ", " + self.__replies['give_items_fail'])
                 return False
         else:
             await ctx.reply(
-                content=self.__replies['give_items_fail_who_are_you'],
+                content=self.__replies['give_items_fail_who_are_you']
             )
             ctx.message.add_reaction(self.__replies['claim_error'])
             await send_message_to_game("Chester_bot", self.__replies['give_items_fail_who_are_you'])
