@@ -140,7 +140,8 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
 
     async def give_items_from_game(self, dst_player_name):
         message = await self.command_webhook.send(
-            content="Игрок с ником " + dst_player_name + " просит выдать вещи", wait=True
+            content="Игрок с ником " + dst_player_name + " просит выдать вещи", wait=True,
+            avatar_url=self.__replies["info_picture"]
         )
         for discord_claim_player_name, claim in wipes.last_wipe.claims.items():
             if claim.player.dst_nickname == dst_player_name:
