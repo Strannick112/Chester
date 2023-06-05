@@ -143,13 +143,13 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                                 5
                             )
                         )
-                        if "@админ" in message:
+                        if "@admin" in message:
                             await self.chat_webhook.send(
-                                content=re.sub(r'@админ', self.chester_bot.replies['admin_role_id'], message).strip(),
+                                content=re.sub(r'@admin', self.chester_bot.replies['admin_role_id'], message).strip(),
                                 username=player_name,
                                 avatar_url=avatar_url if avatar_url is not None else self.chester_bot.replies["unknown"]
                             )
-                        elif "@дай_предметы" in message:
+                        elif "@give_items" in message:
                             await self.chester_bot.wipe_manage.give_items_from_game(player_name)
                         else:
                             await self.chat_webhook.send(
