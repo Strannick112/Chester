@@ -79,6 +79,7 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
                     "bishop_nightmare": 0,
                     "rook_nightmare": 0,
                 },
+                "Спилагмиты": {"spiderhole": 0},
             },
             "Ресурсы": {
                 "Статуи в руинах": {
