@@ -148,6 +148,9 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                                 5
                             )
                         )
+                        print("help: ", message[0:5])
+                        ask = message[5:]
+                        print("ask: ", ask)
                         if "@help" == message[0:5]:
                             print("help: ", message[0:5])
                             ask = message[5:]
