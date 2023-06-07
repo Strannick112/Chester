@@ -149,7 +149,7 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                             )
                         )
 
-                        if "@help" in message[0:5]:
+                        if "@help" == message[0:5]:
                             ask = message[5:]
                             if ask == "":
                                 await send_message_to_game(
