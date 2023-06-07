@@ -9,7 +9,7 @@ from discord.ext import commands, tasks
 from chesterbot import main_config, ChesterBot
 from chesterbot.cogs.server_manage.ServerManageView import ServerManageView
 from chesterbot.cogs.server_manage.commands import restart, soft_restart, soft_stop, start, stop, send_message_to_game
-from chesterbot.cogs.server_manage.helps import helps, extended_command_list
+from chesterbot.cogs.server_manage.helps import helps, extended_command_list, short_command_list
 
 
 class ServerManage(commands.Cog, name="Управление сервером"):
@@ -163,7 +163,7 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                                 await send_message_to_game(
                                     "Chester_bot",
                                     "Чтобы получить конкретную информацию используйте '@help название раздела'"
-                                    + extended_command_list
+                                    + short_command_list
                                 )
                                 return
                         elif "@admin" in message:
