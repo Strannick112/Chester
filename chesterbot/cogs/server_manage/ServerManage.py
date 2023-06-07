@@ -156,7 +156,7 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                                 await send_message_to_game(
                                     "Chester_bot",
                                     "Чтобы получить конкретную информацию используйте '@help название раздела'\n"
-                                    + extended_command_list
+                                    # + extended_command_list
                                 )
                                 return
                             else:
