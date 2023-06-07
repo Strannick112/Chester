@@ -155,18 +155,18 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                             for command, info in helps.items():
                                 if command in ask:
                                     await send_message_to_game(
-                                        "Chester_bot",
+                                        "",
                                         info["extended_info"]
                                     )
                                     return
                             else:
                                 await send_message_to_game(
-                                    "Chester_bot",
+                                    "",
                                     "Чтобы получить конкретную информацию используйте '@help название раздела', например: '@help где база?' или '@help @admin'"
                                 )
                                 for command, info in helps.items():
                                     await send_message_to_game(
-                                        "Chester_bot",
+                                        "",
                                         command + ": " + info["short_info"]
                                     )
                                 # await send_message_to_game(
