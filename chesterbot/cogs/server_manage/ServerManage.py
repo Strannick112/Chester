@@ -156,7 +156,7 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                                 if ask in command:
                                     await send_message_to_game(
                                         "Chester_bot",
-                                        info["full_info"]
+                                        info["extended_info"]
                                     )
                                     return
                             else:
