@@ -162,13 +162,19 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                             else:
                                 await send_message_to_game(
                                     "",
-                                    "Чтобы получить конкретную информацию используйте '@help название раздела', например: '@help где база?' или '@help @admin'"
+                                    "Чтобы получить конкретную информацию используйте '@help название раздела', "
+                                    "например: '@help где база?' или '@help @admin'"
                                 )
-                                for command, info in helps.items():
+                                for name, parts in helps.items():
                                     await send_message_to_game(
                                         "",
-                                        command + ": " + info["short_info"]
+                                        " --- " + name + " --- "
                                     )
+                                    for command, info in parts:
+                                        await send_message_to_game(
+                                            "",
+                                            command + ": " + info["short_info"]
+                                        )
                                 # await send_message_to_game(
                                 #     "Chester_bot",
                                 #     "Разделы: " + short_command_list
