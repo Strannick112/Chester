@@ -152,13 +152,14 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                             print("help: ", message[0:5])
                             ask = message[5:].strip()
                             print("ask: \"", ask, "\"")
-                            for command, info in helps.items():
-                                if command in ask:
-                                    await send_message_to_game(
-                                        "",
-                                        info["extended_info"]
-                                    )
-                                    return
+                            for _, parts in helps.items():
+                                for command, info in parts:
+                                    if command in ask:
+                                        await send_message_to_game(
+                                            "",
+                                            info["extended_info"]
+                                        )
+                                        return
                             else:
                                 await send_message_to_game(
                                     "",
