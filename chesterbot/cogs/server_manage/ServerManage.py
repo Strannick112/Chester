@@ -162,7 +162,7 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                             else:
                                 await send_message_to_game(
                                     "Chester_bot",
-                                    "Чтобы получить конкретную информацию используйте '@help название раздела', например: '@help где база?'"
+                                    "Чтобы получить конкретную информацию используйте '@help название раздела', например: '@help где база?' или '@help @admin'"
                                 )
                                 await send_message_to_game(
                                     "Chester_bot",
