@@ -153,7 +153,7 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                             ask = message[5:].strip()
                             print("ask: \"", ask, "\"")
                             for command, info in helps.items():
-                                if ask in command:
+                                if command in ask:
                                     await send_message_to_game(
                                         "Chester_bot",
                                         info["extended_info"]
