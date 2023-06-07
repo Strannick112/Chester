@@ -152,8 +152,8 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                             print("help: ", message[0:5])
                             ask = message[5:].strip()
                             print("ask: \"", ask, "\"")
-                            for _, parts in helps.items():
-                                for command, info in parts:
+                            for parts in helps.values():
+                                for command, info in parts.items():
                                     if command in ask:
                                         await send_message_to_game(
                                             "",
@@ -171,7 +171,7 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                                         "",
                                         " --- " + name + " --- "
                                     )
-                                    for command, info in parts:
+                                    for command, info in parts.items():
                                         await send_message_to_game(
                                             "",
                                             command + ": " + info["short_info"]
