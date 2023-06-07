@@ -164,10 +164,15 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                                     "Chester_bot",
                                     "Чтобы получить конкретную информацию используйте '@help название раздела', например: '@help где база?' или '@help @admin'"
                                 )
-                                await send_message_to_game(
-                                    "Chester_bot",
-                                    "Разделы: " + short_command_list
-                                )
+                                for command, info in helps.items():
+                                    await send_message_to_game(
+                                        "Chester_bot",
+                                        command + ": " + info["short_info"]
+                                    )
+                                # await send_message_to_game(
+                                #     "Chester_bot",
+                                #     "Разделы: " + short_command_list
+                                # )
                                 return
                         elif "@admin" in message:
                             await self.chat_webhook.send(
