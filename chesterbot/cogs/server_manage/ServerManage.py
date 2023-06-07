@@ -152,21 +152,19 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                             print("help: ", message[0:5])
                             ask = message[5:].strip()
                             print("ask: \"", ask, "\"")
-                            if ask == "":
+                            for command, info in helps.items():
+                                if ask in command:
+                                    await send_message_to_game(
+                                        "Chester_bot",
+                                        info["full_info"]
+                                    )
+                                    return
+                            else:
                                 await send_message_to_game(
                                     "Chester_bot",
                                     "Чтобы получить конкретную информацию используйте '@help название раздела'\n"
                                     # + extended_command_list
                                 )
-                                return
-                            else:
-                                for command, info in helps.items():
-                                    if ask in command:
-                                        await send_message_to_game(
-                                            "Chester_bot",
-                                            info["full_info"]
-                                        )
-                                        return
                                 return
                         elif "@admin" in message:
                             await self.chat_webhook.send(
