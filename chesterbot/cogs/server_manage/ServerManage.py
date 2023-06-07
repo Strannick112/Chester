@@ -150,9 +150,9 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                         )
                         if "@help" == message[0:5]:
                             print("help: ", message[0:5])
-                            ask = message[5:]
+                            ask = message[5:].strip()
                             print("ask: \"", ask, "\"")
-                            if ask == "" or ask == "\n" or ask == " ":
+                            if ask == "":
                                 await send_message_to_game(
                                     "Chester_bot",
                                     "Чтобы получить конкретную информацию используйте '@help название раздела'\n"
