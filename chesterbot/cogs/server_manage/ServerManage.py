@@ -152,7 +152,7 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                             print("help: ", message[0:5])
                             ask = message[5:]
                             print("ask: ", ask)
-                            if ask == "" or ask == "\n":
+                            if ask == "" or ask == "\n" or ask == " ":
                                 await send_message_to_game(
                                     "Chester_bot",
                                     "Чтобы получить конкретную информацию используйте '@help название раздела'\n"
