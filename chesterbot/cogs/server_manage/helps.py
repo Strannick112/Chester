@@ -35,5 +35,5 @@ helps = {
     },
 }
 
-short_command_list = ", ".join(tuple(command for command in helps))
+short_command_list = ", ".join(tuple("'" + command + "'" for command in helps))
 extended_command_list = "\n".join(tuple(key + ": " + value["short_info"] for key, value in helps.items()))

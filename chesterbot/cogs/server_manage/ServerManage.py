@@ -163,8 +163,12 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                                 await send_message_to_game(
                                     "Chester_bot",
                                     "Чтобы получить конкретную информацию используйте '@help название раздела'"
-                                    + short_command_list
                                 )
+                                await send_message_to_game(
+                                    "Chester_bot",
+                                    short_command_list
+                                )
+
                                 return
                         elif "@admin" in message:
                             await self.chat_webhook.send(
