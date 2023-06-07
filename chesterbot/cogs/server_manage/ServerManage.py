@@ -148,7 +148,6 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                                 5
                             )
                         )
-
                         if "@help" == message[0:5]:
                             print("help: ", message[0:5])
                             ask = message[5:]
@@ -159,6 +158,7 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                                     "Чтобы получить конкретную информацию используйте '@help название раздела'\n"
                                     + extended_command_list
                                 )
+                                return
                             else:
                                 for command, info in helps.items():
                                     if ask in command:
@@ -166,20 +166,24 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                                             "Chester_bot",
                                             info["full_info"]
                                         )
+                                        return
+                                return
                         elif "@admin" in message:
                             await self.chat_webhook.send(
                                 content=re.sub(r'@admin', self.chester_bot.replies['admin_role_id'], message).strip(),
                                 username=player_name,
                                 avatar_url=avatar_url if avatar_url is not None else self.chester_bot.replies["unknown"]
                             )
+                            return
                         elif "@give_items" in message:
                             await self.chester_bot.wipe_manage.give_items_from_game(player_name)
-
+                            return
                         else:
                             await self.chat_webhook.send(
                                 content=message, username=player_name,
                                 avatar_url=avatar_url if avatar_url is not None else self.chester_bot.replies["unknown"]
                             )
+                            return
                     return
                 await self.log_channel.send(content=("```" + text + "```"))
         except Exception as error:
