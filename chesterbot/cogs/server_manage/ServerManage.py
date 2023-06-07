@@ -134,7 +134,7 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                 if "[Whisper]" in text:
                     await self.log_channel.send(content=("```" + text + "```"))
                 if "[Say]" in text:
-                    ku_id, player_name, message = re.findall(r"\[Say]\s\(([\w\W]+?)\)\s([\w\W]+):([\w\W]+)", text)[0]
+                    ku_id, player_name, message = re.findall(r"\[Say]\s\(([\w\W]+?)\)\s([\w\W]+):\s*([\w\W]+)", text)[0]
 
                     await self.log_channel.send(content=("```" + text + "```"))
                     if message[0] != "$":
