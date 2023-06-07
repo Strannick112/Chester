@@ -86,7 +86,8 @@ async def soft_world_regenerate():
         return False
 
 
-async def send_message_to_game(author, text):
+async def send_message_to_game(author: str, text: str):
+    """Отправляет сообщение от указанного автора в игру"""
     try:
         screen_list = subprocess.run(
             'screen -ls',

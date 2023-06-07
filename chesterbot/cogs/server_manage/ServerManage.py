@@ -8,7 +8,8 @@ from discord.ext import commands, tasks
 
 from chesterbot import main_config, ChesterBot
 from chesterbot.cogs.server_manage.ServerManageView import ServerManageView
-from chesterbot.cogs.server_manage.commands import restart, soft_restart, soft_stop, start, stop
+from chesterbot.cogs.server_manage.commands import restart, soft_restart, soft_stop, start, stop, send_message_to_game
+from chesterbot.cogs.server_manage.helps import helps, extended_command_list
 
 
 class ServerManage(commands.Cog, name="Управление сервером"):
@@ -125,6 +126,10 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                         content=self.chester_bot.replies["enter_phrase"], username="Аномалия: " + text[19:],
                         avatar_url=self.chester_bot.replies["enter_picture"]
                     )
+                    await send_message_to_game(
+                        "Chester_bot",
+                        "Данный игровой сервер оснащён ботом. Используйте @help, чтобы получить больше информации"
+                    )
                     return
                 if "[Whisper]" in text:
                     await self.log_channel.send(content=("```" + text + "```"))
@@ -143,7 +148,23 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                                 5
                             )
                         )
-                        if "@admin" in message:
+
+                        if "@help" in message[0:5]:
+                            ask = message[5:]
+                            if ask == "":
+                                await send_message_to_game(
+                                    "Chester_bot",
+                                    "Чтобы получить конкретную информацию используйте '@help название раздела'\n"
+                                    + extended_command_list
+                                )
+                            else:
+                                for command, info in helps.items():
+                                    if ask in command:
+                                        await send_message_to_game(
+                                            "Chester_bot",
+                                            info["full_info"]
+                                        )
+                        elif "@admin" in message:
                             await self.chat_webhook.send(
                                 content=re.sub(r'@admin', self.chester_bot.replies['admin_role_id'], message).strip(),
                                 username=player_name,
@@ -151,6 +172,7 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                             )
                         elif "@give_items" in message:
                             await self.chester_bot.wipe_manage.give_items_from_game(player_name)
+
                         else:
                             await self.chat_webhook.send(
                                 content=message, username=player_name,
