@@ -116,14 +116,16 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                 if "[Leave Announcement]" in text:
                     await self.log_channel.send(content=("```" + text + "```"))
                     await self.chat_webhook.send(
-                        content=self.chester_bot.replies["exit_phrase"], username="Аномалия: " + text[20:],
+                        content=self.chester_bot.replies["exit_phrase"],
+                        username="Чарли забрала игрока " + text[20:],
                         avatar_url=self.chester_bot.replies["exit_picture"]
                     )
                     return
                 if "[Join Announcement]" in text:
                     await self.log_channel.send(content=("```" + text + "```"))
                     await self.chat_webhook.send(
-                        content=self.chester_bot.replies["enter_phrase"], username="Аномалия: " + text[19:],
+                        content=self.chester_bot.replies["enter_phrase"],
+                        username="В константу забросило игрока " + text[19:],
                         avatar_url=self.chester_bot.replies["enter_picture"]
                     )
                     await send_message_to_game(
