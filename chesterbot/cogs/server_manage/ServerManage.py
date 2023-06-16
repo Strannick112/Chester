@@ -145,7 +145,7 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                             await self.chester_bot.console_dst_checker.check(
                                 f"""screen -S {self.screen_name} -X stuff """
                                 """for _, player in ipairs(AllPlayers) do """
-                                f"""if player and (player.userid == \"{ku_id}\") """ 
+                                f"""if player.userid == \"{ku_id}\" """ 
                                 """then print(\"PlayerPrefab\", player.prefab) end end \n\"""",
                                 ku_id + r"PlayerPrefab\s*(\w+)\s*",
                                 main_config["worlds"][0]["shard_id"],
