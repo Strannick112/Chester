@@ -150,7 +150,7 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
                     # true_command = f"""c_countprefabs("{prefab_code}")"""
                     # packed_command = re.sub(r'\"', r"\"", re.sub(r'\'', r"\'", true_command))
                     # linux_command = f"""screen -S {self.screen_name} -X stuff "{packed_command}\n\""""
-                    command = f"screen -S {self.screen_name} -X stuff \""\
+                    command = f"screen -S {self.screen_name} -X stuff "\
                                      f"\"local count = 0 local prefab = \\\"{prefab_code}\\\" "\
                                      "for k,v in pairs(Ents) do if v.prefab == prefab then "\
                                      "count = count + 1 end end print(\\\"CountPrefab\\\", prefab, count)\n\""
