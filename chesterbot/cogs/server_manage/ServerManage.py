@@ -141,8 +141,11 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                     if message[0] != "$":
                         avatar_url = self.chester_bot.replies.get(
                             await self.chester_bot.console_dst_checker.check(
-                                f"""screen -S {self.screen_name} -X stuff "c_listplayers()\n\"""",
-                                ku_id + r"[\w\W]+?\<(\w+)\>",
+                                f"""screen -S {self.screen_name} -X stuff """
+                                """for _, player in ipairs(AllPlayers) do """
+                                """if player and (player.name == \"Molfar®\") """ 
+                                """then print(\"PlayerPrefab\", player.prefab) end end \n\"""",
+                                ku_id + r"PlayerPrefab\s*(\w+)\s*",
                                 main_config["worlds"][0]["shard_id"],
                                 self.screen_name,
                                 "unknown",
