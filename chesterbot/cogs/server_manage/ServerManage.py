@@ -117,7 +117,7 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                     await self.log_channel.send(content=("```" + text + "```"))
                     await self.chat_webhook.send(
                         content=self.chester_bot.replies["exit_phrase"],
-                        username="Чарли забрала игрока " + text[20:].strip(),
+                        username=text[20:].strip() + " похищен чарли",
                         avatar_url=self.chester_bot.replies["exit_picture"]
                     )
                     return
@@ -125,7 +125,7 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                     await self.log_channel.send(content=("```" + text + "```"))
                     await self.chat_webhook.send(
                         content=self.chester_bot.replies["enter_phrase"],
-                        username="В константу забросило игрока " + text[19:].strip(),
+                        username=text[19:].strip() + " забросило в мир константы",
                         avatar_url=self.chester_bot.replies["enter_picture"]
                     )
                     await send_message_to_game(
