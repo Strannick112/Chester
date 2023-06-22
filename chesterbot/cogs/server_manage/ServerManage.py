@@ -144,7 +144,7 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                         avatar_url = self.chester_bot.replies.get(
                             await self.chester_bot.console_dst_checker.check(
                                 f"""screen -S {self.screen_name} -X stuff \""""
-                                """for _, player in ipairs(AllPlayers) do """
+                                """for _, player in pairs(GetPlayerClientTable()) do """
                                 f"""if player.userid == \\\"{ku_id}\\\" """ 
                                 """then print(\\\"PlayerPrefab\\\", player.userid, player.prefab) end end \n\"""",
                                 r"PlayerPrefab\s*"+ku_id+r"\s*(\w+)\s*",
