@@ -319,6 +319,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                             if reaction.me:
                                 to_approve['bot_ok'] = True
                             continue
+                        print("Reaction.__str__(): ", reaction.__str__())
                         if reaction.__str__() == self.__replies['claim_admin_approved_is_ok']:
                             async for user in reaction.users():
                                 if user == self.chester_bot.user:
