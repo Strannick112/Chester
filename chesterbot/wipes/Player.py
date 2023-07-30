@@ -1,6 +1,7 @@
 import re
 
 from chesterbot import main_config
+from chesterbot.ConsoleDSTChecker import ConsoleDSTChecker
 
 
 class Player:
