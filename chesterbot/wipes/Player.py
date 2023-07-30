@@ -24,10 +24,8 @@ class Player:
             r"PlayerName\s*(" + _dst_nickname + r")\s*",
             main_config["worlds"][0]["shard_id"],
             screen_name,
-            "unknown",
+            "",
             5
         )
-        print("result player_name", result)
-        if result == self.dst_nickname:
-            return True
-        return False
+        print("result player_name: ", result)
+        return result == self.dst_nickname

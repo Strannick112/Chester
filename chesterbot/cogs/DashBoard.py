@@ -147,9 +147,6 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
         for group_name, group in self.data.items():
             for prefab_name, prefab_info in group.items():
                 for prefab_code, prefab_count in prefab_info.items():
-                    # true_command = f"""c_countprefabs("{prefab_code}")"""
-                    # packed_command = re.sub(r'\"', r"\"", re.sub(r'\'', r"\'", true_command))
-                    # linux_command = f"""screen -S {self.screen_name} -X stuff "{packed_command}\n\""""
                     command = f"screen -S {self.screen_name} -X stuff "\
                                      f"\"local count = 0 local prefab = \\\"{prefab_code}\\\" "\
                                      "for k,v in pairs(Ents) do if v.prefab == prefab then "\
