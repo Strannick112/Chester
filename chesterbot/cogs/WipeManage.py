@@ -323,7 +323,9 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                             async for user in reaction.users():
                                 if user == self.chester_bot.user:
                                     continue
+                                print("Master Role: ", main_config['master_role'])
                                 for role in user.roles:
+                                    print("Role.id: ", role.id)
                                     if main_config['master_role'] == role.id:
                                         to_approve['admin_ok'] = True
                                         break
