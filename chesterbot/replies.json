@@ -18,7 +18,7 @@
     "rollback_claims_success": "Откат заявок успешно выполенен",
 
     "claim_accepted_is_ok": "<:3nekohmm:872133257649594499>",
-    "claim_admin_approved_is_ok": "<:3nekoOK:870276538669621319>",
+    "claim_admin_approved_is_ok": "<:3OK:870276538669621319>",
     "claim_error": "<:3nekopolice:872132980720685116>",
     "claim_items_executed": "<:3nekogift:872132513580073050>",
     "claim_is_overdue": "<:3nekowaiintfire:872133130973233193>",
@@ -26,7 +26,7 @@
     "claim_deleted": "<:3nekoprison:870276755460608040>",
     "claim_channel_id": "[880077986072780830, 1023193192209846383]",
     "commands_channel_id": "[1025151299391586304, 1025743931947896844, 1021843197942579320]",
-    "admin_role_id": "<@&1022121631814000650>",
+    "admin_role_id": "1022121631814000650",
 
     "unknown": "https://media.discordapp.net/attachments/871824345780080690/1112422709352206336/unknown.png",
     "walter": "https://media.discordapp.net/attachments/871824345780080690/1112422709616443502/Walter.png",
