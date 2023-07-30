@@ -188,7 +188,10 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                 await send_message_to_game("Chester_bot", cur_claim.player.dst_nickname + ", " + self.__replies['give_items_fail_executed'])
                 return False
             # Попытка выдать вещи
-            if await cur_claim.give_items(created_at if created_at is not None else message.created_at.__str__()):
+            if await cur_claim.give_items(
+                    created_at if created_at is not None else message.created_at.__str__(),
+                    self.chester_bot.console_dst_checker
+            ):
                 await message.reply(
                     content="[" + main_config["server_name"] + "] @" +
                             cur_claim.player.discord_nickname + " , " +
