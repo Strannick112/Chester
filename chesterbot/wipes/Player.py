@@ -27,6 +27,7 @@ class Player:
             "unknown",
             5
         )
+        print("result player_name", result)
         if result == self.dst_nickname:
             return True
         return False
