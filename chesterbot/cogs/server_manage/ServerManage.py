@@ -155,9 +155,9 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                             )
                         )
                         if "@help" == message[0:5]:
-                            print("help: ", message[0:5])
+                            # print("help: ", message[0:5])
                             ask = message[5:].strip()
-                            print("ask: \"", ask, "\"")
+                            # print("ask: \"", ask, "\"")
                             for parts in helps.values():
                                 for command, info in parts.items():
                                     if command in ask:

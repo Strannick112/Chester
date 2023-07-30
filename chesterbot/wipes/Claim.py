@@ -60,11 +60,8 @@ class Claim:
         )
 
     async def give_items(self, executed_at: str, console_dst_checker: ConsoleDSTChecker) -> bool:
-        print("claim!")
         if self.status == Status.approved:
-            print("approved!")
             for world in main_config["worlds"]:
-                print("shard:", world["shard_id"])
                 for item in self.items:
                     dst_nickname = re.sub(r'\'', r"\\\\\'", self.player.dst_nickname)
                     dst_nickname = re.sub(r'\"', r"\\\\\"", dst_nickname)
@@ -79,7 +76,6 @@ class Claim:
                         r')"\)[\w\W]*?\.\.\."\]\:1\: attempt to index a nil value',
                         world["shard_id"], world["screen_name"], "is_normal", 5
                         )
-                    print("result:", result)
                     if result == dst_nickname:
                         break
                 else:

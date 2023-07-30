@@ -28,5 +28,4 @@ class Player:
             "",
             5
         )
-        print("result player_name: ", result)
         return result == self.dst_nickname

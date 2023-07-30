@@ -188,9 +188,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                 await send_message_to_game("Chester_bot", cur_claim.player.dst_nickname + ", " + self.__replies['give_items_fail_executed'])
                 return False
             # Проверка на наличие игрока в игре
-            print("meaw -1")
             if not await cur_claim.player.is_player_online(self.chester_bot.console_dst_checker):
-                print("meaw 0")
                 await message.reply(
                     content="[" + main_config["server_name"] + "] @" +
                             cur_claim.player.discord_nickname + " , " +
@@ -198,7 +196,6 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                 )
                 await message.add_reaction(self.__replies['player_is_not_online'])
                 return False
-            print("meaw 1")
             # Попытка выдать вещи
             if await cur_claim.give_items(
                     created_at if created_at is not None else message.created_at.__str__(),
@@ -330,7 +327,6 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                         continue
                     to_approve = {'bot_ok': False, 'admin_ok': False}
                     for reaction in msg.reactions:
-                        print("Reaction.__str__(): ", reaction.__str__())
                         if reaction.__str__() == self.__replies['claim_accepted_is_ok']:
                             if reaction.me:
                                 to_approve['bot_ok'] = True
@@ -339,9 +335,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                             async for user in reaction.users():
                                 if user == self.chester_bot.user:
                                     continue
-                                print("Master Role: ", main_config['master_role'])
                                 for role in user.roles:
-                                    print("Role.id: ", role.id)
                                     if main_config['master_role'] == role.id:
                                         to_approve['admin_ok'] = True
                                         break
@@ -362,10 +356,6 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                 text
         ):
             loot = re.findall(r'''(\w[\w\s].+?) \("([\w].+?)"\)''', message[0][1])
-            print(f"Игровой ник: {message[0][0]}")
-            for item in loot:
-                print(f"Игровое название предмета: {item[0]}")
-                print(f"Код для консоли: {item[1]}")
             return Claim(
                 Player(author, message[0][0]),
                 tuple(Item(item[0], item[1]) for item in loot),
