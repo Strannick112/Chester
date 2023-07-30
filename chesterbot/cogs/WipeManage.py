@@ -324,7 +324,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                                 if user == self.chester_bot.user:
                                     continue
                                 for role in user.roles:
-                                    if main_config['master_role'] == role.name:
+                                    if main_config['master_role'] == role.id:
                                         to_approve['admin_ok'] = True
                                         break
                             continue
