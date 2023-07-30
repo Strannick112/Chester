@@ -61,6 +61,7 @@ class Claim:
 
     async def give_items(self, executed_at: str, console_dst_checker: ConsoleDSTChecker) -> bool:
         if self.status == Status.approved:
+            print("approved!")
             for world in main_config["worlds"]:
                 print("shard:", world["shard_id"])
                 for item in self.items:
