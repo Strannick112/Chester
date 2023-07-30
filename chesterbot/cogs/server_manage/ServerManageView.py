@@ -39,7 +39,7 @@ class ServerManageView(View):
 
     async def interaction_check(self, interaction: Interaction, /) -> bool:
         for role in interaction.user.roles:
-            if role.__str__() == main_config['master_role']:
+            if role.id == main_config['master_role']:
                 return True
         else:
             return False
