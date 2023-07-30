@@ -62,6 +62,7 @@ class Claim:
     async def give_items(self, executed_at: str, console_dst_checker: ConsoleDSTChecker) -> bool:
         if self.status == Status.approved:
             for world in main_config["worlds"]:
+                print("shard:", world["shard_id"])
                 for item in self.items:
                     dst_nickname = re.sub(r'\'', r"\\\\\'", self.player.dst_nickname)
                     dst_nickname = re.sub(r'\"', r"\\\\\"", dst_nickname)
