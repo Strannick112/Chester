@@ -74,10 +74,10 @@ class Claim:
                         command,
                         r'[string "UserToPlayer\("(' +
                         dst_nickname +
-                        r')"\)[\w\W]*?..."]:1: attempt to index a nil value',
+                        r')"\)[\w\W]*?\.\.\."]:1: attempt to index a nil value',
                         world["shard_id"], world["screen_name"], "is_normal", 5
                         )
-                    if result == "is_normal":
+                    if result == dst_nickname:
                         break
                 else:
                     self.executed_at = executed_at
