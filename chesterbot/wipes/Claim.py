@@ -72,12 +72,12 @@ class Claim:
                         f"""GiveItem(SpawnPrefab(\\\"{item_id}\\\"))\n\""""
                     result = await console_dst_checker.check(
                         command,
-                        r'[string "UserToPlayer("' +
+                        r'[string "UserToPlayer\("(' +
                         dst_nickname +
-                        r'").components.inventory:G..."]:1: attempt to index a nil value',
+                        r')"\)[\w\W]*?..."]:1: attempt to index a nil value',
                         world["shard_id"], world["screen_name"], "is_normal", 5
                         )
-                    if result != "is_normal":
+                    if result == "is_normal":
                         break
                 else:
                     self.executed_at = executed_at
