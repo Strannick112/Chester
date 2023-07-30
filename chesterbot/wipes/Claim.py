@@ -1,3 +1,4 @@
+import asyncio
 import codecs
 import json
 import os
@@ -5,6 +6,7 @@ import re
 import shlex
 import subprocess
 
+from chesterbot.ConsoleDSTChecker import ConsoleDSTChecker
 from chesterbot.config import main_config
 from chesterbot.wipes import main_dir
 from chesterbot.wipes.Item import Item
@@ -57,28 +59,32 @@ class Claim:
             raw_dict['status'],
         )
 
-    def give_items(self, executed_at: str) -> bool:
+    async def give_items(self, executed_at: str, console_dst_checker: ConsoleDSTChecker) -> bool:
         if self.status == Status.approved:
-            for item in self.items:
-                dst_nickname = re.sub(r'\'', r"\\\\\'", self.player.dst_nickname)
-                dst_nickname = re.sub(r'\"', r"\\\\\"", dst_nickname)
-                # dst_nickname = shlex.quote(self.player.dst_nickname)
-                item_id = shlex.quote(item.id)
-                subprocess.check_output(
-                    f"""screen -S {main_config['server_main_screen_name']} -X stuff""" +
-                    f""" "UserToPlayer(\\\"{dst_nickname}\\\").components.inventory:""" +
-                    f"""GiveItem(SpawnPrefab(\\\"{item_id}\\\"))\n\"""",
-                    shell=True
-                )
-                # os.system(
-                #     f'''screen -S {main_config['server_main_screen_name']} -X stuff "UserToPlayer(\"{self.player.dst_nickname}\").components.inventory:GiveItem(SpawnPrefab(\"{item.id}\"))\n\"'''
-                # )
-            self.executed_at = executed_at
-            self.status = Status.executed
-            self.save()
-            return True
-        else:
-            return False
+            for world in main_config["worlds"]:
+                for item in self.items:
+                    dst_nickname = re.sub(r'\'', r"\\\\\'", self.player.dst_nickname)
+                    dst_nickname = re.sub(r'\"', r"\\\\\"", dst_nickname)
+                    # dst_nickname = shlex.quote(self.player.dst_nickname)
+                    item_id = shlex.quote(item.id)
+                    command = f"""screen -S {world["screen_name"]} -X stuff"""\
+                        f""" "UserToPlayer(\\\"{dst_nickname}\\\").components.inventory:"""\
+                        f"""GiveItem(SpawnPrefab(\\\"{item_id}\\\"))\n\""""
+                    result = await console_dst_checker.check(
+                        command,
+                        r'[string "UserToPlayer("' +
+                        dst_nickname +
+                        r'").components.inventory:G..."]:1: attempt to index a nil value',
+                        world["shard_id"], world["screen_name"], "is_normal", 5
+                        )
+                    if result != "is_normal":
+                        break
+                else:
+                    self.executed_at = executed_at
+                    self.status = Status.executed
+                    self.save()
+                    return True
+        return False
 
     def rollback_claim(self) -> bool:
         if self.status == Status.executed:

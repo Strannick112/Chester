@@ -39,6 +39,7 @@ for world in main_config["worlds"]:
         world["full_path_to_server_log_file"], "r", encoding="utf-8"
     )
     world["file_log_iter"].seek(0, 2)
+    world["screen_name"] = main_config['short_server_name'] + world["shard_id"]
 
 main_config["full_path_to_server_chat_log_file"] = \
     main_config['path_to_save'] + "/" + main_config["worlds"][0]["folder_name"] + "/server_chat_log.txt"

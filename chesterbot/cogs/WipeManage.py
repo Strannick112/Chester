@@ -164,8 +164,10 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
         else:
             user_name = author
         message = ctx if type(ctx) is WebhookMessage else ctx.message
+        # Проверка на наличие заявки у игрока
         if user_name in wipes.last_wipe.claims:
             cur_claim = wipes.last_wipe.claims[user_name]
+            # Проверка на одобренность заявки
             if cur_claim.status == Status.not_approved:
                 await message.reply(
                     content="[" + main_config["server_name"] + "] @" +
@@ -175,6 +177,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                 await message.add_reaction(self.__replies['claim_error'])
                 await send_message_to_game("Chester_bot", cur_claim.player.dst_nickname + ", " + self.__replies['give_items_fail_not_approved'])
                 return False
+            # Проверка на выполненность заявки
             if cur_claim.status == Status.executed:
                 await message.reply(
                     content="[" + main_config["server_name"] + "] @" +
@@ -184,7 +187,8 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                 await message.add_reaction(self.__replies['claim_error'])
                 await send_message_to_game("Chester_bot", cur_claim.player.dst_nickname + ", " + self.__replies['give_items_fail_executed'])
                 return False
-            if cur_claim.give_items(created_at if created_at is not None else message.created_at.__str__()):
+            # Попытка выдать вещи
+            if await cur_claim.give_items(created_at if created_at is not None else message.created_at.__str__()):
                 await message.reply(
                     content="[" + main_config["server_name"] + "] @" +
                             cur_claim.player.discord_nickname + " , " +

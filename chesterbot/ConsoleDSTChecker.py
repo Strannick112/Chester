@@ -22,8 +22,9 @@ class ConsoleDSTChecker:
             self.__checker.start(self.__all_commands[world["shard_id"]], world)
             self.__log_file_check.start(world)
 
-
-    async def check(self, command: str, reg_answer: str, shard_id: int, screen_name: str, default_answer: int, timeout: int):
+    async def check(
+            self, command: str, reg_answer: str, shard_id: int, screen_name: str, default_answer: str, timeout: int
+    ):
         try:
             screen_list = subprocess.run(
                 'screen -ls',

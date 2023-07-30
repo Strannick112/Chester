@@ -15,7 +15,7 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
         self.chester_bot = bot
         self.shard_id = world["shard_id"]
         self.public_name = world["public_name"]
-        self.screen_name = main_config['short_server_name'] + self.shard_id.__str__()
+        self.screen_name = world["screen_name"]
         self.data = DashBoard.__data[world["world_type"]].copy()
         self.__cog_name__ += self.screen_name
 
