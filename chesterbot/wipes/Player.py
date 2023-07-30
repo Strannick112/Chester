@@ -22,7 +22,7 @@ class Player:
             """for _, player in pairs(GetPlayerClientTable()) do """
             f"""if player.name == \\\"{_dst_nickname}\\\" """
             """then print(\\\"PlayerName: \\\", player.name) end end \n\"""",
-            r"PlayerName :\s*(" + _dst_nickname + r")\s*",
+            r"PlayerName:\s*(" + _dst_nickname + r")\s*",
             main_config["worlds"][0]["shard_id"],
             screen_name,
             "",
