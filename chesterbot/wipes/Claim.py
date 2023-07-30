@@ -65,7 +65,6 @@ class Claim:
                 for item in self.items:
                     dst_nickname = re.sub(r'\'', r"\\\\\'", self.player.dst_nickname)
                     dst_nickname = re.sub(r'\"', r"\\\\\"", dst_nickname)
-                    # dst_nickname = shlex.quote(self.player.dst_nickname)
                     item_id = shlex.quote(item.id)
                     command = f"""screen -S {world["screen_name"]} -X stuff"""\
                         f""" "UserToPlayer(\\\"{dst_nickname}\\\").components.inventory:"""\

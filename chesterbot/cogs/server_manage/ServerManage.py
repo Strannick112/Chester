@@ -182,10 +182,6 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                                             "",
                                             command + ": " + info["short_info"]
                                         )
-                                # await send_message_to_game(
-                                #     "Chester_bot",
-                                #     "Разделы: " + short_command_list
-                                # )
                                 return
                         elif "@admin" in message:
                             await self.chat_webhook.send(

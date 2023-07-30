@@ -187,6 +187,15 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                 await message.add_reaction(self.__replies['claim_error'])
                 await send_message_to_game("Chester_bot", cur_claim.player.dst_nickname + ", " + self.__replies['give_items_fail_executed'])
                 return False
+            # Проверка на наличие игрока в игре
+            if await cur_claim.player.is_player_online():
+                await message.reply(
+                    content="[" + main_config["server_name"] + "] @" +
+                            cur_claim.player.discord_nickname + " , " +
+                            self.__replies['player_is_not_online_phrase']
+                )
+                await message.add_reaction(self.__replies['player_is_not_online'])
+                return False
             # Попытка выдать вещи
             if await cur_claim.give_items(
                     created_at if created_at is not None else message.created_at.__str__(),
