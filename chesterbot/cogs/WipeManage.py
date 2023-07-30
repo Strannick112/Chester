@@ -309,10 +309,13 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                         .history(
                     after=datetime.datetime.strptime(wipes.last_wipe.started_at, '%Y-%m-%d %H:%M:%S.%f%z')
                 ):
+                    print("meaw1")
                     if msg.author == self.chester_bot.user:
                         continue
+                    print("meaw2")
                     if msg.author.__str__() not in wipes.last_wipe.claims.keys():
                         continue
+                    print("meaw3")
                     to_approve = {'bot_ok': False, 'admin_ok': False}
                     for reaction in msg.reactions:
                         print("Reaction.__str__(): ", reaction.__str__())
