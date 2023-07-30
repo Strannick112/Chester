@@ -188,8 +188,9 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                 await send_message_to_game("Chester_bot", cur_claim.player.dst_nickname + ", " + self.__replies['give_items_fail_executed'])
                 return False
             # Проверка на наличие игрока в игре
-            is_player_online = await cur_claim.player.is_player_online(self.chester_bot.console_dst_checker)
-            if is_player_online:
+            print("meaw -1")
+            if not await cur_claim.player.is_player_online(self.chester_bot.console_dst_checker):
+                print("meaw 0")
                 await message.reply(
                     content="[" + main_config["server_name"] + "] @" +
                             cur_claim.player.discord_nickname + " , " +
@@ -197,6 +198,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                 )
                 await message.add_reaction(self.__replies['player_is_not_online'])
                 return False
+            print("meaw 1")
             # Попытка выдать вещи
             if await cur_claim.give_items(
                     created_at if created_at is not None else message.created_at.__str__(),
@@ -313,27 +315,19 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
         """Закрывает набор заявок от игроков"""
         if wipes.last_wipe.stoped_at == "":
             await ctx.reply(self.__replies['stop_success'])
-            print("meaw-10")
             cur_time = ctx.message.created_at.__str__()
-            print("meaw-9")
             wipes.last_wipe.stoped_at = cur_time
-            print("meaw-8")
             wipes.last_wipe.save()
-            print("meaw-7")
             for channel_id in self.__replies['claim_channel_id']:
-                print("meaw-1")
                 async for msg in self.chester_bot \
                         .get_channel(channel_id) \
                         .history(
                     after=datetime.datetime.strptime(wipes.last_wipe.started_at, '%Y-%m-%d %H:%M:%S.%f%z')
                 ):
-                    print("meaw1")
                     if msg.author == self.chester_bot.user:
                         continue
-                    print("meaw2")
                     if msg.author.__str__() not in wipes.last_wipe.claims.keys():
                         continue
-                    print("meaw3")
                     to_approve = {'bot_ok': False, 'admin_ok': False}
                     for reaction in msg.reactions:
                         print("Reaction.__str__(): ", reaction.__str__())
