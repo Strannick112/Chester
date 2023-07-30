@@ -300,10 +300,15 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
         """Закрывает набор заявок от игроков"""
         if wipes.last_wipe.stoped_at == "":
             await ctx.reply(self.__replies['stop_success'])
+            print("meaw-10")
             cur_time = ctx.message.created_at.__str__()
+            print("meaw-9")
             wipes.last_wipe.stoped_at = cur_time
+            print("meaw-8")
             wipes.last_wipe.save()
+            print("meaw-7")
             for channel_id in self.__replies['claim_channel_id']:
+                print("meaw-1")
                 async for msg in self.chester_bot \
                         .get_channel(channel_id) \
                         .history(
