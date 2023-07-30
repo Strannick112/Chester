@@ -188,7 +188,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                 await send_message_to_game("Chester_bot", cur_claim.player.dst_nickname + ", " + self.__replies['give_items_fail_executed'])
                 return False
             # Проверка на наличие игрока в игре
-            if await cur_claim.player.is_player_online():
+            if await cur_claim.player.is_player_online(self.chester_bot.console_dst_checker):
                 await message.reply(
                     content="[" + main_config["server_name"] + "] @" +
                             cur_claim.player.discord_nickname + " , " +
