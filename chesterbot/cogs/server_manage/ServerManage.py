@@ -1,3 +1,4 @@
+import asyncio
 import codecs
 import os
 import re
@@ -112,6 +113,17 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                         content=text[14:], username="Announcement",
                         avatar_url=self.chester_bot.replies["announcement_picture"]
                     )
+                    return
+                if len(re.findall(
+                        r"Серверный мод «[\w\W]+?» устарел\. "
+                        "На сервер нужно установить последнюю версию из Steam Workshop,"
+                        " чтобы могли присоединяться другие игроки\.", text)):
+                    await self.log_channel.send(content=("```" + text + "```"))
+                    await self.chat_webhook.send(
+                        content=text, username="Announcement",
+                        avatar_url=self.chester_bot.replies["announcement_picture"]
+                    )
+                    await soft_restart()
                     return
                 if "[Leave Announcement]" in text:
                     await self.log_channel.send(content=("```" + text + "```"))

@@ -126,10 +126,15 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
 
     async def update_dashboard(self):
         dashboard = self.make_dashboard()
-        await self.log_message.edit(content=dashboard)
+        try:
+            await self.log_message.edit(content=dashboard)
+        finally:
+            pass
         await asyncio.sleep(random.randint(3, 10))
-        await self.chat_message.edit(content=dashboard)
-
+        try:
+            await self.chat_message.edit(content=dashboard)
+        finally:
+            pass
 
     def make_dashboard(self):
         text = "```"
