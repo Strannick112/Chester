@@ -115,9 +115,9 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                     )
                     return
                 if len(re.findall(
-                        r"Серверный мод «[\w\W]+?» устарел\. "
-                        "На сервер нужно установить последнюю версию из Steam Workshop,"
-                        " чтобы могли присоединяться другие игроки\.", text)):
+                        r"Mod \"[\w\W]+?\" is out of date\. "
+                        r"The server needs to get the latest version "
+                        r"from the Steam Workshop so other users can join\.", text)):
                     await self.log_channel.send(content=("```" + text + "```"))
                     await self.chat_webhook.send(
                         content=text, username="Announcement",
