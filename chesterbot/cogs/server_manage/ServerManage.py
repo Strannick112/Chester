@@ -114,17 +114,18 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                         avatar_url=self.chester_bot.replies["announcement_picture"]
                     )
                     return
-                if len(re.findall(
-                        r"Mod \"[\w\W]+?\" is out of date\. "
-                        r"The server needs to get the latest version "
-                        r"from the Steam Workshop so other users can join\.", text)):
-                    await self.log_channel.send(content=("```" + text + "```"))
-                    await self.chat_webhook.send(
+                if "[Mod Warning]" in text:
+                    if len(re.findall(
+                            r"\[Mod Warning] [\w\W]+? is out of date"
+                            r" and needs to be updated for new users"
+                            r"to be able to join the server\.", text)):
+                        await self.log_channel.send(content=("```" + text + "```"))
+                        await self.chat_webhook.send(
                         content=text, username="Announcement",
                         avatar_url=self.chester_bot.replies["announcement_picture"]
-                    )
-                    await soft_restart()
-                    return
+                        )
+                        await soft_restart()
+                        return
                 if "[Leave Announcement]" in text:
                     await self.log_channel.send(content=("```" + text + "```"))
                     await self.chat_webhook.send(
