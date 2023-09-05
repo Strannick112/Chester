@@ -112,11 +112,15 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
 
         with codecs.open(f"./chesterbot/cogs/dashboard/{self.shard_id}.json", "rb", encoding="utf-8") as file:
             self.chat_message_id, self.log_message_id = json.load(file)
-
+        embed = discord.Embed(
+            title=self.public_name,
+            description="Доска создана, начат сбор информации...",
+            colour=discord.Colour.dark_teal()
+        )
         try:
             self.chat_message = await self.chat_channel.fetch_message(self.chat_message_id)
         except:
-            self.chat_message = await self.chat_channel.send(content="Доска создана, начат сбор информации...")
+            self.chat_message = await self.chat_channel.send(embed=embed)
             self.chat_message_id = self.chat_message.id
             with codecs.open(f"./chesterbot/cogs/dashboard/{self.shard_id}.json", "w", encoding="utf-8") as file:
                 json.dump((self.chat_message_id, self.log_message_id), file)
@@ -124,7 +128,7 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
         try:
             self.log_message = await self.log_channel.fetch_message(self.log_message_id)
         except:
-            self.log_message = await self.log_channel.send(content="Доска создана, начат сбор информации...")
+            self.log_message = await self.log_channel.send(embed=embed)
             self.log_message_id = self.log_message.id
             with codecs.open(f"./chesterbot/cogs/dashboard/{self.shard_id}.json", "w", encoding="utf-8") as file:
                 json.dump((self.chat_message_id, self.log_message_id), file)
