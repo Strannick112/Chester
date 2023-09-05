@@ -5,6 +5,7 @@ import os.path
 import random
 import re
 
+import discord
 from discord.ext import commands, tasks
 
 from chesterbot import main_config
@@ -18,6 +19,12 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
         self.screen_name = world["screen_name"]
         self.data = DashBoard.__data[world["world_type"]].copy()
         self.__cog_name__ += self.screen_name
+        self.chat_channel = None
+        self.log_channel = None
+        self.chat_message = None
+        self.chat_message_id = None
+        self.log_message = None
+        self.log_message_id = None
 
     __data = {
         "overworld": {
@@ -127,24 +134,27 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
     async def update_dashboard(self):
         dashboard = self.make_dashboard()
         try:
-            await self.log_message.edit(content=dashboard)
+            embed = discord.Embed(title=self.public_name, description=dashboard, colour=discord.Colour.dark_teal())
+            embed.set_author(name="Chester", url=self.chester_bot.replies["announcement_picture"])
+            await self.log_message.edit(embed=embed)
         finally:
             pass
         await asyncio.sleep(random.randint(3, 10))
         try:
-            await self.chat_message.edit(content=dashboard)
+            await self.chat_message.edit(embed=embed)
         finally:
             pass
 
     def make_dashboard(self):
-        text = "```"
-        text += self.public_name + "\n\n"
+        # text = "```"
+        # text = self.public_name + "\n\n"
+        text = ""
         for group_name, group in self.data.items():
             text += group_name + ":\n\n"
             for prefab_name, prefab_info in group.items():
                 text += prefab_name + ": " + (sum(prefab_info.values()).__str__()) + ";\n"
             text += "\n"
-        text += "```"
+        # text += "```"
         return text
 
     @tasks.loop(minutes=1)
