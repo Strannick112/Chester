@@ -134,14 +134,14 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
     async def update_dashboard(self):
         dashboard = self.make_dashboard()
         try:
-            embed = discord.Embed(title=self.public_name, description="dashboard", colour=discord.Colour.dark_teal())
+            embed = discord.Embed(title=self.public_name, description=dashboard, colour=discord.Colour.dark_teal())
             embed.set_author(name="Chester", url=self.chester_bot.replies["announcement_picture"])
-            await self.log_message.edit(content=".", embed=embed)
+            await self.log_message.edit(embed=embed)
         finally:
             pass
         await asyncio.sleep(random.randint(3, 10))
         try:
-            await self.chat_message.edit(content=".", embed=embed)
+            await self.chat_message.edit(embed=embed)
         finally:
             pass
 
