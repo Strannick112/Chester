@@ -15,6 +15,7 @@ main_config = {
     "game_chat_sync_channel": 0,
     "game_log_sync_channel": 0,
     "command_channel": 0,
+    "dashboard_channel": 0,
     "path_to_save": "/path/to/save_folder",
 
     "worlds": [

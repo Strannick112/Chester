@@ -19,12 +19,9 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
         self.screen_name = world["screen_name"]
         self.data = DashBoard.__data[world["world_type"]].copy()
         self.__cog_name__ += self.screen_name
-        self.chat_channel = None
-        self.log_channel = None
-        self.chat_message = None
-        self.chat_message_id = None
-        self.log_message = None
-        self.log_message_id = None
+        self.channel = None
+        self.message = None
+        self.message_id = None
 
     __data = {
         "overworld": {
@@ -102,8 +99,7 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
     }
 
     async def on_ready(self):
-        self.chat_channel = self.chester_bot.get_channel(main_config["game_chat_sync_channel"])
-        self.log_channel = self.chester_bot.get_channel(main_config["game_log_sync_channel"])
+        self.channel = self.chester_bot.get_channel(main_config["dashboard_channel"])
         if not os.path.exists("./chesterbot/cogs/dashboard"):
             os.mkdir("./chesterbot/cogs/dashboard")
         if not os.path.exists(f"./chesterbot/cogs/dashboard/{self.shard_id}.json"):
@@ -111,7 +107,7 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
                 json.dump((0, 0), file)
 
         with codecs.open(f"./chesterbot/cogs/dashboard/{self.shard_id}.json", "rb", encoding="utf-8") as file:
-            self.chat_message_id, self.log_message_id = json.load(file)
+            self.message_id = json.load(file)
 
         embed = discord.Embed(
             title=self.public_name,
@@ -119,20 +115,12 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
             colour=discord.Colour.dark_teal()
         )
         try:
-            self.chat_message = await self.chat_channel.fetch_message(self.chat_message_id)
+            self.message = await self.channel.fetch_message(self.message_id)
         except:
-            self.chat_message = await self.chat_channel.send(embed=embed)
-            self.chat_message_id = self.chat_message.id
+            self.message = await self.channel.send(embed=embed)
+            self.message_id = self.message.id
             with codecs.open(f"./chesterbot/cogs/dashboard/{self.shard_id}.json", "w", encoding="utf-8") as file:
-                json.dump((self.chat_message_id, self.log_message_id), file)
-
-        try:
-            self.log_message = await self.log_channel.fetch_message(self.log_message_id)
-        except:
-            self.log_message = await self.log_channel.send(embed=embed)
-            self.log_message_id = self.log_message.id
-            with codecs.open(f"./chesterbot/cogs/dashboard/{self.shard_id}.json", "w", encoding="utf-8") as file:
-                json.dump((self.chat_message_id, self.log_message_id), file)
+                json.dump(self.message_id, file)
 
         self.reload_data.start()
 
@@ -141,25 +129,17 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
         try:
             embed = discord.Embed(title=self.public_name, description=dashboard, colour=discord.Colour.dark_teal())
             embed.set_author(name="Chester", url=self.chester_bot.replies["announcement_picture"])
-            await self.log_message.edit(embed=embed)
-        finally:
-            pass
-        await asyncio.sleep(random.randint(3, 10))
-        try:
-            await self.chat_message.edit(embed=embed)
+            await self.message.edit(embed=embed)
         finally:
             pass
 
     def make_dashboard(self):
-        # text = "```"
-        # text = self.public_name + "\n\n"
         text = ""
         for group_name, group in self.data.items():
             text += group_name + ":\n\n"
             for prefab_name, prefab_info in group.items():
                 text += prefab_name + ": " + (sum(prefab_info.values()).__str__()) + ";\n"
             text += "\n"
-        # text += "```"
         return text
 
     @tasks.loop(minutes=1)
