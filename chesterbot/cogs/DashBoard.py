@@ -136,7 +136,7 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
         embed.set_author(name="Chester", url=self.chester_bot.replies["announcement_picture"])
 
         for group_name, group in self.data.items():
-            text = group_name + ":\n\n"
+            text = ""
             for prefab_name, prefab_info in group.items():
                 text += prefab_name + ": " + (sum(prefab_info.values()).__str__()) + ";\n"
             embed.add_field(name=group_name, value=text, inline=True)
