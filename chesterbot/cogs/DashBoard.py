@@ -1,27 +1,15 @@
 import asyncio
-import codecs
-import json
-import os.path
 import random
-import re
 
 import discord
-from discord.ext import commands, tasks
 
-from chesterbot import main_config
-
-
-class DashBoard(commands.Cog, name="Доска подсчёта"):
+class DashBoard:
     def __init__(self, bot, world):
         self.chester_bot = bot
         self.shard_id = world["shard_id"]
         self.public_name = world["public_name"]
         self.screen_name = world["screen_name"]
         self.data = DashBoard.__data[world["world_type"]].copy()
-        self.__cog_name__ += self.screen_name
-        self.channel = None
-        self.message = None
-        self.message_id = None
 
     __data = {
         "overworld": {
@@ -98,39 +86,6 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
         }
     }
 
-    async def on_ready(self):
-        self.channel = self.chester_bot.get_channel(main_config["dashboard_channel"])
-        if not os.path.exists("./chesterbot/cogs/dashboard"):
-            os.mkdir("./chesterbot/cogs/dashboard")
-        if not os.path.exists(f"./chesterbot/cogs/dashboard/{self.shard_id}.json"):
-            with codecs.open(f"./chesterbot/cogs/dashboard/{self.shard_id}.json", "w", encoding="utf-8") as file:
-                json.dump((0, 0), file)
-
-        with codecs.open(f"./chesterbot/cogs/dashboard/{self.shard_id}.json", "rb", encoding="utf-8") as file:
-            self.message_id = json.load(file)
-
-        embed = discord.Embed(
-            title=self.public_name,
-            description="Доска создана, начат сбор информации...",
-            colour=discord.Colour.dark_teal()
-        )
-        try:
-            self.message = await self.channel.fetch_message(self.message_id)
-        except:
-            self.message = await self.channel.send(embed=embed)
-            self.message_id = self.message.id
-            with codecs.open(f"./chesterbot/cogs/dashboard/{self.shard_id}.json", "w", encoding="utf-8") as file:
-                json.dump(self.message_id, file)
-
-        self.reload_data.start()
-
-    async def update_dashboard(self):
-        dashboard = await self.make_dashboard()
-        try:
-            await self.message.edit(embed=dashboard)
-        finally:
-            pass
-
     async def _get_season(self):
         return await self.chester_bot.console_dst_checker.check(
             "command", r"catch", self.shard_id, self.screen_name, 0, 5
@@ -147,7 +102,6 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
             embed.add_field(name=group_name, value=text, inline=True)
         return embed
 
-    @tasks.loop(minutes=1)
     async def reload_data(self):
         for group_name, group in self.data.items():
             for prefab_name, prefab_info in group.items():
@@ -165,4 +119,3 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
                         )
                     )
             await asyncio.sleep(random.randint(3, 10))
-            await self.update_dashboard()
