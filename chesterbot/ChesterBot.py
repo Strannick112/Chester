@@ -47,8 +47,7 @@ class ChesterBot(commands.Bot):
         await self.add_cog(self.server_manage)
         await self.add_cog(self.bot_manage)
         await self.add_cog(self.wipe_manage)
-        for dashboard in self.dashboards:
-            await self.add_cog(dashboard)
+        await self.add_cog(self.dashboards)
 
     async def start(self, token: str = main_config['token'], *, reconnect: bool = True):
         await self.init()
