@@ -132,8 +132,8 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
             pass
 
     def make_dashboard(self):
-        embed = discord.Embed(title="Доска подсчёта", colour=discord.Colour.dark_teal())
-        embed.set_author(name=self.public_name, url=self.chester_bot.replies["announcement_picture"])
+        embed = discord.Embed(colour=discord.Colour.dark_teal())
+        embed.set_author(name=self.public_name)
         for group_name, group in self.data.items():
             text = ""
             for prefab_name, prefab_info in group.items():
