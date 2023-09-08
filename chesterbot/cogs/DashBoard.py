@@ -125,15 +125,21 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
         self.reload_data.start()
 
     async def update_dashboard(self):
-        dashboard = self.make_dashboard()
+        dashboard = await self.make_dashboard()
         try:
             await self.message.edit(embed=dashboard)
         finally:
             pass
 
-    def make_dashboard(self):
+    async def _get_season(self):
+        return await self.chester_bot.console_dst_checker.check(
+            "command", r"catch", self.shard_id, self.screen_name, 0, 5
+        )
+
+    async def make_dashboard(self):
         embed = discord.Embed(colour=discord.Colour.dark_teal())
         embed.set_author(name=self.public_name)
+        embed.set_image(url=self.chester_bot.replies[await self._get_season()])
         for group_name, group in self.data.items():
             text = ""
             for prefab_name, prefab_info in group.items():
