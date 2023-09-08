@@ -127,20 +127,20 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
     async def update_dashboard(self):
         dashboard = self.make_dashboard()
         try:
-            embed = discord.Embed(title=self.public_name, description=dashboard, colour=discord.Colour.dark_teal())
-            embed.set_author(name="Chester", url=self.chester_bot.replies["announcement_picture"])
-            await self.message.edit(embed=embed)
+            await self.message.edit(embed=dashboard)
         finally:
             pass
 
     def make_dashboard(self):
-        text = ""
+        embed = discord.Embed(title=self.public_name, colour=discord.Colour.dark_teal())
+        embed.set_author(name="Chester", url=self.chester_bot.replies["announcement_picture"])
+
         for group_name, group in self.data.items():
-            text += group_name + ":\n\n"
+            text = group_name + ":\n\n"
             for prefab_name, prefab_info in group.items():
                 text += prefab_name + ": " + (sum(prefab_info.values()).__str__()) + ";\n"
-            text += "\n"
-        return text
+            embed.add_field(name=group_name, value=text, inline=True)
+        return embed
 
     @tasks.loop(minutes=1)
     async def reload_data(self):
