@@ -94,7 +94,7 @@ class DashBoard:
     async def make_dashboard(self):
         embed = discord.Embed(colour=discord.Colour.dark_teal())
         embed.set_author(name=self.public_name)
-        embed.set_image(url=self.chester_bot.replies[await self._get_season()])
+        # embed.set_image(url=self.chester_bot.replies[await self._get_season()])
         for group_name, group in self.data.items():
             text = ""
             for prefab_name, prefab_info in group.items():
