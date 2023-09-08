@@ -112,6 +112,7 @@ class DashBoard(commands.Cog, name="Доска подсчёта"):
 
         with codecs.open(f"./chesterbot/cogs/dashboard/{self.shard_id}.json", "rb", encoding="utf-8") as file:
             self.chat_message_id, self.log_message_id = json.load(file)
+
         embed = discord.Embed(
             title=self.public_name,
             description="Доска создана, начат сбор информации...",

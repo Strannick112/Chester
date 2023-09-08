@@ -251,6 +251,53 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
         else:
             return False
 
+    async def approve(self, msg, cur_time):
+        """
+        Проверяет возможно ли изменить состояние заявки с "Не одобрена" на "Одобрена" у определённого игрока,
+        и если все правила соблюдены - изменяет состояние заявки.
+        Принимает один аргумент: ник игрока в дискорде
+        """
+        to_approve = {'bot_ok': False, 'admin_ok': False}
+        for reaction in msg.reactions:
+            if reaction.__str__() == self.__replies['claim_accepted_is_ok']:
+                if reaction.me:
+                    to_approve['bot_ok'] = True
+                continue
+            if reaction.__str__() == self.__replies['claim_admin_approved_is_ok']:
+                async for user in reaction.users():
+                    if user == self.chester_bot.user:
+                        continue
+                    for role in user.roles:
+                        if main_config['master_role'] == role.id:
+                            to_approve['admin_ok'] = True
+                            break
+                continue
+        if to_approve['bot_ok'] and to_approve['admin_ok']:
+            wipes.last_wipe.claims[msg.author.__str__()].approve(cur_time)
+            await msg.add_reaction(self.__replies['claim_full_approved'])
+            return True
+
+    @commands.command(name=main_config['short_server_name'] + "_approve_claims")
+    @commands.has_role(main_config['master_role'])
+    async def approve_claims(self, ctx):
+        cur_time = ctx.message.created_at.__str__()
+        wipes.last_wipe.stoped_at = cur_time
+        wipes.last_wipe.save()
+        for channel_id in self.__replies['claim_channel_id']:
+            async for msg in self.chester_bot \
+                    .get_channel(channel_id) \
+                    .history(
+                after=datetime.datetime.strptime(wipes.last_wipe.started_at, '%Y-%m-%d %H:%M:%S.%f%z')
+            ):
+                if msg.author == self.chester_bot.user:
+                    continue
+                if msg.author.__str__() not in wipes.last_wipe.claims.keys():
+                    continue
+                if await self.approve(msg, cur_time):
+                    print("Заявка " + msg.author + " одобрена.")
+                else:
+                    print("Заявка " + msg.author + " не одобрена.")
+
     @commands.command(name=main_config['short_server_name'] + "_rollback_claims")
     @commands.has_role(main_config['master_role'])
     async def rollback_claims(self, ctx):
@@ -312,37 +359,42 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
         """Закрывает набор заявок от игроков"""
         if wipes.last_wipe.stoped_at == "":
             await ctx.reply(self.__replies['stop_success'])
-            cur_time = ctx.message.created_at.__str__()
-            wipes.last_wipe.stoped_at = cur_time
-            wipes.last_wipe.save()
-            for channel_id in self.__replies['claim_channel_id']:
-                async for msg in self.chester_bot \
-                        .get_channel(channel_id) \
-                        .history(
-                    after=datetime.datetime.strptime(wipes.last_wipe.started_at, '%Y-%m-%d %H:%M:%S.%f%z')
-                ):
-                    if msg.author == self.chester_bot.user:
-                        continue
-                    if msg.author.__str__() not in wipes.last_wipe.claims.keys():
-                        continue
-                    to_approve = {'bot_ok': False, 'admin_ok': False}
-                    for reaction in msg.reactions:
-                        if reaction.__str__() == self.__replies['claim_accepted_is_ok']:
-                            if reaction.me:
-                                to_approve['bot_ok'] = True
-                            continue
-                        if reaction.__str__() == self.__replies['claim_admin_approved_is_ok']:
-                            async for user in reaction.users():
-                                if user == self.chester_bot.user:
-                                    continue
-                                for role in user.roles:
-                                    if main_config['master_role'] == role.id:
-                                        to_approve['admin_ok'] = True
-                                        break
-                            continue
-                    if to_approve['bot_ok'] and to_approve['admin_ok']:
-                        wipes.last_wipe.claims[msg.author.__str__()].approve(cur_time)
-                        await msg.add_reaction(self.__replies['claim_full_approved'])
+            await self.approve_claims(ctx)
+            # cur_time = ctx.message.created_at.__str__()
+            # wipes.last_wipe.stoped_at = cur_time
+            # wipes.last_wipe.save()
+            # for channel_id in self.__replies['claim_channel_id']:
+            #     async for msg in self.chester_bot \
+            #             .get_channel(channel_id) \
+            #             .history(
+            #         after=datetime.datetime.strptime(wipes.last_wipe.started_at, '%Y-%m-%d %H:%M:%S.%f%z')
+            #     ):
+            #         if msg.author == self.chester_bot.user:
+            #             continue
+            #         if msg.author.__str__() not in wipes.last_wipe.claims.keys():
+            #             continue
+            #         if await self.approve(msg, cur_time):
+            #             print("Заявка " + msg.author + " одобрена.")
+            #         else:
+            #             print("Заявка " + msg.author + " не одобрена.")
+                    # to_approve = {'bot_ok': False, 'admin_ok': False}
+                    # for reaction in msg.reactions:
+                    #     if reaction.__str__() == self.__replies['claim_accepted_is_ok']:
+                    #         if reaction.me:
+                    #             to_approve['bot_ok'] = True
+                    #         continue
+                    #     if reaction.__str__() == self.__replies['claim_admin_approved_is_ok']:
+                    #         async for user in reaction.users():
+                    #             if user == self.chester_bot.user:
+                    #                 continue
+                    #             for role in user.roles:
+                    #                 if main_config['master_role'] == role.id:
+                    #                     to_approve['admin_ok'] = True
+                    #                     break
+                    #         continue
+                    # if to_approve['bot_ok'] and to_approve['admin_ok']:
+                    #     wipes.last_wipe.claims[msg.author.__str__()].approve(cur_time)
+                    #     await msg.add_reaction(self.__replies['claim_full_approved'])
             return True
         if wipes.last_wipe.stoped_at != "":
             await ctx.reply(self.__replies['stop_fail'])
