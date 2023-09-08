@@ -272,6 +272,8 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                             to_approve['admin_ok'] = True
                             break
                 continue
+        print(msg.author.__str__())
+        print(to_approve)
         if to_approve['bot_ok'] and to_approve['admin_ok']:
             wipes.last_wipe.claims[msg.author.__str__()].approve(cur_time)
             await msg.add_reaction(self.__replies['claim_full_approved'])
