@@ -37,6 +37,7 @@ class DashBoardEmbed(commands.Cog, name="Доска подсчёта"):
                 )
             )
         try:
+            print(self.message_id)
             self.message = await self.channel.fetch_message(self.message_id)
         except:
             self.message = await self.channel.send(embed=embed_list)
