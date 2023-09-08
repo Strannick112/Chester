@@ -50,7 +50,7 @@ class DashBoardEmbed(commands.Cog, name="Доска подсчёта"):
     async def update_dashboard(self):
         dashboard = [await world.make_dashboard() for world in self.world_dashboards]
         try:
-            await self.message.edit(embed=dashboard)
+            await self.message.edit(embeds=dashboard)
         finally:
             pass
 
