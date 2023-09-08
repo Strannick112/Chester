@@ -38,8 +38,8 @@ class ChesterBot(commands.Bot):
         await self.user.edit(username="Chester")
         await self.server_manage.on_ready()
         await self.console_dst_checker.on_ready(self.loop)
-        await self.dashboards.on_ready()
         await self.wipe_manage.on_ready()
+        await self.dashboards.on_ready()
 
 
     async def init(self):
