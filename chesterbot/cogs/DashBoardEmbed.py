@@ -23,7 +23,7 @@ class DashBoardEmbed(commands.Cog, name="Доска подсчёта"):
             os.mkdir("./chesterbot/cogs/dashboard")
         if not os.path.exists(f"./chesterbot/cogs/dashboard/message.json"):
             with codecs.open(f"./chesterbot/cogs/dashboard/message.json", "w", encoding="utf-8") as file:
-                json.dump((0, 0), file)
+                json.dump(0, file)
 
         with codecs.open(f"./chesterbot/cogs/dashboard/message.json", "rb", encoding="utf-8") as file:
             self.message_id = json.load(file)
