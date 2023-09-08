@@ -118,4 +118,4 @@ class DashBoard:
                             )
                         )
                     )
-            await asyncio.sleep(random.randint(3, 10))
+            # await asyncio.sleep(random.randint(3, 10))
