@@ -269,7 +269,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                         continue
                     for role in user.roles:
                         print(role.id)
-                        if self.chester_bot.replies["admin_role_id"] == role.id:
+                        if int(self.chester_bot.replies["admin_role_id"]) == role.id:
                             to_approve['admin_ok'] = True
                             break
                 continue
