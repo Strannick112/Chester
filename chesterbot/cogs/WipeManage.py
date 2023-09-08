@@ -268,13 +268,10 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                     if user == self.chester_bot.user:
                         continue
                     for role in user.roles:
-                        print(role.id)
                         if int(self.chester_bot.replies["admin_role_id"]) == role.id:
                             to_approve['admin_ok'] = True
                             break
                 continue
-        print(msg.author.__str__())
-        print(to_approve)
         if to_approve['bot_ok'] and to_approve['admin_ok']:
             wipes.last_wipe.claims[msg.author.__str__()].approve(cur_time)
             await msg.add_reaction(self.__replies['claim_full_approved'])
@@ -296,10 +293,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                     continue
                 if msg.author.__str__() not in wipes.last_wipe.claims.keys():
                     continue
-                if await self.approve(msg, cur_time):
-                    print("Заявка " + msg.author.__str__() + " одобрена.")
-                else:
-                    print("Заявка " + msg.author.__str__() + " не одобрена.")
+                await self.approve(msg, cur_time)
 
     @commands.command(name=main_config['short_server_name'] + "_rollback_claims")
     @commands.has_role(main_config['master_role'])
