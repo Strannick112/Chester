@@ -294,9 +294,9 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                 if msg.author.__str__() not in wipes.last_wipe.claims.keys():
                     continue
                 if await self.approve(msg, cur_time):
-                    print("Заявка " + msg.author + " одобрена.")
+                    print("Заявка " + msg.author.__str__() + " одобрена.")
                 else:
-                    print("Заявка " + msg.author + " не одобрена.")
+                    print("Заявка " + msg.author.__str__() + " не одобрена.")
 
     @commands.command(name=main_config['short_server_name'] + "_rollback_claims")
     @commands.has_role(main_config['master_role'])
