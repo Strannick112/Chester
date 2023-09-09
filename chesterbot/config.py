@@ -16,6 +16,7 @@ main_config = {
     "game_log_sync_channel": 0,
     "command_channel": 0,
     "dashboard_channel": 0,
+    "description": "short description of the server",
     "path_to_save": "/path/to/save_folder",
     "main_embed_picture": "url_to_image",
 
