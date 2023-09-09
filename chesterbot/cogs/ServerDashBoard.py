@@ -37,11 +37,11 @@ class ServerDashBoard:
         embed.add_field(name="", value=main_config["description"], inline=False)
         embed.add_field(name="", value="День: 1")
         embed.add_field(name="", value="Сезон: " + self.chester_bot.replies["autumn_emoji"], inline=True)
-        for group_name, group in self.data.items():
-            text = ""
-            for prefab_name, prefab_info in group.items():
-                text += prefab_name + ": " + list(prefab_info.values())[0] + ";\n"
-            embed.add_field(name=group_name, value=text, inline=False)
+        # for group_name, group in self.data.items():
+        #     text = ""
+        #     for prefab_name, prefab_info in group.items():
+        #         text += prefab_name + ": " + list(prefab_info.values())[0] + ";\n"
+        #     embed.add_field(name=group_name, value=text, inline=False)
         return embed
 
     async def reload_data(self):
