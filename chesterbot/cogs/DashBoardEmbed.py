@@ -7,7 +7,8 @@ import discord
 from discord.ext import tasks, commands
 
 from chesterbot import main_config
-from chesterbot.cogs.DashBoard import DashBoard
+from chesterbot.cogs.ResourceDashBoard import ResourceDashBoard
+from chesterbot.cogs.ServerDashBoard import ServerDashBoard
 
 
 class DashBoardEmbed(commands.Cog, name="Доска подсчёта"):
@@ -28,7 +29,13 @@ class DashBoardEmbed(commands.Cog, name="Доска подсчёта"):
 
         with codecs.open(f"./chesterbot/cogs/dashboard/message.json", "rb", encoding="utf-8") as file:
             self.message_id = json.load(file)
-        embed_list = []
+        embed_list = [
+            discord.Embed(
+                title=main_config["server_name"],
+                description="Доска создана, начат сбор информации...",
+                colour=discord.Colour.dark_teal()
+            )
+        ]
         for world in main_config["worlds"]:
             embed_list.append(
                 discord.Embed(
@@ -44,7 +51,8 @@ class DashBoardEmbed(commands.Cog, name="Доска подсчёта"):
             self.message_id = self.message.id
             with codecs.open(f"./chesterbot/cogs/dashboard/message.json", "w", encoding="utf-8") as file:
                 json.dump(self.message_id, file)
-        self.world_dashboards = [DashBoard(self.chester_bot, world) for world in main_config["worlds"]]
+        self.world_dashboards = [ServerDashBoard(self.chester_bot, main_config["worlds"][0])]
+        self.world_dashboards.append([ResourceDashBoard(self.chester_bot, world) for world in main_config["worlds"]])
         self.reload_data.start()
 
     async def update_dashboard(self):

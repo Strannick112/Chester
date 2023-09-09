@@ -3,13 +3,14 @@ import random
 
 import discord
 
-class DashBoard:
+
+class ResourceDashBoard:
     def __init__(self, bot, world):
         self.chester_bot = bot
         self.shard_id = world["shard_id"]
         self.public_name = world["public_name"]
         self.screen_name = world["screen_name"]
-        self.data = DashBoard.__data[world["world_type"]].copy()
+        self.data = ResourceDashBoard.__data[world["world_type"]].copy()
 
     __data = {
         "overworld": {
@@ -86,15 +87,9 @@ class DashBoard:
         }
     }
 
-    async def _get_season(self):
-        return await self.chester_bot.console_dst_checker.check(
-            "command", r"catch", self.shard_id, self.screen_name, 0, 5
-        )
-
     async def make_dashboard(self):
         embed = discord.Embed(colour=discord.Colour.dark_teal())
         embed.set_author(name=self.public_name)
-        # embed.set_image(url=self.chester_bot.replies[await self._get_season()])
         for group_name, group in self.data.items():
             text = ""
             for prefab_name, prefab_info in group.items():
@@ -118,4 +113,3 @@ class DashBoard:
                             )
                         )
                     )
-            # await asyncio.sleep(random.randint(3, 10))
