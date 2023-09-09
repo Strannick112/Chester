@@ -52,7 +52,7 @@ class DashBoardEmbed(commands.Cog, name="Доска подсчёта"):
             with codecs.open(f"./chesterbot/cogs/dashboard/message.json", "w", encoding="utf-8") as file:
                 json.dump(self.message_id, file)
         self.world_dashboards = [ServerDashBoard(self.chester_bot, main_config["worlds"][0])]
-        self.world_dashboards.append([ResourceDashBoard(self.chester_bot, world) for world in main_config["worlds"]])
+        self.world_dashboards += [ResourceDashBoard(self.chester_bot, world) for world in main_config["worlds"]]
         self.reload_data.start()
 
     async def update_dashboard(self):
@@ -64,7 +64,6 @@ class DashBoardEmbed(commands.Cog, name="Доска подсчёта"):
 
     @tasks.loop(minutes=1)
     async def reload_data(self):
-        print(self.world_dashboards)
         tasks = [asyncio.create_task(world.reload_data()) for world in self.world_dashboards]
         for task in tasks:
             await task
