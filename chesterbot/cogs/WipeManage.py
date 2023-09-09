@@ -27,6 +27,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
         self.command_webhook = discord.utils.get(await self.command_channel.webhooks(), name='Command')
         if self.command_webhook is None:
             self.command_webhook = await self.command_channel.create_webhook(name='Command')
+
     @commands.command(name=main_config['short_server_name'] + "_checkout_marks_on_executed_claims")
     @commands.has_role(main_config['master_role'])
     async def checkout_marks_on_executed_claims(self, ctx):
@@ -85,7 +86,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
             cur_user = ctx.author.__str__()
         else:
             for role in ctx.author.roles:
-                if role.id == main_config['master_role']:
+                if role.id == int(self.chester_bot.replies["admin_role_id"]):
                     cur_user = user_name
         if cur_user in wipes.last_wipe.claims:
             for channel_id in self.__replies['claim_channel_id']:
@@ -120,7 +121,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
             cur_user = ctx.author.__str__()
         else:
             for role in ctx.author.roles:
-                if role.id == main_config['master_role']:
+                if role.id == int(self.chester_bot.replies["admin_role_id"]):
                     cur_user = user_name
         if cur_user in wipes.last_wipe.claims:
             text = json.dumps(wipes.last_wipe.claims[cur_user], default=lambda o: o.__dict__, ensure_ascii=False,
@@ -175,7 +176,8 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                             self.__replies['give_items_fail_not_approved']
                 )
                 await message.add_reaction(self.__replies['claim_error'])
-                await send_message_to_game("Chester_bot", cur_claim.player.dst_nickname + ", " + self.__replies['give_items_fail_not_approved'])
+                await send_message_to_game("Chester_bot", cur_claim.player.dst_nickname + ", " + self.__replies[
+                    'give_items_fail_not_approved'])
                 return False
             # Проверка на выполненность заявки
             if cur_claim.status == Status.executed:
@@ -185,7 +187,8 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                             self.__replies['give_items_fail_executed']
                 )
                 await message.add_reaction(self.__replies['claim_error'])
-                await send_message_to_game("Chester_bot", cur_claim.player.dst_nickname + ", " + self.__replies['give_items_fail_executed'])
+                await send_message_to_game("Chester_bot", cur_claim.player.dst_nickname + ", " + self.__replies[
+                    'give_items_fail_executed'])
                 return False
             # Проверка на наличие игрока в игре
             if not await cur_claim.player.is_player_online(self.chester_bot.console_dst_checker):
@@ -207,7 +210,8 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                             self.__replies['give_items_success']
                 )
                 await message.add_reaction(self.__replies['claim_items_executed'])
-                await send_message_to_game("Chester_bot", cur_claim.player.dst_nickname + ", " + self.__replies['give_items_success'])
+                await send_message_to_game("Chester_bot",
+                                           cur_claim.player.dst_nickname + ", " + self.__replies['give_items_success'])
                 await self.mark_claim_executed(user_name)
                 return True
             else:
@@ -217,7 +221,8 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                             self.__replies['give_items_fail']
                 )
                 await message.add_reaction(self.__replies['claim_error'])
-                await send_message_to_game("Chester_bot", cur_claim.player.dst_nickname + ", " + self.__replies['give_items_fail'])
+                await send_message_to_game("Chester_bot",
+                                           cur_claim.player.dst_nickname + ", " + self.__replies['give_items_fail'])
                 return False
         else:
             await message.reply(
@@ -245,7 +250,8 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                             for reaction in msg.reactions:
                                 if reaction.__str__() == self.__replies['claim_items_executed']:
                                     if reaction.me:
-                                        await msg.remove_reaction(self.__replies['claim_items_executed'], self.chester_bot.user)
+                                        await msg.remove_reaction(self.__replies['claim_items_executed'],
+                                                                  self.chester_bot.user)
             await ctx.reply(self.__replies['rollback_claims_success'])
             return True
         else:
@@ -309,7 +315,8 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                             for reaction in msg.reactions:
                                 if reaction.__str__() == self.__replies['claim_items_executed']:
                                     if reaction.me:
-                                        await msg.remove_reaction(self.__replies['claim_items_executed'], self.chester_bot.user)
+                                        await msg.remove_reaction(self.__replies['claim_items_executed'],
+                                                                  self.chester_bot.user)
         await ctx.reply(self.__replies['rollback_claims_success'])
         return True
 
@@ -374,24 +381,24 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
             #             print("Заявка " + msg.author + " одобрена.")
             #         else:
             #             print("Заявка " + msg.author + " не одобрена.")
-                    # to_approve = {'bot_ok': False, 'admin_ok': False}
-                    # for reaction in msg.reactions:
-                    #     if reaction.__str__() == self.__replies['claim_accepted_is_ok']:
-                    #         if reaction.me:
-                    #             to_approve['bot_ok'] = True
-                    #         continue
-                    #     if reaction.__str__() == self.__replies['claim_admin_approved_is_ok']:
-                    #         async for user in reaction.users():
-                    #             if user == self.chester_bot.user:
-                    #                 continue
-                    #             for role in user.roles:
-                    #                 if main_config['master_role'] == role.id:
-                    #                     to_approve['admin_ok'] = True
-                    #                     break
-                    #         continue
-                    # if to_approve['bot_ok'] and to_approve['admin_ok']:
-                    #     wipes.last_wipe.claims[msg.author.__str__()].approve(cur_time)
-                    #     await msg.add_reaction(self.__replies['claim_full_approved'])
+            # to_approve = {'bot_ok': False, 'admin_ok': False}
+            # for reaction in msg.reactions:
+            #     if reaction.__str__() == self.__replies['claim_accepted_is_ok']:
+            #         if reaction.me:
+            #             to_approve['bot_ok'] = True
+            #         continue
+            #     if reaction.__str__() == self.__replies['claim_admin_approved_is_ok']:
+            #         async for user in reaction.users():
+            #             if user == self.chester_bot.user:
+            #                 continue
+            #             for role in user.roles:
+            #                 if main_config['master_role'] == role.id:
+            #                     to_approve['admin_ok'] = True
+            #                     break
+            #         continue
+            # if to_approve['bot_ok'] and to_approve['admin_ok']:
+            #     wipes.last_wipe.claims[msg.author.__str__()].approve(cur_time)
+            #     await msg.add_reaction(self.__replies['claim_full_approved'])
             return True
         if wipes.last_wipe.stoped_at != "":
             await ctx.reply(self.__replies['stop_fail'])
