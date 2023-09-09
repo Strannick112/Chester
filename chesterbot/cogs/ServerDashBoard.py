@@ -41,7 +41,7 @@ class ServerDashBoard:
             text = ""
             for prefab_name, prefab_info in group.items():
                 text += prefab_name + ": " + list(prefab_info.values())[0] + ";\n"
-            embed.add_field(name=group_name, value=text, inline=True)
+            embed.add_field(name=group_name, value=text, inline=False)
         return embed
 
     async def reload_data(self):
