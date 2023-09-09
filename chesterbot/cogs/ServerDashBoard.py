@@ -1,6 +1,8 @@
 import asyncio
 import discord
 
+from chesterbot import main_config
+
 
 class ServerDashBoard:
     def __init__(self, bot, world):
@@ -31,8 +33,6 @@ class ServerDashBoard:
 
     async def make_dashboard(self):
         embed = discord.Embed(colour=discord.Colour.dark_teal())
-        embed.set_author(name=self.public_name)
-        embed.set_image(url="https://media.discordapp.net/attachments/871824345780080690/1149828384474550303/c10f279bd211b750.jpg")
         for group_name, group in self.data.items():
             text = ""
             for prefab_name, prefab_info in group.items():

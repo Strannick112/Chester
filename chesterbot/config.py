@@ -17,6 +17,7 @@ main_config = {
     "command_channel": 0,
     "dashboard_channel": 0,
     "path_to_save": "/path/to/save_folder",
+    "main_embed_picture": "url_to_image",
 
     "worlds": [
         {"public_name": "Обычный мир, поверхность", "shard_id": "1", "world_type": "overworld", "folder_name": "Shard 1"},
