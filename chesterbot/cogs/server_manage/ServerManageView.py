@@ -23,7 +23,6 @@ class ServerManageView(View):
 
     @discord.ui.button(label="Перезапуск сервера через 1 минуту", style=ButtonStyle.green, row=0)
     async def soft_restart_callback(self, interaction, button):
-        print("Перезагрузка через минуту")
         await soft_restart()
         await interaction.response.send_message("Перезагрузка сервера через 1 минуту принята к исполнению")
 
@@ -43,7 +42,6 @@ class ServerManageView(View):
         await interaction.response.send_message("Пересоздание игрового мира принято к исполнению")
 
     async def interaction_check(self, interaction: Interaction, /) -> bool:
-        print("Ты не достоин")
         for role in interaction.user.roles:
             if role.id == int(self.chester_bot.replies["admin_role_id"]):
                 return True
