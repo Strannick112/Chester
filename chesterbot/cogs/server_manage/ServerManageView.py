@@ -2,11 +2,15 @@ import discord
 from discord import ButtonStyle, Interaction
 from discord.ui import View
 
-from chesterbot import main_config
 from chesterbot.cogs.server_manage.commands import restart, stop, soft_stop, soft_restart, soft_world_regenerate
 
 
 class ServerManageView(View):
+
+    def __init__(self, bot):
+        self.chester_bot = bot
+        super().__init__()
+
     @discord.ui.button(label="Запуск сервера", style=ButtonStyle.green, row=0)
     async def start_callback(self, interaction, button):
         await restart()
@@ -41,7 +45,7 @@ class ServerManageView(View):
     async def interaction_check(self, interaction: Interaction, /) -> bool:
         print("Ты не достоин")
         for role in interaction.user.roles:
-            if role.id == main_config['master_role']:
+            if role.id == int(self.chester_bot.replies["admin_role_id"]):
                 return True
         else:
             return False

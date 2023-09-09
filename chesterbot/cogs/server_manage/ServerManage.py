@@ -38,7 +38,7 @@ class ServerManage(commands.Cog, name="Управление сервером"):
     @commands.command(name=main_config['short_server_name'] + "_buttons")
     @commands.has_role(main_config['master_role'])
     async def buttons(self, ctx):
-        await ctx.send("Команды управления игровым сервером «" + main_config["server_name"] + "»", view=ServerManageView())
+        await ctx.send("Команды управления игровым сервером «" + main_config["server_name"] + "»", view=ServerManageView(self.chester_bot))
 
     @commands.command(name=main_config['short_server_name'] + "_restart_server")
     @commands.has_role(main_config['master_role'])
