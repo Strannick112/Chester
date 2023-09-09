@@ -64,6 +64,7 @@ class DashBoardEmbed(commands.Cog, name="Доска подсчёта"):
 
     @tasks.loop(minutes=1)
     async def reload_data(self):
+        print(self.world_dashboards)
         tasks = [asyncio.create_task(world.reload_data()) for world in self.world_dashboards]
         for task in tasks:
             await task
