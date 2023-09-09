@@ -19,6 +19,7 @@ class ServerManageView(View):
 
     @discord.ui.button(label="Перезапуск сервера через 1 минуту", style=ButtonStyle.green, row=0)
     async def soft_restart_callback(self, interaction, button):
+        print("Перезагрузка через минуту")
         await soft_restart()
         await interaction.response.send_message("Перезагрузка сервера через 1 минуту принята к исполнению")
 
