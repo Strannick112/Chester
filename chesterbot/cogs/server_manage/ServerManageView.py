@@ -39,6 +39,7 @@ class ServerManageView(View):
         await interaction.response.send_message("Пересоздание игрового мира принято к исполнению")
 
     async def interaction_check(self, interaction: Interaction, /) -> bool:
+        print("Ты не достоин")
         for role in interaction.user.roles:
             if role.id == main_config['master_role']:
                 return True
