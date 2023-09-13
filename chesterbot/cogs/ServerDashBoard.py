@@ -24,13 +24,13 @@ class ServerDashBoard:
     async def _get_season(self):
         return await self.chester_bot.console_dst_checker.check(
             f"screen -S {self.screen_name} -X stuff \"print(\\\"Season: \\\", TheWorld.components.worldstate.data.season)\n\"",
-            r"Season:\s[\w\W]+?", self.shard_id, self.screen_name, 0, 5
+            r"Season:\s[\w\W]+?", self.shard_id, self.screen_name, "unknown", 5
         )
 
     async def _get_cycles(self):
         return await self.chester_bot.console_dst_checker.check(
             f"screen -S {self.screen_name} -X stuff \"print(\\\"Cycles: \\\", TheWorld.components.worldstate.data.cycles)\n\"",
-            r"Cycles:\s[\d]+?", self.shard_id, self.screen_name, "unknown", 5
+            r"Cycles:\s[\d]+?", self.shard_id, self.screen_name, 0, 5
         )
 
     async def make_dashboard(self):
