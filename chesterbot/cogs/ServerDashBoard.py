@@ -37,7 +37,7 @@ class ServerDashBoard:
         embed = discord.Embed(colour=discord.Colour.dark_teal())
         embed.set_author(name=main_config["server_name"])
         embed.add_field(name="", value=main_config["description"], inline=False)
-        embed.add_field(name="", value="День: " + await self._get_cycles())
+        embed.add_field(name="", value="День: " + (await self._get_cycles()).__str__())
         # embed.add_field(name="", value="Сезон: " + self.chester_bot.replies["autumn_emoji"], inline=True)
         embed.add_field(name="", value="Сезон: " + await self._get_season(), inline=True)
         # for group_name, group in self.data.items():
