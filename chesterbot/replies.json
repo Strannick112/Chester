@@ -57,5 +57,9 @@
     "announcement_picture": "https://cdn.discordapp.com/avatars/490844320874889216/f225363f8d96733c9177500057f91d8a.webp",
     "info_picture": "https://media.discordapp.net/attachments/871824345780080690/1118991536923881502/Announcement.png",
 
-    "autumn_emoji": ":sunny:"
+    "autumn": ":maple_leaf:",
+    "winter": ":snowflake:",
+    "spring": ":thunder_cloud_rain:",
+    "summer": ":sunny:",
+    "unknown": ":grinning:"
 }

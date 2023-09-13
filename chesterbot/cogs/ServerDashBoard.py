@@ -39,7 +39,7 @@ class ServerDashBoard:
         embed.add_field(name="", value=main_config["description"], inline=False)
         embed.add_field(name="", value="День: " + (await self._get_cycles()).__str__())
         # embed.add_field(name="", value="Сезон: " + self.chester_bot.replies["autumn_emoji"], inline=True)
-        embed.add_field(name="", value="Сезон: " + await self._get_season(), inline=True)
+        embed.add_field(name="", value="Сезон: " + self.chester_bot.replies[await self._get_season()], inline=True)
         # for group_name, group in self.data.items():
         #     text = ""
         #     for prefab_name, prefab_info in group.items():
