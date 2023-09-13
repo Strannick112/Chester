@@ -21,22 +21,25 @@ class ServerDashBoard:
         }
     }
 
-    # async def _get_season(self):
-    #     return await self.chester_bot.console_dst_checker.check(
-    #         "command", r"catch", self.shard_id, self.screen_name, 0, 5
-    #     )
+    async def _get_season(self):
+        return await self.chester_bot.console_dst_checker.check(
+            f"screen -S {self.screen_name} -X stuff \"print(\\\"Season: \\\", TheWorld.components.worldstate.data.season)\n\"",
+            r"Season:\s[\w\W]+?\s", self.shard_id, self.screen_name, 0, 5
+        )
 
-    # async def _get_day_time(self):
-    #     return await self.chester_bot.console_dst_checker.check(
-    #         "command", r"catch", self.shard_id, self.screen_name, 0, 5
-    #     )
+    async def _get_cycles(self):
+        return await self.chester_bot.console_dst_checker.check(
+            f"screen -S {self.screen_name} -X stuff \"print(\\\"Cycles: \\\", TheWorld.components.worldstate.data.cycles)\n\"",
+            r"Cycles:\s[\d]+?\s", self.shard_id, self.screen_name, 0, 5
+        )
 
     async def make_dashboard(self):
         embed = discord.Embed(colour=discord.Colour.dark_teal())
         embed.set_author(name=main_config["server_name"])
         embed.add_field(name="", value=main_config["description"], inline=False)
-        embed.add_field(name="", value="День: 1")
-        embed.add_field(name="", value="Сезон: " + self.chester_bot.replies["autumn_emoji"], inline=True)
+        embed.add_field(name="", value="День: " + await self._get_cycles())
+        # embed.add_field(name="", value="Сезон: " + self.chester_bot.replies["autumn_emoji"], inline=True)
+        embed.add_field(name="", value="Сезон: " + await self._get_season(), inline=True)
         # for group_name, group in self.data.items():
         #     text = ""
         #     for prefab_name, prefab_info in group.items():
