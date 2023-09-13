@@ -24,7 +24,7 @@ class ServerDashBoard:
     async def _get_season(self):
         return await self.chester_bot.console_dst_checker.check(
             f"screen -S {self.screen_name} -X stuff \"print(\\\"Season\\\", TheWorld.components.worldstate.data.season)\n\"",
-            r"Season\s*([\w\W]+)\s*", self.shard_id, self.screen_name, "unknown", 5
+            r"Season\s*([\w]+)\s*", self.shard_id, self.screen_name, "unknown", 5
         )
 
     async def _get_cycles(self):
