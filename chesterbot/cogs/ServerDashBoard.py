@@ -33,13 +33,20 @@ class ServerDashBoard:
             r"Cycles\s*([\d]+)\s*", self.shard_id, self.screen_name, 0, 5
         )
 
+    async def _get_day_phase(self):
+        return await self.chester_bot.console_dst_checker.check(
+            f"screen -S {self.screen_name} -X stuff \"print(\\\"Day phase\\\", TheWorld.components.worldstate.data.phase)\n\"",
+            r"Day phase\s*([\w]+)\s*", self.shard_id, self.screen_name, "unknown_emoji", 5
+        )
+
     async def make_dashboard(self):
         embed = discord.Embed(colour=discord.Colour.dark_teal())
         embed.set_thumbnail(url="https://media.discordapp.net/attachments/871824345780080690/1149833791687368744/2.png")
         embed.set_author(name=main_config["server_name"])
         description = main_config["description"]
         description += "\n**День**: " + (await self._get_cycles()).__str__()
-        description += "\n**Сезон**: " + self.chester_bot.replies[await self._get_season()]
+        description += "**Время суток**: " + (await self._get_day_phase())
+        # description += "\n**Сезон**: " + self.chester_bot.replies[await self._get_season()]
         embed.add_field(name="", value=description, inline=False)
         return embed
 
