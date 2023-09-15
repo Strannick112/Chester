@@ -36,9 +36,10 @@ class ServerDashBoard:
     async def make_dashboard(self):
         embed = discord.Embed(colour=discord.Colour.dark_teal())
         embed.set_author(name=main_config["server_name"])
-        embed.add_field(name="", value=main_config["description"], inline=False)
-        embed.add_field(name="", value="День: " + (await self._get_cycles()).__str__())
-        embed.add_field(name="", value="Сезон: " + self.chester_bot.replies[await self._get_season()], inline=True)
+        description = main_config["description"]
+        description += "\n**День**: ```" + (await self._get_cycles()).__str__() + "```"
+        description += "\n**Сезон**: " + self.chester_bot.replies[await self._get_season()]
+        embed.add_field(name="", value=description, inline=False)
         return embed
 
     async def reload_data(self):

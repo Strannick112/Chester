@@ -94,7 +94,7 @@ class ResourceDashBoard:
             text = ""
             for prefab_name, prefab_info in group.items():
                 text += prefab_name + ": " + (sum(prefab_info.values()).__str__()) + "\n"
-            embed.add_field(name=group_name, value=text, inline=True)
+            embed.add_field(name="", value=f"**{group_name}**\n{text}", inline=True)
         return embed
 
     async def reload_data(self):
