@@ -10,7 +10,7 @@ class ResourceDashBoard:
         self.shard_id = world["shard_id"]
         self.public_name = world["public_name"]
         self.screen_name = world["screen_name"]
-        self.data = ResourceDashBoard.__data[world["world_type"]].copy()
+        self.data = (ResourceDashBoard.__data[world["world_type"]]).copy()
 
     __data = {
         "overworld": {
