@@ -41,7 +41,7 @@ class ServerDashBoard:
 
     async def make_dashboard(self):
         embed = discord.Embed(colour=discord.Colour.dark_teal())
-        embed.set_thumbnail(url="https://media.discordapp.net/attachments/871824345780080690/1149828420298084372/2.jpg")
+        embed.set_thumbnail(url="https://media.discordapp.net/attachments/972971947224870932/1152296441000251472/images.png")
         embed.set_author(name=main_config["server_name"])
         description = main_config["description"]
         description += "\n**День**: " + (await self._get_cycles()).__str__()
