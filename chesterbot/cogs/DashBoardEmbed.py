@@ -57,8 +57,11 @@ class DashBoardEmbed(commands.Cog, name="Доска подсчёта"):
 
     async def update_dashboard(self):
         head_embed = discord.Embed(
-            colour=discord.Colour.from_str("#2f3136"), type="image")
+            colour=discord.Colour.from_str("#2f3136"))
         head_embed.set_image(url=main_config["main_embed_picture"])
+        head_embed.add_field(name="", value="")
+        head_embed.add_field(name="", value="")
+        head_embed.add_field(name="", value="")
         dashboard = [head_embed]
         dashboard += [await world.make_dashboard() for world in self.world_dashboards]
         try:
