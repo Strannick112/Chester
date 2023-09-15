@@ -45,7 +45,7 @@ class ServerDashBoard:
         embed.set_author(name=main_config["server_name"])
         description = main_config["description"]
         description += "\n**День**: " + (await self._get_cycles()).__str__()
-        description += "**Время суток**: " + (await self._get_day_phase())
+        description += "\n**Время суток**: " + (await self._get_day_phase())
         # description += "\n**Сезон**: " + self.chester_bot.replies[await self._get_season()]
         embed.add_field(name="", value=description, inline=False)
         return embed
