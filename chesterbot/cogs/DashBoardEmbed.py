@@ -62,7 +62,7 @@ class DashBoardEmbed(commands.Cog, name="Доска подсчёта"):
         dashboard = [head_embed]
         dashboard += [await world.make_dashboard() for world in self.world_dashboards]
         for board in dashboard:
-            board.set_image(url=main_config["main_embed_picture"])
+            board.set_image(url="https://media.discordapp.net/attachments/871824345780080690/1152208878772174848/image.png")
         try:
             await self.message.edit(embeds=dashboard)
         finally:
