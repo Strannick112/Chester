@@ -19,7 +19,7 @@ class ResourceDashBoard:
                 "Драконья муха": {"dragonfly": 0},
                 "Гломмер": {"glommer": 0},
                 "Мешок клауса": {"klaus_sack": 0},
-                "Улей пчелом.": {"beequeenhivegrown": 0},
+                "Улей пчеломатки": {"beequeenhivegrown": 0},
                 "Медведь-барсук": {"bearger": 0},
                 "Яйца Гусь-лусей": {"mooseegg": 0},
                 "Гусь-лусь": {"moose": 0},
