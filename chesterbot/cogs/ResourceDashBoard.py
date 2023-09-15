@@ -15,7 +15,7 @@ class ResourceDashBoard:
     __data = {
         "overworld": {
             "Боссы": {
-                "Дружелюбная фруктовая муха": {"friendlyfruitfly": 0},
+                "Фруктовая муха": {"friendlyfruitfly": 0},
                 "Драконья муха": {"dragonfly": 0},
                 "Гломмер": {"glommer": 0},
                 "Мешок клауса": {"klaus_sack": 0},
@@ -41,33 +41,33 @@ class ResourceDashBoard:
                 "Енотокоты": {"catcoon": 0},
                 "Дикие улья": {"beehive": 0},
                 "Улья пчёл-убийц": {"wasphive": 0},
-                "Смертоносные светлоцветы": {"lunarthrall_plant": 0},
+                "Светлоцветы": {"lunarthrall_plant": 0},
             },
             "Ресурсы": {
                 "Кусты камыша": {"reeds": 0},
-                "Кусты каменных фруктов": {"rock_avocado_bush": 0},
+                "Кусты кам. фруктов": {"rock_avocado_bush": 0},
                 "Перекати-поле": {"tumbleweed": 0},
-                "Спаунеры перекати-поле": {"tumbleweedspawner": 0},
+                "Спаун. перекати-поле": {"tumbleweedspawner": 0},
                 "Приманкоцветы": {"lureplant": 0},
                 "Разломы": {"lunarrift_portal": 0},
-                "Кристаллы разлома": {"lunarrift_crystal_big": 0},
+                "Крист. разлома": {"lunarrift_crystal_big": 0},
             }
         },
         "caves": {
             "Боссы": {
                 "Древний страж": {"minotaur": 0},
-                "Дружелюбная фруктовая муха": {"friendlyfruitfly": 0},
+                "Фруктовая муха": {"friendlyfruitfly": 0},
                 "Скелеты игроков": {"skeleton": 0},
             },
             "Монстры": {
                 "Проглоты": {"slurper": 0},
-                "Глубинные черви": {"worm": 0},
+                "Глуб. черви": {"worm": 0},
                 "Лобстеры": {"rocky": 0},
                 "Дома зайцев": {"rabbithouse": 0},
-                "Логова мотыльков": {"dustmothden": 0},
-                "Обезьяньи тотемы": {"monkeybarrel": 0},
+                "Дома мотыльков": {"dustmothden": 0},
+                "Дома обезьян": {"monkeybarrel": 0},
                 "Щупальца": {"tentacle": 0},
-                "Повреждённых шахмат на охране руин": {
+                "Шахм. в руинах": {
                     "knight_nightmare": 0,
                     "bishop_nightmare": 0,
                     "rook_nightmare": 0,
@@ -82,7 +82,7 @@ class ResourceDashBoard:
                     "ruins_statue_head_nogem": 0,
                 },
                 "Кусты камыша": {"reeds": 0},
-                "Сундуки в лабиринте": {"pandoraschest": 0},
+                "Сунд. в лаб.": {"pandoraschest": 0},
             }
         }
     }
