@@ -65,6 +65,12 @@ class DashBoardEmbed(commands.Cog, name="Доска подсчёта"):
             dashboard[i].set_image(url="https://media.discordapp.net/attachments/871824345780080690/1152211515106136104/image.png")
         view = discord.ui.View()  # Establish an instance of the discord.ui.View class
         style = discord.ButtonStyle.gray  # The button will be gray in color
+        view.add_item(
+            item=discord.ui.Button(
+                style=discord.ButtonStyle.blurple, label="Узнай о нас больше!",
+                url="https://discord.gg/NFGxUDDbz7"
+            )
+        )
         for button_description in main_config["buttons"]:
             view.add_item(
                 item=discord.ui.Button(
