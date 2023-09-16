@@ -63,8 +63,17 @@ class DashBoardEmbed(commands.Cog, name="Доска подсчёта"):
         dashboard += [await world.make_dashboard() for world in self.world_dashboards]
         for i in range(1, dashboard.__len__()):
             dashboard[i].set_image(url="https://media.discordapp.net/attachments/871824345780080690/1152211515106136104/image.png")
+        view = discord.ui.View()  # Establish an instance of the discord.ui.View class
+        style = discord.ButtonStyle.gray  # The button will be gray in color
+        for button_description in main_config["buttons"]:
+            view.add_item(
+                item=discord.ui.Button(
+                    style=style, label=button_description["description"],
+                    url=button_description["url"]
+                )
+            )
         try:
-            await self.message.edit(embeds=dashboard)
+            await self.message.edit(embeds=dashboard, view=view)
         finally:
             pass
 
