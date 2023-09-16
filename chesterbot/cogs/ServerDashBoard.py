@@ -44,9 +44,9 @@ class ServerDashBoard:
         # embed.set_thumbnail(url="https://media.discordapp.net/attachments/972971947224870932/1152296441000251472/images.png")
         embed.set_author(name=main_config["server_name"])
         description = main_config["description"]
-        description += "ᅠ ᅠДень: " + (await self._get_cycles()).__str__()
-        description += "ᅠ ᅠСезон: " + self.chester_bot.replies[await self._get_season()]
-        description += "ᅠ ᅠВремя суток: " + self.chester_bot.replies[await self._get_day_phase()]
+        description += "ᅠ День: " + (await self._get_cycles()).__str__()
+        description += "ᅠ Сезон: " + self.chester_bot.replies[await self._get_season()]
+        description += "ᅠ Время суток: " + self.chester_bot.replies[await self._get_day_phase()]
         # embed.add_field(name="", value=main_config["description"], inline=True)
         # embed.add_field(name="", value="\tДень: " + (await self._get_cycles()).__str__(), inline=True)
         # embed.add_field(name="", value="\tСезон: " + self.chester_bot.replies[await self._get_season()], inline=True)
