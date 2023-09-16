@@ -43,12 +43,18 @@ class ServerDashBoard:
         embed = discord.Embed(colour=discord.Colour.dark_teal())
         # embed.set_thumbnail(url="https://media.discordapp.net/attachments/972971947224870932/1152296441000251472/images.png")
         embed.set_author(name=main_config["server_name"])
-        description = main_config["description"]
-        description += "\tДень: " + (await self._get_cycles()).__str__()
-        description += "\tСезон: " + self.chester_bot.replies[await self._get_season()]
-        description += "\tВремя суток: " + (await self._get_day_phase())
-        embed.add_field(name="", value=description, inline=False)
+        # description = main_config["description"]
+        # description += "\tДень: " + (await self._get_cycles()).__str__()
+        # description += "\tСезон: " + self.chester_bot.replies[await self._get_season()]
+        # description += "\tВремя суток: " + (await self._get_day_phase())
+        embed.add_field(name="", value=main_config["description"], inline=False)
+        embed.add_field(name="", value="\tДень: " + (await self._get_cycles()).__str__(), inline=True)
+        embed.add_field(name="", value="\tСезон: " + self.chester_bot.replies[await self._get_season()], inline=True)
+        embed.add_field(name="", value="\tВремя суток: " + (await self._get_day_phase()), inline=True)
+        # embed.add_field(name="", value=description, inline=False)
         return embed
 
     async def reload_data(self):
         pass
+
+    # a = [что_класть (if условие else что_класть) цикл (условие-фильтр)]
