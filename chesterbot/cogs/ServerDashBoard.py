@@ -50,7 +50,7 @@ class ServerDashBoard:
         embed.add_field(name="", value=main_config["description"], inline=True)
         embed.add_field(name="", value="\tДень: " + (await self._get_cycles()).__str__(), inline=True)
         embed.add_field(name="", value="\tСезон: " + self.chester_bot.replies[await self._get_season()], inline=True)
-        embed.add_field(name="", value="\tВремя суток: " + (await self._get_day_phase()), inline=True)
+        embed.add_field(name="", value="\tВремя суток: " + self.chester_bot.replies[await self._get_day_phase()], inline=True)
         # embed.add_field(name="", value=description, inline=False)
         return embed
 
