@@ -40,7 +40,7 @@ class ServerDashBoard:
         )
 
     async def make_dashboard(self):
-        embed = discord.Embed(colour=discord.Colour.dark_teal())
+        embed = discord.Embed(color=0x2F3136)
         # embed.set_thumbnail(url="https://media.discordapp.net/attachments/972971947224870932/1152296441000251472/images.png")
         embed.set_author(name=main_config["server_name"])
         description = main_config["description"]

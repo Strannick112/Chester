@@ -88,7 +88,7 @@ class ResourceDashBoard:
     }
 
     async def make_dashboard(self):
-        embed = discord.Embed(colour=discord.Colour.dark_teal())
+        embed = discord.Embed(color=0x2F3136)
         embed.set_author(name=self.public_name)
         for group_name, group in self.data.items():
             text = ""
