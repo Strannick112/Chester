@@ -28,7 +28,7 @@ class ResourceDashBoard:
                 "Король-краб": {"crabking": 0},
                 "Скелеты игроков": {"skeleton": 0},
         },
-            "Монстры":{
+            "Существа":{
                 "Вольт-козы": {"lightninggoat": 0},
                 "Бифало": {"beefalo": 0},
                 "Хижины моржей": {"walrus_camp": 0},
@@ -59,7 +59,7 @@ class ResourceDashBoard:
                 "Фруктовая муха": {"friendlyfruitfly": 0},
                 "Скелеты игроков": {"skeleton": 0},
             },
-            "Монстры": {
+            "Существа": {
                 "Проглоты": {"slurper": 0},
                 "Глуб. черви": {"worm": 0},
                 "Лобстеры": {"rocky": 0},
