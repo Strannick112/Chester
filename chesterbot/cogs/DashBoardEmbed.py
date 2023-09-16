@@ -67,7 +67,7 @@ class DashBoardEmbed(commands.Cog, name="Доска подсчёта"):
         style = discord.ButtonStyle.gray  # The button will be gray in color
         view.add_item(
             item=discord.ui.Button(
-                style=discord.ButtonStyle.blurple, label="Узнай о нас больше!",
+                style=discord.ButtonStyle.primary, label="Узнай о нас больше!",
                 url="https://discord.gg/NFGxUDDbz7"
             )
         )
