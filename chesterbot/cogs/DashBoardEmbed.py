@@ -60,8 +60,8 @@ class DashBoardEmbed(commands.Cog, name="Доска подсчёта"):
         head_embed.set_image(url=main_config["main_embed_picture"])
         dashboard = [head_embed]
         dashboard += [await world.make_dashboard() for world in self.world_dashboards]
-        # for i in range(1, dashboard.__len__()):
-            # dashboard[i].set_image(url="https://media.discordapp.net/attachments/871824345780080690/1152211515106136104/image.png")
+        for i in range(1, dashboard.__len__()):
+            dashboard[i].set_image(url="https://media.discordapp.net/attachments/871824345780080690/1152211515106136104/image.png")
         view = discord.ui.View()
         style = discord.ButtonStyle.gray
         view.add_item(
