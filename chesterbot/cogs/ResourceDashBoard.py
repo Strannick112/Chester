@@ -32,7 +32,7 @@ class ResourceDashBoard:
                 "Вольт-козы": {"lightninggoat": 0},
                 "Бифало": {"beefalo": 0},
                 "Хижины моржей": {"walrus_camp": 0},
-                "Моржи": {"walrus": 0},
+                "МакБивень": {"walrus": 0},
                 "Дома свиней": {"pighouse": 0},
                 "Дома мермов": {"mermhouse": 0},
                 "Мермы": {"merm": 0},
