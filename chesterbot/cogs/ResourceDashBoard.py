@@ -15,7 +15,7 @@ class ResourceDashBoard:
     __data = {
         "overworld": {
             "Боссы": {
-                "Дружелюбная фруктовая муха": {"friendlyfruitfly": 0},
+                "Дружелюбная муха": {"friendlyfruitfly": 0},
                 "Драконья муха": {"dragonfly": 0},
                 "Гломмер": {"glommer": 0},
                 "Мешок клауса": {"klaus_sack": 0},
@@ -41,7 +41,7 @@ class ResourceDashBoard:
                 "Енотокоты": {"catcoon": 0},
                 "Дикие улья": {"beehive": 0},
                 "Улья пчёл-убийц": {"wasphive": 0},
-                "Смертоносные светлоцветы": {"lunarthrall_plant": 0},
+                "Светлоцветы": {"lunarthrall_plant": 0},
             },
             "Ресурсы": {
                 "Кусты камыша": {"reeds": 0},
@@ -67,7 +67,7 @@ class ResourceDashBoard:
                 "Логова мотыльков": {"dustmothden": 0},
                 "Обезьяньи тотемы": {"monkeybarrel": 0},
                 "Щупальца": {"tentacle": 0},
-                "Повреждённых шахмат на охране руин": {
+                "Шахматы в руинах": {
                     "knight_nightmare": 0,
                     "bishop_nightmare": 0,
                     "rook_nightmare": 0,
