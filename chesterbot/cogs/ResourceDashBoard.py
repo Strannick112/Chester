@@ -57,6 +57,7 @@ class ResourceDashBoard:
             "Боссы": {
                 "Древний страж": {"minotaur": 0},
                 "Дружелюбная муха": {"friendlyfruitfly": 0},
+                "Кошмарный свин-оборотень": {"daywalker": 0},
                 "Скелеты игроков": {"skeleton": 0},
             },
             "Существа": {
@@ -67,7 +68,7 @@ class ResourceDashBoard:
                 "Логова мотыльков": {"dustmothden": 0},
                 "Обезьяньи тотемы": {"monkeybarrel": 0},
                 "Щупальца": {"tentacle": 0},
-                "Механизмы на страже руин": {
+                "Шахмат в руинах": {
                     "knight_nightmare": 0,
                     "bishop_nightmare": 0,
                     "rook_nightmare": 0,
