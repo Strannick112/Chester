@@ -56,7 +56,7 @@ class ResourceDashBoard:
         "caves": {
             "Боссы": {
                 "Древний страж": {"minotaur": 0},
-                "Дружелюбная фруктовая муха": {"friendlyfruitfly": 0},
+                "Дружелюбная муха": {"friendlyfruitfly": 0},
                 "Скелеты игроков": {"skeleton": 0},
             },
             "Существа": {
