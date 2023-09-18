@@ -30,11 +30,11 @@ class DashBoardEmbed(commands.Cog, name="Доска подсчёта"):
         with codecs.open(f"./chesterbot/cogs/dashboard/message.json", "rb", encoding="utf-8") as file:
             self.message_id = json.load(file)
         embed_list = [
-            discord.Embed(
-                title=main_config["server_name"],
-                description="Доска создана, начат сбор информации...",
-                colour=discord.Colour.dark_teal()
-            )
+            # discord.Embed(
+            #     title=main_config["server_name"],
+            #     description="Доска создана, начат сбор информации...",
+            #     colour=discord.Colour.dark_teal()
+            # )
         ]
         for world in main_config["worlds"]:
             embed_list.append(
@@ -56,15 +56,29 @@ class DashBoardEmbed(commands.Cog, name="Доска подсчёта"):
         self.reload_data.start()
 
     async def update_dashboard(self):
-        head_embed = discord.Embed(
-            colour=discord.Colour.from_str("#2f3136"))
-        head_embed.set_image(url=main_config["main_embed_picture"])
-        dashboard = [head_embed]
+        # head_embed = discord.Embed(color=0x2F3136)
+        # head_embed.set_image(url=main_config["main_embed_picture"])
+        # dashboard = [head_embed]
         dashboard += [await world.make_dashboard() for world in self.world_dashboards]
         for i in range(1, dashboard.__len__()):
             dashboard[i].set_image(url="https://media.discordapp.net/attachments/871824345780080690/1152211515106136104/image.png")
+        view = discord.ui.View()
+        style = discord.ButtonStyle.gray
+        view.add_item(
+            item=discord.ui.Button(
+                style=discord.ButtonStyle.primary, label="Узнай больше о сервере",
+                url="https://discord.com/channels/794687419105411082/968907992575668275"
+            )
+        )
+        for button_description in main_config["buttons"]:
+            view.add_item(
+                item=discord.ui.Button(
+                    style=style, label=button_description["description"],
+                    url=button_description["url"]
+                )
+            )
         try:
-            await self.message.edit(embeds=dashboard)
+            await self.message.edit(embeds=dashboard, view=view)
         finally:
             pass
 
