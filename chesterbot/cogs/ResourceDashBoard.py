@@ -15,7 +15,7 @@ class ResourceDashBoard:
     __data = {
         "overworld": {
             "Боссы": {
-                "Дружелюбная муха": {"friendlyfruitfly": 0},
+                "Дружелюбная фруктовая муха": {"friendlyfruitfly": 0},
                 "Драконья муха": {"dragonfly": 0},
                 "Гломмер": {"glommer": 0},
                 "Мешок клауса": {"klaus_sack": 0},
@@ -31,8 +31,8 @@ class ResourceDashBoard:
             "Существа":{
                 "Вольт-козы": {"lightninggoat": 0},
                 "Бифало": {"beefalo": 0},
-                "Хижины МакБивня": {"walrus_camp": 0},
-                "МакБивень": {"walrus": 0},
+                "Хижины моржей": {"walrus_camp": 0},
+                "Моржи": {"walrus": 0},
                 "Дома свиней": {"pighouse": 0},
                 "Дома мермов": {"mermhouse": 0},
                 "Мермы": {"merm": 0},
@@ -41,7 +41,7 @@ class ResourceDashBoard:
                 "Енотокоты": {"catcoon": 0},
                 "Дикие улья": {"beehive": 0},
                 "Улья пчёл-убийц": {"wasphive": 0},
-                "Светлоцветы": {"lunarthrall_plant": 0},
+                "Смертоносные светлоцветы": {"lunarthrall_plant": 0},
             },
             "Ресурсы": {
                 "Кусты камыша": {"reeds": 0},
@@ -56,8 +56,7 @@ class ResourceDashBoard:
         "caves": {
             "Боссы": {
                 "Древний страж": {"minotaur": 0},
-                "Дружелюбная муха": {"friendlyfruitfly": 0},
-                "Кошмарный свиноборотень": {"daywalker": 0},
+                "Дружелюбная фруктовая муха": {"friendlyfruitfly": 0},
                 "Скелеты игроков": {"skeleton": 0},
             },
             "Существа": {
@@ -68,7 +67,7 @@ class ResourceDashBoard:
                 "Логова мотыльков": {"dustmothden": 0},
                 "Обезьяньи тотемы": {"monkeybarrel": 0},
                 "Щупальца": {"tentacle": 0},
-                "Шахмат в руинах": {
+                "Повреждённых шахмат на охране руин": {
                     "knight_nightmare": 0,
                     "bishop_nightmare": 0,
                     "rook_nightmare": 0,
