@@ -64,12 +64,6 @@ class DashBoardEmbed(commands.Cog, name="Доска подсчёта"):
         #     dashboard[i].set_image(url="https://media.discordapp.net/attachments/871824345780080690/1152211515106136104/image.png")
         view = discord.ui.View()
         style = discord.ButtonStyle.gray
-        view.add_item(
-            item=discord.ui.Button(
-                style=discord.ButtonStyle.primary, label="Узнай больше о сервере",
-                url="https://discord.com/channels/794687419105411082/968907992575668275/970776984068161556"
-            )
-        )
         for button_description in main_config["buttons"]:
             view.add_item(
                 item=discord.ui.Button(
