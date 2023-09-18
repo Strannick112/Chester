@@ -67,7 +67,7 @@ class DashBoardEmbed(commands.Cog, name="Доска подсчёта"):
         view.add_item(
             item=discord.ui.Button(
                 style=discord.ButtonStyle.primary, label="Узнай больше о сервере",
-                url="https://discord.com/channels/794687419105411082/968907992575668275"
+                url="https://discord.com/channels/794687419105411082/968907992575668275/970776984068161556"
             )
         )
         for button_description in main_config["buttons"]:
