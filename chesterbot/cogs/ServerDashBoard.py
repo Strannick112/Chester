@@ -45,6 +45,7 @@ class ServerDashBoard:
         description += "ᅠ День: " + (await self._get_cycles()).__str__()
         description += "ᅠ Сезон: " + self.chester_bot.replies[await self._get_season()]
         description += "ᅠ Время суток: " + self.chester_bot.replies[await self._get_day_phase()]
+        description += "       "
         embed.add_field(name="", value=description, inline=False)
         return embed
 
