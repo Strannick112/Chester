@@ -40,21 +40,13 @@ class ServerDashBoard:
         )
 
     async def make_dashboard(self):
-        embed = discord.Embed(color=0x2F3136)
-        # embed.set_thumbnail(url="https://media.discordapp.net/attachments/972971947224870932/1152296441000251472/images.png")
-        embed.set_author(name=main_config["server_name"])
+        embed = discord.Embed(color=0x2F3136, title="Информационная доска сервера")
         description = main_config["description"]
         description += "ᅠ День: " + (await self._get_cycles()).__str__()
         description += "ᅠ Сезон: " + self.chester_bot.replies[await self._get_season()]
         description += "ᅠ Время суток: " + self.chester_bot.replies[await self._get_day_phase()]
-        # embed.add_field(name="", value=main_config["description"], inline=True)
-        # embed.add_field(name="", value="\tДень: " + (await self._get_cycles()).__str__(), inline=True)
-        # embed.add_field(name="", value="\tСезон: " + self.chester_bot.replies[await self._get_season()], inline=True)
-        # embed.add_field(name="", value="\tВремя суток: " + self.chester_bot.replies[await self._get_day_phase()], inline=True)
         embed.add_field(name="", value=description, inline=False)
         return embed
 
     async def reload_data(self):
         pass
-
-    # a = [что_класть (if условие else что_класть) цикл (условие-фильтр)]
