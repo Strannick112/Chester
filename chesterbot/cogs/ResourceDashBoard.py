@@ -67,7 +67,7 @@ class ResourceDashBoard:
                 "Логова мотыльков": {"dustmothden": 0},
                 "Обезьяньи тотемы": {"monkeybarrel": 0},
                 "Щупальца": {"tentacle": 0},
-                "Механизмов на страже руин": {
+                "Механизмы на страже руин": {
                     "knight_nightmare": 0,
                     "bishop_nightmare": 0,
                     "rook_nightmare": 0,
