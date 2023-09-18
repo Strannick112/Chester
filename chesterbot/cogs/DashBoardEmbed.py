@@ -47,7 +47,7 @@ class DashBoardEmbed(commands.Cog, name="Доска подсчёта"):
         try:
             self.message = await self.channel.fetch_message(self.message_id)
         except:
-            self.message = await self.channel.send(embeds=embed_list, file=main_config["main_embed_picture"])
+            self.message = await self.channel.send(embeds=embed_list, file=discord.File(main_config["main_embed_picture"]))
             self.message_id = self.message.id
             with codecs.open(f"./chesterbot/cogs/dashboard/message.json", "w", encoding="utf-8") as file:
                 json.dump(self.message_id, file)
