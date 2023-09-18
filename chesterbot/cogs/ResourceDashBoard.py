@@ -45,7 +45,7 @@ class ResourceDashBoard:
             },
             "Ресурсы": {
                 "Кусты камыша": {"reeds": 0},
-                "Кусты каменных фруктов": {"rock_avocado_bush": 0},
+                "Кусты камен. фруктов": {"rock_avocado_bush": 0},
                 "Перекати-поле": {"tumbleweed": 0},
                 "Спаунеры перекати-поле": {"tumbleweedspawner": 0},
                 "Приманкоцветы": {"lureplant": 0},
