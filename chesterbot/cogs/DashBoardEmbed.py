@@ -73,7 +73,7 @@ class DashBoardEmbed(commands.Cog, name="Доска подсчёта"):
             )
         try:
             await self.message.edit(embeds=dashboard, view=view)
-        finally:
+        except:
             pass
 
     @tasks.loop(minutes=1)
