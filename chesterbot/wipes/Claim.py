@@ -17,13 +17,14 @@ from chesterbot.wipes.Status import Status
 class Claim:
     def __init__(
             self,
-            player: Player = None,
+            id: int,
+            player: Player,
+            wipe_id: int,
+            status: int = Status.not_approved,
             items: tuple[Item] = tuple(),
             created_at: str = "",
-            path: str = "",
             approved_at: str = "",
-            executed_at: str = "",
-            status: str = Status.not_approved
+            executed_at: str = ""
     ):
         self.player = player
         self.items = items
@@ -31,16 +32,16 @@ class Claim:
         self.created_at = created_at
         self.approved_at = approved_at
         self.executed_at = executed_at
-        self.path = path
 
     def save(self):
-        """Сохраняет данные объекта в файл"""
-        with codecs.open(
-                f"{main_dir}/{self.path}/claims/{self.player.discord_nickname}.json",
-            "w",
-            encoding="utf-8"
-        ) as file:
-            json.dump(self, file, default=lambda o: o.__dict__, indent=4, ensure_ascii=False)
+        """Сохраняет данные объекта"""
+        cur.execute("UPDATE Claim SET created_at = ?, approved_at = ?, executed_at = ?, ")
+        # with codecs.open(
+        #         f"{main_dir}/{self.path}/claims/{self.player.discord_nickname}.json",
+        #     "w",
+        #     encoding="utf-8"
+        # ) as file:
+        #     json.dump(self, file, default=lambda o: o.__dict__, indent=4, ensure_ascii=False)
 
     def delete(self):
         tmp_path = f"{main_dir}/{self.path}/claims/{self.player.discord_nickname}.json"

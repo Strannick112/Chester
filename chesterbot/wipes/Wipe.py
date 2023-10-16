@@ -1,6 +1,7 @@
 import codecs
 import json
 import os
+from sqlite3 import Cursor
 
 from chesterbot.wipes import main_dir
 from chesterbot.wipes.Claim import Claim
@@ -9,19 +10,34 @@ from chesterbot.wipes.Claim import Claim
 class Wipe:
     def __init__(
             self,
-            claims: dict[Claim],
-            server_name: str = "",
             started_at: str = "",
-            stoped_at: str = "",
-            path: str = "",
+            *,
+            cur: Cursor
     ):
-        self.server_name = server_name
-        self.started_at = started_at
-        self.stoped_at = stoped_at
-        self.path = path if path != "" else f"{self.server_name}_{self.started_at}"
-        self.claims = claims
+        if cur is not None:
+            self.started_at = started_at
+            self.stoped_at = ""
+            self.claims = {}
+        else:
+            (id, self.started_at, self.stoped_at) = (
+                cur.execute(
+                    "SELECT id, started_at, stopped_at FROM Wipe WHERE started = (SELECT MAX(started) FROM Wipe)"
+                ).fetchone())
+            self.claims = [
+                Claim(claim_data)
+                for claim_data in cur.execute(
+                    "SELECT Claim.id, Claim.user_id, Claim.status_id, "
+                    "Claim.created_at, Claim.approved_at, Claim.executed_at"
+                    "FROM Claim"
+                    "LEFT JOIN Wipe"
+                    "ON Wipe.id = Claim.wipe_id"
+                    "WHERE Wipe.id = ?",
+                    (id, )
+                ).fetchall()
+            ]
 
     def save(self):
+
         cur_dir = os.path.join(main_dir, self.path)
         if not os.path.exists(cur_dir):
             os.mkdir(cur_dir)
