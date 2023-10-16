@@ -9,6 +9,7 @@ from discord.ext import commands
 from chesterbot import main_config, wipes
 from chesterbot.ConsoleDSTChecker import ConsoleDSTChecker
 from chesterbot.cogs import BotManage, WipeManage
+from chesterbot.cogs.Halloween import Halloween
 from chesterbot.cogs.ResourceDashBoard import ResourceDashBoard
 from chesterbot.cogs.DashBoardEmbed import DashBoardEmbed
 from chesterbot.cogs.server_manage import ServerManage
@@ -31,6 +32,7 @@ class ChesterBot(commands.Bot):
         self.bot_manage = BotManage(self)
         self.wipe_manage = WipeManage(self)
         self.dashboards = DashBoardEmbed(self)
+        self.halloween = Halloween(self)
         self.event(self.on_ready)
         super().__init__(command_prefix=main_config['prefix'], intents=intents)
 
@@ -48,6 +50,7 @@ class ChesterBot(commands.Bot):
         await self.add_cog(self.bot_manage)
         await self.add_cog(self.wipe_manage)
         await self.add_cog(self.dashboards)
+        await self.add_cog(self.halloween)
 
     async def start(self, token: str = main_config['token'], *, reconnect: bool = True):
         await self.init()
