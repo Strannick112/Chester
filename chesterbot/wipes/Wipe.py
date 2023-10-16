@@ -12,7 +12,7 @@ class Wipe:
             self,
             started_at: str = "",
             *,
-            cur: Cursor
+            cur: Cursor = None
     ):
         if cur is not None:
             self.started_at = started_at
