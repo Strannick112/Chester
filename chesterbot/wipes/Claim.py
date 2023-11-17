@@ -88,7 +88,7 @@ class Claim:
     async def check_days(self, console_dst_checker: ConsoleDSTChecker, is_ok: int):
         dst_nickname = re.sub(r'\'', r"\\\\\'", self.player.dst_nickname)
         dst_nickname = re.sub(r'\"', r"\\\\\"", dst_nickname)
-        command = f"""screen -S {main_config["worlds"][0]["shard_id"]} -X stuff""" \
+        command = f"""screen -S {main_config["worlds"][0]["screen_name"]} -X stuff""" \
                   f""" "for k,v in pairs(AllPlayers) do print('CheckDaysForPlayer: ', v.name, TheNet:GetClientTableForUser(v.userid).playerage) end\n\""""
 
         result = await console_dst_checker.check(
