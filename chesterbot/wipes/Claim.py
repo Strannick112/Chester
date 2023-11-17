@@ -101,7 +101,6 @@ class Claim:
             )
         for result in raw_results:
             if int(result) > 0:
-                print(int(result))
                 return int(result) > is_ok
         return False
 
