@@ -38,36 +38,42 @@ class ServerManage(commands.Cog, name="Управление сервером"):
     @commands.command(name=main_config['short_server_name'] + "_buttons")
     @commands.has_role(main_config['master_role'])
     async def buttons(self, ctx):
-        await ctx.send("Команды управления игровым сервером «" + main_config["server_name"] + "»", view=ServerManageView(self.chester_bot))
+        await ctx.send("Команды управления игровым сервером «" + main_config["server_name"] + "»",
+                       view=ServerManageView(self.chester_bot))
 
     @commands.command(name=main_config['short_server_name'] + "_restart_server")
     @commands.has_role(main_config['master_role'])
     async def restart_server(self, ctx):
         """Перезапускает сервер сразу"""
+        await ctx.send("Перезагрузка сервера принята к исполнению")
         return await restart()
 
     @commands.command(name=main_config['short_server_name'] + "_soft_restart_server")
     @commands.has_role(main_config['master_role'])
     async def soft_restart_server(self, ctx):
         """Перезапускает сервер через 1 минуту"""
+        await ctx.send("Перезагрузка сервера через 1 минуту принята к исполнению")
         return await soft_restart()
 
     @commands.command(name=main_config['short_server_name'] + "_soft_stop_server")
     @commands.has_role(main_config['master_role'])
     async def soft_stop_server(self, ctx):
         """Останавливает сервер через 1 минуту"""
+        await ctx.send("Остановка сервера через одну минуту принята к исполнению")
         return await soft_stop()
 
     @commands.command(name=main_config['short_server_name'] + "_start_server")
     @commands.has_role(main_config['master_role'])
     async def start_server(self, ctx):
         """Запускает сервер"""
+        await ctx.send("Запуск сервера принят к исполнению")
         return await start()
 
     @commands.command(name=main_config['short_server_name'] + "_stop_server")
     @commands.has_role(main_config['master_role'])
     async def stop_server(self, ctx):
         """Останавливает сервер сразу"""
+        await ctx.send("Остановка сервера принята к исполнению")
         return await stop()
 
     @commands.command(name=main_config['short_server_name'] + "_command")
@@ -79,6 +85,7 @@ class ServerManage(commands.Cog, name="Управление сервером"):
         command - собственно команда, которая будет передана на указанный игровой мир.
         """
         text = re.sub(r'\"', r"\"", re.sub(r'\'', r"\'", command))
+        await ctx.send("Выполнение команды «" + text + "» принято к исполнению")
 
         subprocess.check_output(
             f"""screen -S {main_config['short_server_name']}{shard_id} -X stuff""" +
