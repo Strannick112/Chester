@@ -95,7 +95,7 @@ class Claim:
             r'CheckDaysForPlayer:\s' + dst_nickname + r'([\d]+?)',
             main_config["worlds"][0]["shard_id"], main_config["worlds"][0]["screen_name"], "is_normal", 5
         )
-        return result > is_ok
+        return int(result) > is_ok
 
     def rollback_claim(self) -> bool:
         if self.status == Status.executed:
