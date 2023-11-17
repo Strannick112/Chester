@@ -78,12 +78,11 @@ class ChesterBot(commands.Bot):
                             or message.channel.id == main_config["game_chat_sync_channel"]:
                         await send_message_to_game(message.author.display_name, message.content)
                     elif wipes.last_wipe.stoped_at == "":
-                        author = message.author.__str__()
-                        claim = WipeManage.make_claim(message.content, author, message.created_at.__str__())
+                        claim = await self.wipe_manage.make_claim(message)
                         if claim is not None:
+                            author = message.author.__str__()
                             wipes.last_wipe.claims[author] = claim
                             wipes.last_wipe.claims[author].save()
-                            await message.add_reaction(self.replies['claim_accepted_is_ok'])
 
     async def on_member_join(self, member):
         if self.default_role is None:

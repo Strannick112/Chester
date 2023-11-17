@@ -65,6 +65,10 @@
     "dusk": ":white_sun_cloud:",
     "night": ":waxing_crescent_moon:",
     "unknown_emoji": ":grinning:",
+
+    "claim_days_count": 100,
+    "claim_days_ok": "<:3nekoD:872133440852598845>"
+    "unknown_emoji": ":grinning:",
     "predictions_channel_id": 1163507216154894397,
     "predictions": [
         "Мне кажется, за тобой кто-то пристально следит, стоит подумать о своем поведении в этом году!",

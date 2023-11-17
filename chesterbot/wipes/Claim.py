@@ -85,6 +85,18 @@ class Claim:
                     return True
         return False
 
+    async def check_days(self, console_dst_checker: ConsoleDSTChecker, is_ok: int):
+        dst_nickname = re.sub(r'\'', r"\\\\\'", self.player.dst_nickname)
+        dst_nickname = re.sub(r'\"', r"\\\\\"", dst_nickname)
+        command = "for k,v in pairs(AllPlayers) do print('CheckDaysForPlayer: ', v.name, TheNet:GetClientTableForUser(v.userid).playerage) end"
+
+        result = await console_dst_checker.check(
+            command,
+            r'CheckDaysForPlayer:\s' + dst_nickname + r'([\d]+?)',
+            main_config["worlds"][0]["shard_id"], main_config["worlds"][0]["screen_name"], "is_normal", 5
+        )
+        return result > is_ok
+
     def rollback_claim(self) -> bool:
         if self.status == Status.executed:
             self.executed_at = ""

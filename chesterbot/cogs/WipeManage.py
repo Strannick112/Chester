@@ -3,10 +3,11 @@ import json
 import re
 
 import discord
-from discord import WebhookMessage
+from discord import WebhookMessage, Message
 from discord.ext import commands
 
 from chesterbot import wipes, main_config
+from chesterbot.ConsoleDSTChecker import ConsoleDSTChecker
 from chesterbot.cogs.server_manage.commands import send_message_to_game
 from chesterbot.wipes import Wipe
 from chesterbot.wipes.Claim import Claim
@@ -369,20 +370,23 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
             await ctx.reply(self.__replies['stop_fail'])
             return False
 
-    @staticmethod
-    def make_claim(text: str, author: str, created_at: str):
-        if message := re.findall(
+    async def make_claim(self, message: Message):
+        if raw_claim := re.findall(
                 r'''Сервер: ''' + main_config['server_name']
                 + r'''[\s]*?Игровой ник: ([\w\W]+?)[\s]+?Прошу:[\s]*?([\w\W]+)''',
-                text
+                message.content
         ):
-            loot = re.findall(r'''(\w[\w\s].+?) \("([\w].+?)"\)''', message[0][1])
-            return Claim(
-                Player(author, message[0][0]),
+            loot = re.findall(r'''(\w[\w\s].+?) \("([\w].+?)"\)''', raw_claim[0][1])
+            claim = Claim(
+                Player(message.author.__str__(), raw_claim[0][0]),
                 tuple(Item(item[0], item[1]) for item in loot),
-                created_at,
+                message.created_at.__str__(),
                 wipes.last_wipe.path,
             )
+            await message.add_reaction(self.__replies['claim_accepted_is_ok'])
+            if claim.check_days(self.chester_bot.console_dst_checker, self.__replies['claim_days_count']):
+                await message.add_reaction(self.__replies['claim_days_ok'])
+            return claim
         return None
 
     async def mark_claim_executed(self, user_name: str):
