@@ -384,9 +384,12 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                 wipes.last_wipe.path,
             )
             await message.add_reaction(self.__replies['claim_accepted_is_ok'])
-            is_days_ok = await claim.check_days(self.chester_bot.console_dst_checker, self.__replies['claim_days_count'])
-            if not is_days_ok:
+            count_days = await claim.check_days(self.chester_bot.console_dst_checker, self.__replies['claim_days_count'])
+            if count_days == 0:
                 await message.add_reaction(self.__replies['claim_warning'])
+            else:
+                if count_days > 250:
+                    await message.add_reaction(self.__replies['claim_250_days'])
             return claim
         return None
 
