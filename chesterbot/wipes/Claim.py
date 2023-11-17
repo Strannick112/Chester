@@ -105,6 +105,9 @@ class Claim:
                 return int(result) > is_ok
         return False
 
+    async def check_items(self, console_dst_checker: ConsoleDSTChecker, is_ok: int):
+        pass
+
     def rollback_claim(self) -> bool:
         if self.status == Status.executed:
             self.executed_at = ""
