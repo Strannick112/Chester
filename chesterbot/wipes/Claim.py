@@ -90,13 +90,13 @@ class Claim:
         dst_nickname = re.sub(r'\"', r"\\\\\"", dst_nickname)
         raw_results = set()
         for world in main_config["worlds"]:
-            command = f"""screen -S {main_config["worlds"][0]["screen_name"]} -X stuff""" \
+            command = f"""screen -S {world["screen_name"]} -X stuff""" \
                       f""" "for k,v in pairs(AllPlayers) do print('CheckDaysForPlayer: ', v.name, TheNet:GetClientTableForUser(v.userid).playerage) end\n\""""
             raw_results.add(
                 await console_dst_checker.check(
                     command,
                     r'CheckDaysForPlayer:\s+' + dst_nickname + r'\s+([\d]+)',
-                    main_config["worlds"][0]["shard_id"], main_config["worlds"][0]["screen_name"], "0", 5
+                    world["shard_id"], world["screen_name"], "0", 5
                 )
             )
         for result in raw_results:
