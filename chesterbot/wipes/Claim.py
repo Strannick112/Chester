@@ -101,11 +101,29 @@ class Claim:
             )
         for result in raw_results:
             if int(result) > 0:
-                return int(result) > is_ok
-        return False
+                return int(result)
+        return 0
 
     async def check_items(self, console_dst_checker: ConsoleDSTChecker, is_ok: int):
-        pass
+        dst_nickname = re.sub(r'\'', r"\\\\\'", self.player.dst_nickname)
+        dst_nickname = re.sub(r'\"', r"\\\\\"", dst_nickname)
+        raw_results = dict()
+        for world in main_config["worlds"]:
+            raw_results[world["shard_id"]] = []
+            for item in self.items:
+                command = f"""screen -S {world["screen_name"]} -X stuff""" \
+                          f""" "for k,v in pairs(AllPlayers) do print('CheckDaysForPlayer: ', v.name, TheNet:GetClientTableForUser(v.userid).playerage) end\n\""""
+                raw_results[world["shard_id"]].append(
+                    await console_dst_checker.check(
+                        command,
+                        r'CheckDaysForPlayer:\s+' + dst_nickname + r'\s+([\d]+)',
+                        world["shard_id"], world["screen_name"], "0", 5
+                    )
+                )
+        for result in raw_results:
+            if int(result) > 0:
+                return int(result) > is_ok
+        return False
 
     def rollback_claim(self) -> bool:
         if self.status == Status.executed:
