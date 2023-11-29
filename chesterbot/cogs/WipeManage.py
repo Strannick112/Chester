@@ -384,13 +384,8 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                 wipes.last_wipe.path,
             )
             await message.add_reaction(self.__replies['claim_accepted_is_ok'])
-            count_days = await claim.check_days(self.chester_bot.console_dst_checker, self.__replies['claim_days_count'])
-            if count_days == 0:
-                await message.add_reaction(self.__replies['claim_warning'])
-            else:
-                for day, reaction in self.__replies["claim_days_count"].values():
-                    if count_days > day:
-                        await message.add_reaction(reaction)
+            count_days = await claim.check_days(self.chester_bot.console_dst_checker, self.__replies['claim_days_min'])
+            await self.sync_reactions(count_days, message)
             return claim
         return None
 
@@ -413,22 +408,24 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                             continue
 
                         count_days = await claim.check_days(self.chester_bot.console_dst_checker,
-                                                            self.__replies['claim_days_count'])
-                        if count_days == 0:
-                            await msg.add_reaction(self.__replies['claim_warning'])
-                        else:
-                            try:
-                                await msg.remove_reaction(self.__replies['claim_warning'], self.chester_bot.user)
-                            finally:
-                                for day, reaction in self.__replies["claim_days_count"].items():
-                                    if count_days > int(day):
-                                        await msg.add_reaction(reaction)
+                                                            self.__replies['claim_days_min'])
+                        await self.sync_reactions(count_days, msg)
                         return
         await send_message_to_game(
             "",
             "Заявка не обнаружена, обратитесь к администратору"
         )
 
+    async def sync_reactions(self, count_days, msg):
+        if count_days == 0:
+            await msg.add_reaction(self.__replies['claim_warning'])
+        else:
+            try:
+                await msg.remove_reaction(self.__replies['claim_warning'], self.chester_bot.user)
+            finally:
+                for day, reaction in self.__replies["claim_days_count"].items():
+                    if count_days > int(day):
+                        await msg.add_reaction(reaction)
 
     async def mark_claim_executed(self, user_name: str):
         for channel_id in self.__replies['claim_channel_id']:
