@@ -418,7 +418,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                             await msg.add_reaction(self.__replies['claim_warning'])
                         else:
                             try:
-                                await msg.remove_reaction(self.__replies['claim_warning'])
+                                await msg.remove_reaction(self.__replies['claim_warning'], self.chester_bot.user)
                             finally:
                                 for day, reaction in self.__replies["claim_days_count"].items():
                                     if count_days > int(day):
