@@ -212,7 +212,7 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                             asyncio.create_task(self.chester_bot.wipe_manage.give_items_from_game(player_name))
                             return
                         elif "@check_me" in message:
-                            asyncio.create_task(self.chester_bot.wipe_manage.check_claim())
+                            asyncio.create_task(self.chester_bot.wipe_manage.check_claim(player_name))
                             return
                         else:
                             await self.chat_webhook.send(
