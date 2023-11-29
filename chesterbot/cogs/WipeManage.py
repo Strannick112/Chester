@@ -424,6 +424,10 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                                     if count_days > int(day):
                                         await msg.add_reaction(reaction)
                         return
+        await send_message_to_game(
+            "",
+            "Заявка не обнаружена, обратитесь к администратору"
+        )
 
 
     async def mark_claim_executed(self, user_name: str):
