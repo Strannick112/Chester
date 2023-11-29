@@ -388,10 +388,43 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
             if count_days == 0:
                 await message.add_reaction(self.__replies['claim_warning'])
             else:
-                if count_days > 250:
-                    await message.add_reaction(self.__replies['claim_250_days'])
+                for day, reaction in self.__replies["claim_days_count"].values():
+                    if count_days > day:
+                        await message.add_reaction(reaction)
             return claim
         return None
+
+    async def check_claim(self, dst_player_name):
+        await send_message_to_game(
+            "",
+            "Обновление информации о заявке принято к исполнению"
+        )
+        for discord_claim_player_name, claim in wipes.last_wipe.claims.items():
+            if claim.player.dst_nickname == dst_player_name:
+                for channel_id in self.__replies['claim_channel_id']:
+                    async for msg in self.chester_bot \
+                            .get_channel(channel_id) \
+                            .history(
+                        after=datetime.datetime.strptime(wipes.last_wipe.started_at, '%Y-%m-%d %H:%M:%S.%f%z')
+                    ):
+                        if msg.author == self.chester_bot.user:
+                            continue
+                        if msg.author.__str__() not in wipes.last_wipe.claims.keys():
+                            continue
+
+                        count_days = await claim.check_days(self.chester_bot.console_dst_checker,
+                                                            self.__replies['claim_days_count'])
+                        if count_days == 0:
+                            await msg.add_reaction(self.__replies['claim_warning'])
+                        else:
+                            try:
+                                await msg.remove_reaction(self.__replies['claim_warning'])
+                            finally:
+                                for day, reaction in self.__replies["claim_days_count"].values():
+                                    if count_days > day:
+                                        await msg.add_reaction(reaction)
+                        return
+
 
     async def mark_claim_executed(self, user_name: str):
         for channel_id in self.__replies['claim_channel_id']:

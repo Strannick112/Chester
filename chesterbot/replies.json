@@ -66,7 +66,9 @@
     "night": ":waxing_crescent_moon:",
     "unknown_emoji": ":grinning:",
 
-    "claim_days_count": 100,
-    "claim_warning": "⚠",
-    "claim_250_days": "<:3nekoD:872133440852598845>"
+    "claim_days_count": {
+        "100": "<:100:1175156801226944512>",
+        "250": "<:250:1175156891396100126>"
+    },
+    "claim_warning": "⚠"
 }
