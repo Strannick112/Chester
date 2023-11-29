@@ -175,9 +175,7 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                             )
                         )
                         if "@help" == message[0:5]:
-                            # print("help: ", message[0:5])
                             ask = message[5:].strip()
-                            # print("ask: \"", ask, "\"")
                             for parts in helps.values():
                                 for command, info in parts.items():
                                     if command in ask:
@@ -211,7 +209,10 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                             )
                             return
                         elif "@give_items" in message:
-                            await self.chester_bot.wipe_manage.give_items_from_game(player_name)
+                            asyncio.create_task(self.chester_bot.wipe_manage.give_items_from_game(player_name))
+                            return
+                        elif "@check_me" in message:
+                            asyncio.create_task(self.chester_bot.wipe_manage.check_claim())
                             return
                         else:
                             await self.chat_webhook.send(
