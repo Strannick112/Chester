@@ -20,6 +20,8 @@ main_config = {
     "path_to_save": "/path/to/save_folder",
     "main_embed_picture": "url_to_image",
 
+    "is_event": False,
+
     "buttons": [
         {"description": "description by default", "url": "https://discord.gg/NFGxUDDbz7"}
     ],

@@ -17,5 +17,5 @@ class Halloween(commands.Cog, name="Хеллоуин"):
         """
         Узнать предсказание на сегодня.
         """
-        if ctx.message.channel.id == self.chester_bot.replies["predictions_channel_id"]:
+        if main_config["is_event"] and ctx.message.channel.id == self.chester_bot.replies["predictions_channel_id"]:
             await ctx.reply(random.choice(self.chester_bot.replies["predictions"]))
