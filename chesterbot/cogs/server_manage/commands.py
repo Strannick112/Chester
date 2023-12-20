@@ -118,3 +118,34 @@ async def send_message_to_game(author: str, text: str):
         return False
 
 
+async def send_announce_to_game(text: str, color: tuple = (255, 0, 0, 1)):
+    """Отправляет сообщение от указанного автора в игру"""
+    try:
+        screen_list = subprocess.run(
+            'screen -ls',
+            shell=True,
+            stdout=subprocess.PIPE,
+            stdin=subprocess.PIPE
+        ).stdout.decode('ascii')
+        if main_config['server_main_screen_name'] in screen_list:
+            nickname = re.sub(r'\'', r"\\\\\'", author)
+            nickname = re.sub(r'\"', r"\\\\\"", nickname)
+            nickname = re.sub(r'\$', r"\\\\\$", nickname)
+            nickname = re.sub(r'>', r"\\\\\>", nickname)
+            nickname = re.sub(r'<', r"\\\\\<", nickname)
+            nickname = re.sub(r'/', r"\\\\\/", nickname)
+            text = re.sub(r'\'', r"\\\\\'", text)
+            text = re.sub(r'\"', r"\\\\\"", text)
+            text = re.sub(r'\$', r"\\\\\$", text)
+            text = re.sub(r'>', r"\\\\\>", text)
+            text = re.sub(r'<', r"\\\\\<", text)
+            text = re.sub(r'/', r"\\\\\/", text)
+            subprocess.check_output(
+                f"""screen -S {main_config['server_main_screen_name']} -X stuff""" +
+                f""" \"Networking_Announcement(\\\"{text}\\\", """ + """{""" +
+                f"""{color[0]}, {color[1]}, {color[2]}, {color[3]}""" + """}, \\\"mod\\\")\n\"""",
+                shell=True
+            )
+        return True
+    finally:
+        return False
