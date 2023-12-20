@@ -13,7 +13,7 @@ from chesterbot.cogs.Halloween import Halloween
 from chesterbot.cogs.ResourceDashBoard import ResourceDashBoard
 from chesterbot.cogs.DashBoardEmbed import DashBoardEmbed
 from chesterbot.cogs.server_manage import ServerManage
-from chesterbot.cogs.server_manage.commands import send_message_to_game, send_announce_to_game
+from chesterbot.cogs.server_manage.commands import send_message_to_game
 
 
 class ChesterBot(commands.Bot):
@@ -75,7 +75,7 @@ class ChesterBot(commands.Bot):
                 # When a message
                 else:
                     if message.channel.id == main_config["game_log_sync_channel"]:
-                        await send_announce_to_game("Admin " + message.author.display_name + ": " + message.content)
+                        await send_message_to_game("Admin " + message.author.display_name, message.content)
                     if message.channel.id == main_config["game_chat_sync_channel"]:
                         await send_message_to_game(message.author.display_name, message.content)
                     elif wipes.last_wipe.stoped_at == "":
