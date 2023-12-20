@@ -84,6 +84,7 @@ class ResourceDashBoard:
             },
             "Кусты камыша": {"reeds": 0},
             "Сундуки в лабиринте": {"pandoraschest": 0},
+            "Теневой разлом": {"shadowrift_portal": 0}
         }
     }
     __data = {
