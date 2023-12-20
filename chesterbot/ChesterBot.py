@@ -74,8 +74,9 @@ class ChesterBot(commands.Bot):
                         await self.process_commands(message)
                 # When a message
                 else:
-                    if message.channel.id == main_config["game_log_sync_channel"]\
-                            or message.channel.id == main_config["game_chat_sync_channel"]:
+                    if message.channel.id == main_config["game_log_sync_channel"]:
+                        await send_message_to_game("Admin " + message.author.display_name, message.content)
+                    if message.channel.id == main_config["game_chat_sync_channel"]:
                         await send_message_to_game(message.author.display_name, message.content)
                     elif wipes.last_wipe.stoped_at == "":
                         claim = await self.wipe_manage.make_claim(message)
