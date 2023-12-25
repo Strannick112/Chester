@@ -19,7 +19,9 @@ class Halloween(commands.Cog, name="Хеллоуин"):
         """
         if ctx.message.channel.id == self.chester_bot.replies["predictions_channel_id"]:
             random_prediction_index = random.randint(0, len(self.chester_bot.replies["predictions"]))
-            stickers = self.chester_bot.replies["predictions"][random_prediction_index].get("stickers")
+            stickers = await self.chester_bot.fetch_sticker(
+                self.chester_bot.replies["predictions"][random_prediction_index].get("stickers")
+            )
             await ctx.reply(
                 self.chester_bot.replies["predictions"][random_prediction_index].get("text"),
                 stickers=stickers,
