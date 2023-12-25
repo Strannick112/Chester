@@ -18,18 +18,23 @@ class Halloween(commands.Cog, name="Хеллоуин"):
         Узнать предсказание на сегодня.
         """
         if ctx.message.channel.id == self.chester_bot.replies["predictions_channel_id"]:
+
+            stickers = await ctx.message.guild.fetch_stickers()
+            for sticker in stickers:
+                print(sticker.id)
+
             random_prediction_index = random.randint(
                 len(self.chester_bot.replies["predictions"]) - 2,
                 len(self.chester_bot.replies["predictions"]) - 1
             )
-            stickers_id = self.chester_bot.replies["predictions"][random_prediction_index].get("stickers")
-            if stickers_id is not None:
-                stickers = [self.chester_bot.get_sticker(stick_id) for stick_id in stickers_id]
-                await ctx.reply(
-                    self.chester_bot.replies["predictions"][random_prediction_index].get("text"),
-                    stickers=stickers,
-                )
-            else:
-                await ctx.reply(
-                    self.chester_bot.replies["predictions"][random_prediction_index].get("text")
-                )
+            # stickers_id = self.chester_bot.replies["predictions"][random_prediction_index].get("stickers")
+            # if stickers_id is not None:
+            #     stickers = [self.chester_bot.get_sticker(stick_id) for stick_id in stickers_id]
+            #     await ctx.reply(
+            #         self.chester_bot.replies["predictions"][random_prediction_index].get("text"),
+            #         stickers=stickers,
+            #     )
+            # else:
+            #     await ctx.reply(
+            #         self.chester_bot.replies["predictions"][random_prediction_index].get("text")
+            #     )
