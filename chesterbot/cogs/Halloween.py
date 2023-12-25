@@ -23,7 +23,7 @@ class Halloween(commands.Cog, name="Хеллоуин"):
             for sticker in stickers:
                 await ctx.reply(
                     sticker.id,
-                    stickers=self.chester_bot.get_sticker((sticker,))
+                    stickers=(await self.chester_bot.fetch_sticker(sticker.id),)
                 )
 
 
