@@ -21,7 +21,11 @@ class Halloween(commands.Cog, name="Хеллоуин"):
 
             stickers = await ctx.message.guild.fetch_stickers()
             for sticker in stickers:
-                print(sticker.id)
+                await ctx.reply(
+                    sticker.id,
+                    stickers=self.chester_bot.get_sticker(sticker.id)
+                )
+
 
             random_prediction_index = random.randint(
                 len(self.chester_bot.replies["predictions"]) - 2,
