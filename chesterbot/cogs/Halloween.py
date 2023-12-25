@@ -18,7 +18,7 @@ class Halloween(commands.Cog, name="Хеллоуин"):
         Узнать предсказание на сегодня.
         """
         if ctx.message.channel.id == self.chester_bot.replies["predictions_channel_id"]:
-            random_prediction_index = random.randint(0, len(self.chester_bot.replies["predictions"]))
+            random_prediction_index = random.randint(len(self.chester_bot.replies["predictions"]) - 2, len(self.chester_bot.replies["predictions"]))
             stickers_id = self.chester_bot.replies["predictions"][random_prediction_index].get("stickers")
             if stickers_id is not None:
                 stickers = [await self.chester_bot.fetch_sticker(stick_id) for stick_id in stickers_id]
