@@ -21,7 +21,7 @@ class Halloween(commands.Cog, name="Хеллоуин"):
             random_prediction_index = random.randint(len(self.chester_bot.replies["predictions"]) - 2, len(self.chester_bot.replies["predictions"]))
             stickers_id = self.chester_bot.replies["predictions"][random_prediction_index].get("stickers")
             if stickers_id is not None:
-                stickers = [await self.chester_bot.get_sticker(stick_id) for stick_id in stickers_id]
+                stickers = [self.chester_bot.get_sticker(stick_id) for stick_id in stickers_id]
                 await ctx.reply(
                     self.chester_bot.replies["predictions"][random_prediction_index].get("text"),
                     stickers=stickers,
