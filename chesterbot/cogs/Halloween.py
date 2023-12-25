@@ -20,7 +20,7 @@ class Halloween(commands.Cog, name="Хеллоуин"):
         if ctx.message.channel.id == self.chester_bot.replies["predictions_channel_id"]:
             random_prediction_index = random.randint(
                 len(self.chester_bot.replies["predictions"]) - 2,
-                len(self.chester_bot.replies["predictions"])
+                len(self.chester_bot.replies["predictions"]) - 1
             )
             stickers_id = self.chester_bot.replies["predictions"][random_prediction_index].get("stickers")
             if stickers_id is not None:
