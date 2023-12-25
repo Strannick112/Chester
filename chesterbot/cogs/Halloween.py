@@ -26,7 +26,6 @@ class Halloween(commands.Cog, name="Хеллоуин"):
             #     )
 
             random_prediction_index = random.randint(
-                len(self.chester_bot.replies["predictions"]),
                 len(self.chester_bot.replies["predictions"]) - 1
             )
             stickers_id = self.chester_bot.replies["predictions"][random_prediction_index].get("stickers")
