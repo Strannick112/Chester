@@ -13,7 +13,7 @@ class Halloween(commands.Cog, name="Хеллоуин"):
         self.chester_bot = chester_bot
         self.__replies = chester_bot.replies
         self.__weights = tuple(
-            weight if (weight := prediction["weight"]) is not None
+            weight if (weight := prediction.get("weight")) is not None
             else 1
             for prediction in self.chester_bot.replies["predictions"]
         )
