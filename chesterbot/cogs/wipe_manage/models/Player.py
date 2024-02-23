@@ -20,15 +20,16 @@ class Player(Base):
     claim: Mapped[List["Claim"]] = relationship("Claim")
 
     def __repr__(self) -> str:
-        return f"Player(id={self.id!r}, steam_account_id={self.steam_account_id!r}, discord_account_id={self.discord_account_id!r})"
+        return f"Player(id={str(self.id)!r}, steam_account_id={str(self.steam_account_id)!r}, discord_account_id={str(self.discord_account_id)!r})"
 
     @staticmethod
     def get_or_create(session, **kwargs):
-        with session.begin():
-            instance = session.query(Player).filter_by(**kwargs).first()
-            if instance:
-                return instance
-            else:
-                instance = Player(**kwargs)
-                session.add(instance)
-                return instance
+        # with session.begin():
+        instance = session.query(Player).filter_by(**kwargs).first()
+        if instance:
+            pass
+        else:
+            instance = Player(**kwargs)
+            session.add(instance)
+        # session.close()
+        return instance

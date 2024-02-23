@@ -25,3 +25,10 @@ with session.begin():
         session.add(Status(name="not_approved"))
         session.add(Status(name="approved"))
         session.add(Status(name="executed"))
+
+with session.begin():
+    if session.query(func.count(Wipe.id)).scalar() == 0:
+        last_wipe = Wipe()
+        session.add(last_wipe)
+    else:
+        last_wipe = session.query(Wipe).order_by(Wipe.id.desc()).first()

@@ -1,9 +1,12 @@
+import re
 from datetime import datetime
 from typing import List, Optional
 
 from sqlalchemy import Integer, DateTime, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+from chesterbot import main_config
+from chesterbot.ConsoleDSTChecker import ConsoleDSTChecker
 from .Base import Base
 
 
@@ -30,19 +33,38 @@ class Claim(Base):
     )
 
     def __repr__(self) -> str:
-        return f"Claim(id={self.id!r}, player_id={self.player_id!r}," + \
-            f" status_id={self.status_id!r}, wipe_id={self.wipe_id!r}," + \
-            f" started={self.started!r}, approved={self.approved!r}," + \
-            f" executed={self.executed!r})"
+        return f"Claim(id={str(self.id)!r}, player_id={str(self.player_id)!r}," + \
+            f" status_id={str(self.status_id)!r}, wipe_id={str(self.wipe_id)!r}," + \
+            f" started={str(self.started)!r}, approved={str(self.approved)!r}," + \
+            f" executed={str(self.executed)!r})"
 
     @staticmethod
     def get_or_create(session, item, **kwargs):
-        with session.begin():
-            instance = session.query(Claim).filter_by(**kwargs).first()
-            if instance:
-                return instance
-            else:
-                instance = Claim(item=item, **kwargs)
-                session.add(instance)
-                return instance
+        # with session.begin():
+        instance = session.query(Claim).filter_by(**kwargs).first()
+        if instance:
+            pass
+        else:
+            instance = Claim(item=item, **kwargs)
+            session.add(instance)
+        # session.close()
+        return instance
 
+    async def check_days(self, console_dst_checker: ConsoleDSTChecker, is_ok: int):
+        dst_nickname = re.sub(r'\'', r"\\\\\'", self.player.steam_account.nickname)
+        dst_nickname = re.sub(r'\"', r"\\\\\"", dst_nickname)
+        raw_results = set()
+        for world in main_config["worlds"]:
+            command = f"""screen -S {world["screen_name"]} -X stuff""" \
+                      f""" "for k,v in pairs(AllPlayers) do print('CheckDaysForPlayer: ', v.name, TheNet:GetClientTableForUser(v.userid).playerage) end\n\""""
+            raw_results.add(
+                await console_dst_checker.check(
+                    command,
+                    r'CheckDaysForPlayer:\s+' + dst_nickname + r'\s+([\d]+)',
+                    world["shard_id"], world["screen_name"], "0", 5
+                )
+            )
+        for result in raw_results:
+            if int(result) > 0:
+                return int(result)
+        return 0

@@ -17,15 +17,16 @@ class Wipe(Base):
     claim: Mapped[List["Claim"]] = relationship("Claim", back_populates="wipe")
 
     def __repr__(self) -> str:
-        return f"Wipe(id={self.id!r}, started={self.started!r}, stopped={self.stopped!r})"
+        return f"Wipe(id={str(self.id)!r}, started={str(self.started)!r}, stopped={str(self.stopped)!r})"
 
     @staticmethod
     def get_or_create(session, **kwargs):
-        with session.begin():
-            instance = session.query(Wipe).filter_by(**kwargs).first()
-            if instance:
-                return instance
-            else:
-                instance = Wipe(**kwargs)
-                session.add(instance)
-                return instance
+        # with session.begin():
+        instance = session.query(Wipe).filter_by(**kwargs).first()
+        if instance:
+            pass
+        else:
+            instance = Wipe(**kwargs)
+            session.add(instance)
+        # session.close()
+        return instance

@@ -18,7 +18,8 @@ class Wipe:
         self.server_name = server_name
         self.started_at = started_at
         self.stoped_at = stoped_at
-        self.path = path if path != "" else f"{self.server_name}_{self.started_at}"
+        # self.path = path if path != "" else f"{self.server_name}_{self.started_at}"
+        self.path = path if path != "" else f"{self.server_name}"
         self.claims = claims
 
     def save(self):

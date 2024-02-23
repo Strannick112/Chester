@@ -5,9 +5,12 @@ import re
 import discord
 from discord import WebhookMessage, Message
 from discord.ext import commands
+from sqlalchemy import select
 
 from chesterbot import wipes, main_config
 from chesterbot.cogs.server_manage.commands import send_message_to_game
+from chesterbot.cogs.wipe_manage.models import DiscordAccount, SteamAccount, session, last_wipe, ClaimItem
+import chesterbot.cogs.wipe_manage.models as models
 from chesterbot.wipes import Wipe
 from chesterbot.wipes.Claim import Claim
 from chesterbot.wipes.Item import Item
@@ -370,12 +373,58 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
             return False
 
     async def make_claim(self, message: Message):
+
         if raw_claim := re.findall(
                 r'''Сервер: ''' + main_config['server_name']
                 + r'''[\s]*?Игровой ник: ([\w\W]+?)[\s]+?Прошу:[\s]*?([\w\W]+)''',
                 message.content
         ):
             loot = re.findall(r'''(\w[\w\s].+?) \("([\w].+?)"\)''', raw_claim[0][1])
+
+
+            # Попытка добавить заявку в БД
+            try:
+                with session.begin():
+                    discord_account = DiscordAccount.get_or_create(
+                        session=session,
+                        discord_id=message.author.id,
+                        name=message.author.name,
+                        display_name=message.author.display_name
+                    )
+                    steam_account = SteamAccount.get_or_create(session=session, ku_id="", nickname=raw_claim[0][0])
+                    player = models.Player.get_or_create(session=session,
+                                                  discord_account=discord_account,
+                                                  steam_account=steam_account
+                                                  )
+                    item = [models.Item.get_or_create(session=session, name=item[0], console_id=item[1]) for item in loot]
+                    claim = models.Claim.get_or_create(session=session,
+                                                player=player,
+                                                item=item,
+                                                wipe=last_wipe
+                                                )
+                with session.begin():
+                    session.add(claim)
+                with session.begin():
+                    claims = session.execute(select(models.Claim)).all()
+                    for claim in claims:
+                        print(claim)
+                    players = session.execute(select(models.Player)).all()
+                    for claim in players:
+                        print(claim)
+                    items = session.execute(select(models.Item)).all()
+                    for claim in items:
+                        print(claim)
+                    statuses = session.execute(select(models.Status)).all()
+                    for claim in statuses:
+                        print(claim)
+                    claimitems = session.execute(select(models.ClaimItem)).all()
+                    for claim in claimitems:
+                        print(claim)
+            except Exception as error:
+                print(error)
+            #Конец попытки!
+
+
             claim = Claim(
                 Player(message.author.__str__(), raw_claim[0][0]),
                 tuple(Item(item[0], item[1]) for item in loot),

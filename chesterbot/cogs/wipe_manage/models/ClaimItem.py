@@ -14,15 +14,16 @@ class ClaimItem(Base):
     item_id: Mapped[int] = mapped_column(ForeignKey("item.id"))
 
     def __repr__(self) -> str:
-        return f"ClaimItem(id={self.id!r}, claim_id={self.claim_id!r}, item_id={self.item_id!r})"
+        return f"ClaimItem(id={str(self.id)!r}, claim_id={str(self.claim_id)!r}, item_id={str(self.item_id)!r})"
 
     @staticmethod
     def get_or_create(session, **kwargs):
-        with session.begin():
-            instance = session.query(ClaimItem).filter_by(**kwargs).first()
-            if instance:
-                return instance
-            else:
-                instance = ClaimItem(**kwargs)
-                session.add(instance)
-                return instance
+        # with session.begin():
+        instance = session.query(ClaimItem).filter_by(**kwargs).first()
+        if instance:
+            pass
+        else:
+            instance = ClaimItem(**kwargs)
+            session.add(instance)
+        # session.close()
+        return instance
