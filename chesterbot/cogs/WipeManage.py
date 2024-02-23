@@ -7,7 +7,6 @@ from discord import WebhookMessage, Message
 from discord.ext import commands
 
 from chesterbot import wipes, main_config
-from chesterbot.ConsoleDSTChecker import ConsoleDSTChecker
 from chesterbot.cogs.server_manage.commands import send_message_to_game
 from chesterbot.wipes import Wipe
 from chesterbot.wipes.Claim import Claim
@@ -79,7 +78,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
     async def delete_claim(self, ctx, user_name: str = None):
         """
         Удаляет заявку пользователя.
-        Администратор может указать ник пользователя, чью заявку он хочет получить. Принимает один аргумент:
+        Администратор может указать ник пользователя, чью заявку он хочет удалить. Принимает один аргумент:
         user_name: имя пользователя, чья заявка будет отправлена в чат.
         """
         cur_user = None
