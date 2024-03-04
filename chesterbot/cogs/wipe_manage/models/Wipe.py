@@ -27,8 +27,8 @@ class Wipe(Base):
             claims += ";\n"
         claims += "]"
         stopped = '?' if self.stopped == self.started else str(self.stopped)
-        return (f"id={str(self.id)},\nstarted={str(self.started)},\nstopped={stopped!r},\n"
-                f"claims={str(claims)}\n")
+        return (f"Номер вайпа={str(self.id)},\nНачало={str(self.started)},\nКонец={stopped!r},\n"
+                f"Заявки={str(claims)}\n")
 
     @staticmethod
     def get_or_create(session, **kwargs):

@@ -49,18 +49,18 @@ class Claim(Base):
     def __str__(self):
         items = "[\n"
         for index, item in enumerate(self.items):
-            items += f'ᅠᅠ{index}. ' + {'console_id': item.console_id, 'name': item.name}.__str__() + ',\n'
+            items += f'ᅠᅠ{index + 1}. ' + {'console_id': item.console_id, 'name': item.name}.__str__() + ',\n'
         items += "]"
         approved = '?' if self.approved == self.started else str(self.approved)
         executed = '?' if self.executed == self.started else str(self.executed)
         return (
-            f"player\_id={str(self.player_id)},\n"
-            f"discord\_user={'<@' + str(self.player.discord_account.discord_id) + '>'},\n"
-            f"steam\_account\_ku\_id={str(self.player.steam_account.ku_id)!r},\n"
-            f"steam\_account\_nickname={str(self.player.steam_account.nickname)},\n"
-            f"status={str(self.status.name)},\nitems={items},\n"
-            f"started={str(self.started)!r},\napproved={approved!r},\n"
-            f"executed={executed!r},\n message\_link={str(self.message_link)}\n"
+            f"id игрока={str(self.player_id)},\n"
+            f"Дискорд аккаунт={'<@' + str(self.player.discord_account.discord_id) + '>'},\n"
+            f"ku\_id={str(self.player.steam_account.ku_id)!r},\n"
+            f"Игровой ник={str(self.player.steam_account.nickname)},\n"
+            f"Статус={str(self.status.name)},\nПредметы={items},\n"
+            f"Создана={str(self.started)!r},\nОдобрена={approved!r},\n"
+            f"Выполнена={executed!r},\nЗаявка={str(self.message_link)}\n"
         )
 
     @staticmethod

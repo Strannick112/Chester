@@ -178,7 +178,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
             )
             for index, wipe in enumerate(session.query(models.Wipe).order_by(models.Wipe.id.desc()).all()):
                 stopped = '?' if wipe.stopped == wipe.started else str(wipe.stopped)
-                embed.add_field(name="", value=f"{index + 1}. started={wipe.started}, stopped={stopped}", inline=False)
+                embed.add_field(name="", value=f"{index + 1}. Начало={wipe.started}, Конец={stopped}", inline=False)
 
         await ctx.reply(embed=embed)
         return True
