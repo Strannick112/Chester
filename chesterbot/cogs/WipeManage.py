@@ -112,7 +112,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
             ctx.reply("Параметры команды указаны не верно")
         requested_discord_id = None
         if discord_id is None:
-            requested_discord_id = ctx.author.__str__()
+            requested_discord_id = ctx.author.id
         else:
             for role in ctx.author.roles:
                 if role.id == int(self.chester_bot.replies["admin_role_id"]):
@@ -401,10 +401,10 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                 return
             if raw_claim := re.findall(
                 r'''Сервер: ''' + main_config['server_name']
-                + r'''[\s]*?Игровой ник: ([\w\W]+?)[\s]+?Прошу:[\s]*?([\w\W]+)''',
+                + r'''[\s]*?Игровой ник: ([\w\W]+?)\sИдентификатор:\s(.+?)\sПрошу:[\s]*?([\w\W]+)''',
                     message.content
             ):
-                loot = re.findall(r'''([\w\s]+?)\s*\(\"([\w]+?)\"\)''', raw_claim[0][1])
+                loot = re.findall(r'''([\w\s]+?)\s*\(\"([\w]+?)\"\)''', raw_claim[0][2])
                 try:
                     discord_account = DiscordAccount.get_or_create(
                         session=session,
@@ -412,7 +412,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                         name=message.author.name,
                         display_name=message.author.display_name
                     )
-                    steam_account = SteamAccount.get_or_create(session=session, ku_id="", nickname=raw_claim[0][0])
+                    steam_account = SteamAccount.get_or_create(session=session, ku_id=raw_claim[0][1], nickname=raw_claim[0][0])
                     player = models.Player.get_or_create(
                         session=session,
                         discord_account=discord_account,

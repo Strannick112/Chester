@@ -27,9 +27,12 @@ class Player(Base):
 
     @staticmethod
     def get_or_create(session, **kwargs):
-        instance = session.query(Player).filter_by(**kwargs).first()
-        if instance:
-            pass
+
+        if instance := session.query(Player).filter_by(**kwargs).first():
+            return instance
+        if instance := session.query(Player).filter_by(discord_account=kwargs.get("discord_account")).first():
+            instance.steam_account = kwargs.get("steam_account")
+            return instance
         else:
             instance = Player(**kwargs)
             session.add(instance)
