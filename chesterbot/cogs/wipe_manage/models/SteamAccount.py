@@ -21,14 +21,11 @@ class SteamAccount(Base):
 
     @staticmethod
     def get_or_create(session, ku_id, nickname):
-        # with session.begin():
         instance = session.query(SteamAccount).filter_by(ku_id=ku_id).first()
-        # instance = session.execute(select(SteamAccount).where(SteamAccount.ku_id == ku_id)).first()[0]
         if instance:
             if nickname != instance.nickname:
                 instance.nickname = nickname
         else:
             instance = SteamAccount(ku_id=ku_id, nickname=nickname)
             session.add(instance)
-        # session.close()
         return instance

@@ -1,5 +1,10 @@
 from sqlalchemy.orm import Session
 
+statuses = dict()
+statuses["not_approved"] = 1
+statuses["approved"] = 2
+statuses["executed"] = 3
+
 from .Base import Base
 from .DiscordAccount import DiscordAccount
 from .SteamAccount import SteamAccount
@@ -11,7 +16,7 @@ from .ClaimItem import ClaimItem
 from .Claim import Claim
 
 
-from sqlalchemy import create_engine, select, func
+from sqlalchemy import create_engine, func
 
 engine = create_engine("sqlite:///dst_keriwell", echo=True)
 Base.metadata.create_all(engine)
@@ -28,7 +33,4 @@ with session.begin():
 
 with session.begin():
     if session.query(func.count(Wipe.id)).scalar() == 0:
-        last_wipe = Wipe()
-        session.add(last_wipe)
-    else:
-        last_wipe = session.query(Wipe).order_by(Wipe.id.desc()).first()
+        session.add(Wipe())

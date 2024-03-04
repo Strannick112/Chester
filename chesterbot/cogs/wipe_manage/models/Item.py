@@ -14,7 +14,7 @@ class Item(Base):
     name: Mapped[str] = mapped_column(String(100))
 
     claim: Mapped[List["Claim"]] = relationship("Claim",
-        secondary='claim_item', back_populates="item"
+        secondary='claim_item', back_populates="items"
     )
 
     def __repr__(self) -> str:
@@ -22,12 +22,8 @@ class Item(Base):
 
     @staticmethod
     def get_or_create(session, **kwargs):
-        # with session.begin():
         instance = session.query(Item).filter_by(**kwargs).first()
-        if instance:
-            pass
-        else:
+        if not instance:
             instance = Item(**kwargs)
             session.add(instance)
-        # session.close()
         return instance

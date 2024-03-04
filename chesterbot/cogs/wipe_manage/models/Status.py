@@ -18,12 +18,10 @@ class Status(Base):
 
     @staticmethod
     def get_or_create(session, **kwargs):
-        # with session.begin():
         instance = session.query(Status).filter_by(**kwargs).first()
         if instance:
             pass
         else:
             instance = Status(**kwargs)
             session.add(instance)
-        # session.close()
         return instance

@@ -16,6 +16,9 @@
     "delete_claim_fail": "Удаление заявки не удалось",
     "checkout_marks_on_executed_claims_success": "Все реакции под оставленными заявками были синхронизированы",
     "rollback_claims_success": "Откат заявок успешно выполенен",
+    "rollback_claims_fall": "Откат заявок не выполнен",
+    "rollback_claim_success": "Откат заявки успешно выполенен",
+    "rollback_claim_fall": "Откат заявки не выполнен",
     "player_is_not_online_phrase": "Кажется, след потерян… но я буду все еще здесь, когда вы появитесь в игре",
 
     "claim_warning": "⚠",

@@ -21,9 +21,7 @@ class DiscordAccount(Base):
 
     @staticmethod
     def get_or_create(session, discord_id, name, display_name):
-        # with session.begin():
         instance = session.query(DiscordAccount).filter_by(discord_id=discord_id).first()
-        # instance = session.execute(select(DiscordAccount).where(DiscordAccount.discord_id == discord_id)).first()[0]
         if instance:
             if name != instance.name:
                 instance.name = name
@@ -32,5 +30,4 @@ class DiscordAccount(Base):
         else:
             instance = DiscordAccount(discord_id=discord_id, name=name, display_name=display_name)
             session.add(instance)
-        # session.close()
         return instance

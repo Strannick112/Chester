@@ -29,13 +29,7 @@ class DashBoardEmbed(commands.Cog, name="Доска подсчёта"):
 
         with codecs.open(f"./chesterbot/cogs/dashboard/message.json", "rb", encoding="utf-8") as file:
             self.message_id = json.load(file)
-        embed_list = [
-            # discord.Embed(
-            #     title=main_config["server_name"],
-            #     description="Доска создана, начат сбор информации...",
-            #     colour=discord.Colour.dark_teal()
-            # )
-        ]
+        embed_list = []
         for world in main_config["worlds"]:
             embed_list.append(
                 discord.Embed(

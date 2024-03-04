@@ -6,7 +6,7 @@ import subprocess
 import discord
 from discord.ext import commands
 
-from chesterbot import main_config, wipes
+from chesterbot import main_config
 from chesterbot.ConsoleDSTChecker import ConsoleDSTChecker
 from chesterbot.cogs import BotManage, WipeManage
 from chesterbot.cogs.Halloween import Halloween
@@ -78,12 +78,8 @@ class ChesterBot(commands.Bot):
                         await send_message_to_game("Admin " + message.author.display_name, message.content)
                     if message.channel.id == main_config["game_chat_sync_channel"]:
                         await send_message_to_game(message.author.display_name, message.content)
-                    elif wipes.last_wipe.stoped_at == "":
-                        claim = await self.wipe_manage.make_claim(message)
-                        if claim is not None:
-                            author = message.author.__str__()
-                            wipes.last_wipe.claims[author] = claim
-                            wipes.last_wipe.claims[author].save()
+                    else:
+                        await self.wipe_manage.make_claim(message)
 
     async def on_member_join(self, member):
         if self.default_role is None:

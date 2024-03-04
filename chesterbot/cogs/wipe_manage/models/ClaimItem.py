@@ -18,12 +18,10 @@ class ClaimItem(Base):
 
     @staticmethod
     def get_or_create(session, **kwargs):
-        # with session.begin():
         instance = session.query(ClaimItem).filter_by(**kwargs).first()
         if instance:
             pass
         else:
             instance = ClaimItem(**kwargs)
             session.add(instance)
-        # session.close()
         return instance
