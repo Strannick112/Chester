@@ -103,8 +103,8 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
     async def get_claim(self, ctx, discord_id: str = None):
         """
         Отправляет информацию о заявке в чат.
-        Администратор может указать ник пользователя, чью заявку он хочет получить. Принимает один аргумент:
-        user_name: имя пользователя, чья заявка будет отправлена в чат.
+        Администратор может указать уникальный идентификатор пользователя, заявку которого он хочет получить. Принимает один аргумент:
+        discord_id: id пользователя, чья заявка будет отправлена в чат.
         """
         try:
             discord_id = int(discord_id)
@@ -141,19 +141,46 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
             return False
 
     @commands.command(name=main_config['short_server_name'] + "_wipe_info")
-    async def wipe_info(self, ctx):
+    async def wipe_info(self, ctx, wipe_id: str = None):
         """
         Отправляет информацию о вайпе в чат.
+        Администратор может указать номер вайпа, информацию о котором он хочет получить. Принимает один аргумент:
+        wipe_id: номер вайпа, информация о котором будет отправлена в чат.
+        """
+        try:
+            with session.begin():
+                if wipe_id is None:
+                    if last_wipe := session.query(models.Wipe).order_by(models.Wipe.id.desc()).first():
+                        text = last_wipe.__str__()
+                else:
+                    wipe_id = int(wipe_id)
+                    if last_wipe := session.query(models.Wipe).filter_by(id=wipe_id).first():
+                        text = last_wipe.__str__()
+            await ctx.reply(embed=discord.Embed(
+                title="Информация о вайпе",
+                description=text,
+                colour=discord.Colour.dark_teal()
+            ))
+            return True
+        except:
+            ctx.reply("Параметры команды указаны не верно")
+
+
+    @commands.command(name=main_config['short_server_name'] + "_wipe_list")
+    async def wipe_list(self, ctx):
+        """
+        Отправляет информацию о всех вайпах в чат.
         """
         with session.begin():
-            if last_wipe := session.query(models.Wipe).order_by(models.Wipe.id.desc()).first():
-                text = last_wipe.__str__()
+            embed = discord.Embed(
+                title="Информация о вайпах",
+                colour=discord.Colour.dark_teal()
+            )
+            for index, wipe in enumerate(session.query(models.Wipe).order_by(models.Wipe.id.desc()).all()):
+                stopped = '?' if wipe.stopped == wipe.started else str(wipe.stopped)
+                embed.add_field(name="", value=f"{index + 1}. started={wipe.started}, stopped={stopped}", inline=False)
 
-        await ctx.reply(embed=discord.Embed(
-            title="Информация о вайпе",
-            description=text,
-            colour=discord.Colour.dark_teal()
-        ))
+        await ctx.reply(embed=embed)
         return True
 
     async def give_items_from_game(self, steam_nickname):
@@ -377,7 +404,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                 + r'''[\s]*?Игровой ник: ([\w\W]+?)[\s]+?Прошу:[\s]*?([\w\W]+)''',
                     message.content
             ):
-                loot = re.findall(r'''(\w[\w\s].+?) \("([\w].+?)"\)''', raw_claim[0][1])
+                loot = re.findall(r'''([\w\s]+?)\s*\(\"([\w]+?)\"\)''', raw_claim[0][1])
                 try:
                     discord_account = DiscordAccount.get_or_create(
                         session=session,

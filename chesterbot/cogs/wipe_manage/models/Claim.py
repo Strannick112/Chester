@@ -49,7 +49,7 @@ class Claim(Base):
     def __str__(self):
         items = "[\n"
         for index, item in enumerate(self.items):
-            items += f'    {index}. ' + {'console_id': item.console_id, 'name': item.name}.__str__() + ',\n'
+            items += f'ᅠᅠ{index}. ' + {'console_id': item.console_id, 'name': item.name}.__str__() + ',\n'
         items += "]"
         approved = '?' if self.approved == self.started else str(self.approved)
         executed = '?' if self.executed == self.started else str(self.executed)

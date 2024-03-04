@@ -22,7 +22,7 @@ class Wipe(Base):
     def __str__(self):
         claims = "[\n"
         for index, claim in enumerate(self.claims):
-            claims += f"    {index + 1}. <@" + str(claim.player.discord_account.discord_id) + ">    "
+            claims += f"ᅠᅠ{index + 1}. <@" + str(claim.player.discord_account.discord_id) + ">ᅠᅠ"
             claims += claim.message_link
             claims += ";\n"
         claims += "]"
