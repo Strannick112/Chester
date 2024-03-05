@@ -1,8 +1,6 @@
-import re
-from datetime import datetime
 from typing import List, Optional
 
-from sqlalchemy import Integer, DateTime, ForeignKey, func, BigInteger, update, String
+from sqlalchemy import DateTime, ForeignKey, func, BigInteger, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from chesterbot import main_config
@@ -65,7 +63,7 @@ class Claim(Base):
 
     @staticmethod
     async def get_or_create(*, session, items, revoke, player, **kwargs):
-        if instance := session.query(Claim).filter_by(**kwargs, player=player).first():
+        if instance := await session.query(Claim).filter_by(**kwargs, player=player).first():
             return instance
         if old_claim := await revoke(player):
             old_claim.message_id = kwargs.get("message_id")
@@ -99,7 +97,7 @@ class Claim(Base):
                 else:
                     self.executed = func.now()
                     self.status_id = statuses.get("executed")
-                    session.add(self)
+                    await session.add(self)
                     return True
         return False
 
@@ -144,21 +142,21 @@ class Claim(Base):
     #             return int(result) > is_ok
     #     return False
 
-    def rollback_claim(self, *, session) -> bool:
+    async def rollback_claim(self, *, session) -> bool:
         if self.status_id == statuses.get("executed"):
             self.executed = self.started
             self.status_id = statuses.get("approved")
-            session.add(self)
+            await session.add(self)
             return True
         else:
             return False
 
-    def approve(self, *, session) -> bool:
+    async def approve(self, *, session) -> bool:
         if self.status_id == statuses.get("not_approved"):
             self.approved = func.now()
             self.status_id = statuses.get("approved")
             print("APPROVE_3")
-            session.add(self)
+            await session.add(self)
             print("APPROVE_4")
             return True
         else:

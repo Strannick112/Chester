@@ -27,7 +27,6 @@ class Player(Base):
 
     @staticmethod
     def get_or_create(session, **kwargs):
-
         if instance := session.query(Player).filter_by(**kwargs).first():
             return instance
         if instance := session.query(Player).filter_by(discord_account=kwargs.get("discord_account")).first():

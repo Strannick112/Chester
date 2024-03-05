@@ -14,6 +14,7 @@ from chesterbot.cogs.ResourceDashBoard import ResourceDashBoard
 from chesterbot.cogs.DashBoardEmbed import DashBoardEmbed
 from chesterbot.cogs.server_manage import ServerManage
 from chesterbot.cogs.server_manage.commands import send_message_to_game
+from chesterbot.cogs.wipe_manage.models import models_init
 
 
 class ChesterBot(commands.Bot):
@@ -42,6 +43,7 @@ class ChesterBot(commands.Bot):
         await self.console_dst_checker.on_ready(self.loop)
         await self.wipe_manage.on_ready()
         await self.dashboards.on_ready()
+        await models_init()
 
 
     async def init(self):
