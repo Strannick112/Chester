@@ -317,7 +317,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                 else:
                     await ctx.reply(self.__replies['rollback_claim_fall'])
 
-    async def approve(self, msg, claim):
+    async def approve(self, msg, claim, session):
         """
         Проверяет возможно ли изменить состояние заявки с "Не одобрена" на "Одобрена" у определённого игрока,
         и если все правила соблюдены - изменяет состояние заявки.
@@ -411,7 +411,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                         models.Wipe.id == session.query(models.Wipe).order_by(models.Wipe.id.desc()).first().id
                 ).all():
                     if msg := await self.chester_bot.get_channel(claim.channel_id).fetch_message(claim.message_id):
-                        await self.approve(msg, claim)
+                        await self.approve(msg, claim, session)
                 return True
             else:
                 await ctx.reply(self.__replies['stop_fail'])
