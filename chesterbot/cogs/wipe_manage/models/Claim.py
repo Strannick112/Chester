@@ -71,14 +71,11 @@ class Claim(Base):
                 channel_id=kwargs.get("channel_id"),
                 message_link=kwargs.get("message_link"),
                 status_id=statuses.get("not_approved"),
-                items=items
-                # items=items,
             ))
-            # old_claim.message_id = kwargs.get("message_id")
-            # old_claim.channel_id = kwargs.get("channel_id")
-            # old_claim.message_link = kwargs.get("message_link")
-            # old_claim.status_id = statuses.get("not_approved")
-            # old_claim.items = items
+            (await old_claim.awaitable_attrs.items).clear()
+            session.add(old_claim)
+            await session.flush()
+            old_claim.items = items
             session.add(old_claim)
             await session.flush()
             return old_claim
