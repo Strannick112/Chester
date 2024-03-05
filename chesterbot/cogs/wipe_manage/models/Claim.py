@@ -143,18 +143,18 @@ class Claim(Base):
     #             return int(result) > is_ok
     #     return False
 
-    def rollback_claim(self, *, session) -> bool:
+    def rollback_claim(self) -> bool:
         if self.status_id == statuses.get("executed"):
             self.executed = self.started
-            self.status = session.query(Status).where(Status.name == "approved").first()
+            self.status_id = statuses.get("approved")
             return True
         else:
             return False
 
-    def approve(self, *, session) -> bool:
+    def approve(self) -> bool:
         if self.status == statuses.get("not_approved"):
             self.approved = func.now()
-            self.status = session.query(Status).where(Status.name == "approved").first()
+            self.status_id = statuses.get("approved")
             return True
         else:
             return False
