@@ -81,7 +81,7 @@ class Claim(Base):
         if self.status_id == statuses.get("approved"):
             for world in main_config["worlds"]:
                 for item in self.items:
-                    dst_nickname = re.sub(r'\'', r"\\\\\'", self.player.dst_nickname)
+                    dst_nickname = re.sub(r'\'', r"\\\\\'", self.player.steam_account.nickname)
                     dst_nickname = re.sub(r'\"', r"\\\\\"", dst_nickname)
                     item_id = shlex.quote(item.id)
                     command = f"""screen -S {world["screen_name"]} -X stuff"""\
@@ -98,7 +98,7 @@ class Claim(Base):
                         break
                 else:
                     self.executed = func.now()
-                    self.status = session.query(Status).where(Status.name == "executed").first()
+                    self.status_id = statuses.get("executed")
                     return True
         return False
 
@@ -152,13 +152,9 @@ class Claim(Base):
             return False
 
     def approve(self) -> bool:
-        print("APPROVE BEGIN")
         if self.status_id == statuses.get("not_approved"):
-            print("APPROVE IN PROGRESS")
             self.approved = func.now()
-            print("DATA SET")
             self.status_id = statuses.get("approved")
-            print("STATUS ID APPROVED")
             return True
         else:
             return False
