@@ -32,7 +32,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
         async with self.chester_bot.async_session() as session:
             async with session.begin():
         # if True:
-                for claim in await (await session.execute(select(
+                for claim in await (session.execute(select(
                     models.Claim
                 ).where(
                     models.Claim.wipe_id == (await session.execute(select(models.Wipe).order_by(models.Wipe.id.desc()))).scalars().first().id
@@ -468,7 +468,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                             steam_account_id=steam_account.id
                         )
                         items = [
-                            await models.Item.get_or_create(session=session, name=item[0], console_id=item[1])
+                            await models.Item.get_or_create(session=session, name=item[0].strip(), console_id=item[1])
                             for item in loot
                         ]
                         claim = await models.Claim.get_or_create(
