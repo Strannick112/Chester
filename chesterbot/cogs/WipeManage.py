@@ -447,8 +447,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
         with session.begin():
             if claim := await self.get_claim_by_steam_nickname(dst_player_name):
                 if msg := await self.chester_bot.get_channel(claim.channel_id).fetch_message(claim.message_id):
-                    count_days = await claim.check_days(self.chester_bot.console_dst_checker,
-                                                    self.__replies['claim_days_min'])
+                    count_days = await claim.check_days(console_dst_checker=self.chester_bot.console_dst_checker)
                     await self.sync_reactions(count_days, msg)
                     return
         await send_message_to_game(
