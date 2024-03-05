@@ -32,7 +32,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
         async with self.chester_bot.async_session() as session:
             async with session.begin():
         # if True:
-                for claim in await (session.execute(select(
+                for claim in (await session.execute(select(
                     models.Claim
                 ).where(
                     models.Claim.wipe_id == (await session.execute(select(models.Wipe).order_by(models.Wipe.id.desc()))).scalars().first().id
