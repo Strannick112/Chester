@@ -226,7 +226,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                 if claim.status_id == models.statuses.get("not_approved"):
                     await message.reply(
                         content="[" + main_config["server_name"] + "] <@" +
-                                claim.player.discord_account.discord_id + "> , " +
+                                str(claim.player.discord_account.discord_id) + "> , " +
                                 self.__replies['give_items_fail_not_approved']
                     )
                     await message.add_reaction(self.__replies['claim_error'])
@@ -237,7 +237,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                 if claim.status_id == models.statuses.get("executed"):
                     await message.reply(
                         content="[" + main_config["server_name"] + "] <@" +
-                                claim.player.discord_account.discord_id + "> , " +
+                                str(claim.player.discord_account.discord_id) + "> , " +
                                 self.__replies['give_items_fail_executed']
                     )
                     await message.add_reaction(self.__replies['claim_error'])
@@ -248,7 +248,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                 if not await claim.player.is_player_online(self.chester_bot.console_dst_checker):
                     await message.reply(
                         content="[" + main_config["server_name"] + "] <@" +
-                                claim.player.discord_account.discord_id + "> , " +
+                                str(claim.player.discord_account.discord_id) + "> , " +
                                 self.__replies['player_is_not_online_phrase']
                     )
                     await message.add_reaction(self.__replies['player_is_not_online'])
@@ -257,7 +257,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                 if await claim.give_items(session=session, console_dst_checker=self.chester_bot.console_dst_checker):
                     await message.reply(
                         content="[" + main_config["server_name"] + "] <@" +
-                                claim.player.discord_account.discord_id + "> , " +
+                                str(claim.player.discord_account.discord_id) + "> , " +
                                 self.__replies['give_items_success']
                     )
                     await message.add_reaction(self.__replies['claim_items_executed'])
@@ -268,7 +268,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                 else:
                     await message.reply(
                         content="[" + main_config["server_name"] + "] <@" +
-                                claim.player.discord_account.discord_id + "> , " +
+                                str(claim.player.discord_account.discord_id) + "> , " +
                                 self.__replies['give_items_fail']
                     )
                     await message.add_reaction(self.__replies['claim_error'])
