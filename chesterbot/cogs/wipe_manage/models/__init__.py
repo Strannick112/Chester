@@ -22,6 +22,7 @@ engine = create_engine("sqlite:///dst_keriwell", echo=True)
 Base.metadata.create_all(engine)
 
 session = Session(engine)
+session.autobegin = False
 
 with session.begin():
     row_count = session.query(func.count(Status.id)).scalar()
