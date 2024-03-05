@@ -245,7 +245,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                     await message.add_reaction(self.__replies['player_is_not_online'])
                     return False
                 # Попытка выдать вещи
-                if await claim.give_items(session=session,console_dst_checker=self.chester_bot.console_dst_checker):
+                if await claim.give_items(session=session, console_dst_checker=self.chester_bot.console_dst_checker):
                     await message.reply(
                         content="[" + main_config["server_name"] + "] <@" +
                                 claim.player.discord_account.discord_id + "> , " +
