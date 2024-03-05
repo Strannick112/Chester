@@ -17,10 +17,10 @@ from .ClaimItem import ClaimItem
 from .Claim import Claim
 
 
-from sqlalchemy import create_engine, func
+from sqlalchemy import create_engine, func, select
 
-engine = create_engine("sqlite:///dst_keriwell", echo=True)
-Base.metadata.create_all(engine)
+# engine = create_engine("sqlite:///dst_keriwell", echo=True)
+# Base.metadata.create_all(engine)
 
 # session = Session(engine)
 # session.autobegin = False
@@ -37,16 +37,13 @@ Base.metadata.create_all(engine)
 #     if session.query(func.count(Wipe.id)).scalar() == 0:
 #         session.add(Wipe())
 
-engine = None
-async_session = None
 
-async def models_init() -> None:
+async def models_init():
     global engine
     global async_session
 
     engine = create_async_engine(
-        "postgresql+asyncpg://scott:tiger@localhost/test",
-        echo=True,
+        "sqlite+aiosqlite:///dst_keriwell", echo=True
     )
 
     # async_sessionmaker: a factory for new AsyncSession objects.
@@ -56,15 +53,17 @@ async def models_init() -> None:
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
     async with async_session() as session:
-        row_count = session.query(func.count(Status.id)).scalar()
-        if row_count < 3:
-            print("Инициализация таблицы Status")
-            session.add(Status(name="not_approved"))
-            session.add(Status(name="approved"))
-            session.add(Status(name="executed"))
-            if session.query(func.count(Wipe.id)).scalar() == 0:
-                session.add(Wipe())
+        async with session.begin():
+            row_count = (await session.execute(select(func.count(Status.id)))).scalar()
+            if row_count < 3:
+                print("Инициализация таблицы Status")
+                session.add(Status(name="not_approved"))
+                session.add(Status(name="approved"))
+                session.add(Status(name="executed"))
+                if (await session.execute(select(func.count(Wipe.id)))).scalar() == 0:
+                    session.add(Wipe())
 
+    return async_session
     # for AsyncEngine created in function scope, close and
     # clean-up pooled connections
     # await engine.dispose()

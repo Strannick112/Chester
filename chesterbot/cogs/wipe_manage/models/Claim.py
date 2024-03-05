@@ -1,6 +1,6 @@
 from typing import List, Optional
 
-from sqlalchemy import DateTime, ForeignKey, func, BigInteger, String
+from sqlalchemy import DateTime, ForeignKey, func, BigInteger, String, select, update, Integer
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from chesterbot import main_config
@@ -44,42 +44,54 @@ class Claim(Base):
                 f" started={str(self.started)!r}, approved={str(self.approved)!r}," + \
                 f" executed={str(self.executed)!r}, message_link={str(self.message_link)})"
 
-    def __str__(self):
+    async def to_str(self):
         items = "[\n"
-        for index, item in enumerate(self.items):
+        for index, item in enumerate(await self.awaitable_attrs.items):
             items += f'ᅠᅠ{index + 1}. ' + {'console_id': item.console_id, 'name': item.name}.__str__() + ',\n'
         items += "]"
         approved = '?' if self.approved == self.started else str(self.approved)
         executed = '?' if self.executed == self.started else str(self.executed)
         return (
             f"id игрока={str(self.player_id)},\n"
-            f"Дискорд аккаунт={'<@' + str(self.player.discord_account.discord_id) + '>'},\n"
-            f"ku\_id={str(self.player.steam_account.ku_id)!r},\n"
-            f"Игровой ник={str(self.player.steam_account.nickname)},\n"
-            f"Статус={str(self.status.name)},\nПредметы={items},\n"
+            f"Дискорд аккаунт={'<@' + str((await(await self.awaitable_attrs.player).awaitable_attrs.discord_account).discord_id) + '>'},\n"
+            f"Идентификатор={str((await(await self.awaitable_attrs.player).awaitable_attrs.steam_account).ku_id)!r},\n"
+            f"Игровой ник={str((await (await self.awaitable_attrs.player).awaitable_attrs.steam_account).nickname)},\n"
+            f"Статус={str((await self.awaitable_attrs.status).name)},\nПредметы={items},\n"
             f"Создана={str(self.started)!r},\nОдобрена={approved!r},\n"
             f"Выполнена={executed!r},\nЗаявка={str(self.message_link)}\n"
         )
 
     @staticmethod
-    async def get_or_create(*, session, items, revoke, player, **kwargs):
-        if instance := await session.query(Claim).filter_by(**kwargs, player=player).first():
+    async def get_or_create(*, session, items, revoke, player_id, **kwargs):
+        if instance := (await session.execute(select(Claim).filter_by(**kwargs, player_id=player_id))).scalars().first():
             return instance
-        if old_claim := await revoke(player):
-            old_claim.message_id = kwargs.get("message_id")
-            old_claim.channel_id = kwargs.get("channel_id")
-            old_claim.message_link = kwargs.get("message_link")
-            old_claim.status_id = statuses.get("not_approved")
-            old_claim.items = items
+        if old_claim := await revoke(player_id, session):
+            await session.execute(update(Claim).where(Claim.player_id == player_id).values(
+                message_id=kwargs.get("message_id"),
+                channel_id=kwargs.get("channel_id"),
+                message_link=kwargs.get("message_link"),
+                status_id=statuses.get("not_approved"),
+                items=items
+                # items=items,
+            ))
+            # old_claim.message_id = kwargs.get("message_id")
+            # old_claim.channel_id = kwargs.get("channel_id")
+            # old_claim.message_link = kwargs.get("message_link")
+            # old_claim.status_id = statuses.get("not_approved")
+            # old_claim.items = items
+            session.add(old_claim)
+            await session.flush()
             return old_claim
-        instance = Claim(items=items, player=player, **kwargs)
+        instance = Claim(items=items, player_id=player_id, **kwargs)
+        session.add(instance)
+        await session.flush()
         return instance
 
     async def give_items(self, *, session, console_dst_checker: ConsoleDSTChecker) -> bool:
         if self.status_id == statuses.get("approved"):
             for world in main_config["worlds"]:
-                for item in self.items:
-                    dst_nickname = re.sub(r'\'', r"\\\\\'", self.player.steam_account.nickname)
+                for item in await self.awaitable_attrs.items:
+                    dst_nickname = re.sub(r'\'', r"\\\\\'", (await (await self.awaitable_attrs.player).awaitable_attrs.steam_account).nickname)
                     dst_nickname = re.sub(r'\"', r"\\\\\"", dst_nickname)
                     item_id = shlex.quote(item.console_id)
                     command = f"""screen -S {world["screen_name"]} -X stuff"""\
@@ -97,12 +109,12 @@ class Claim(Base):
                 else:
                     self.executed = func.now()
                     self.status_id = statuses.get("executed")
-                    await session.add(self)
+                    session.add(self)
                     return True
         return False
 
     async def check_days(self, *, console_dst_checker: ConsoleDSTChecker):
-        dst_nickname = re.sub(r'\'', r"\\\\\'", self.player.steam_account.nickname)
+        dst_nickname = re.sub(r'\'', r"\\\\\'", (await (await self.awaitable_attrs.player).awaitable_attrs.steam_account).nickname)
         dst_nickname = re.sub(r'\"', r"\\\\\"", dst_nickname)
         raw_results = set()
         for world in main_config["worlds"]:
@@ -146,7 +158,7 @@ class Claim(Base):
         if self.status_id == statuses.get("executed"):
             self.executed = self.started
             self.status_id = statuses.get("approved")
-            await session.add(self)
+            session.add(self)
             return True
         else:
             return False
@@ -156,7 +168,7 @@ class Claim(Base):
             self.approved = func.now()
             self.status_id = statuses.get("approved")
             print("APPROVE_3")
-            await session.add(self)
+            session.add(self)
             print("APPROVE_4")
             return True
         else:

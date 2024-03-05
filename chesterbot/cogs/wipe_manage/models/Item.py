@@ -1,6 +1,6 @@
 from typing import List
 
-from sqlalchemy import String
+from sqlalchemy import String, select, Integer
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .Base import Base
@@ -21,9 +21,10 @@ class Item(Base):
         return f"Item(id={str(self.id)!r}, console_id={str(self.console_id)!r}, name={str(self.name)!r})"
 
     @staticmethod
-    def get_or_create(session, **kwargs):
-        instance = session.query(Item).filter_by(**kwargs).first()
+    async def get_or_create(session, **kwargs):
+        instance = (await session.execute(select(Item).filter_by(**kwargs))).scalars().first()
         if not instance:
             instance = Item(**kwargs)
             session.add(instance)
+            await session.flush()
         return instance

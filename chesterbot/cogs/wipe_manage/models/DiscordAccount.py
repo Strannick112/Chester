@@ -20,14 +20,16 @@ class DiscordAccount(Base):
         return f"DiscordAccount(id={str(self.id)!r}, discord_id={str(self.discord_id)!r}, name={str(self.name)!r}, display_name={str(self.display_name)!r})"
 
     @staticmethod
-    def get_or_create(session, discord_id, name, display_name):
-        instance = session.query(DiscordAccount).filter_by(discord_id=discord_id).first()
+    async def get_or_create(session, discord_id, name, display_name):
+        instance = (await session.execute(select(DiscordAccount).filter_by(discord_id=discord_id))).scalars().first()
         if instance:
             if name != instance.name:
                 instance.name = name
             if display_name != instance.display_name:
                 instance.display_name = display_name
+            session.add(instance)
         else:
             instance = DiscordAccount(discord_id=discord_id, name=name, display_name=display_name)
             session.add(instance)
+        await session.flush()
         return instance

@@ -1,6 +1,6 @@
 from typing import List
 
-from sqlalchemy import String
+from sqlalchemy import String, select, Integer
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .Base import Base
@@ -17,11 +17,12 @@ class Status(Base):
         return f"Status(id={str(self.id)!r}, name={str(self.name)!r})"
 
     @staticmethod
-    def get_or_create(session, **kwargs):
-        instance = session.query(Status).filter_by(**kwargs).first()
+    async def get_or_create(session, **kwargs):
+        instance = (await session.execute(select(Status).filter_by(**kwargs))).scalars().first()
         if instance:
             pass
         else:
             instance = Status(**kwargs)
             session.add(instance)
+            await session.flush()
         return instance

@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import ForeignKey, Table, Column, Integer
+from sqlalchemy import ForeignKey, Integer, select
 from sqlalchemy.orm import Mapped, mapped_column
 
 from .Base import Base
@@ -17,11 +17,12 @@ class ClaimItem(Base):
         return f"ClaimItem(id={str(self.id)!r}, claim_id={str(self.claim_id)!r}, item_id={str(self.item_id)!r})"
 
     @staticmethod
-    def get_or_create(session, **kwargs):
-        instance = session.query(ClaimItem).filter_by(**kwargs).first()
+    async def get_or_create(session, **kwargs):
+        instance = (await session.execute(select(ClaimItem).filter_by(**kwargs))).scalars().first()
         if instance:
             pass
         else:
             instance = ClaimItem(**kwargs)
             session.add(instance)
+        await session.flush()
         return instance

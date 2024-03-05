@@ -36,14 +36,15 @@ class ChesterBot(commands.Bot):
         self.halloween = Halloween(self)
         self.event(self.on_ready)
         super().__init__(command_prefix=main_config['prefix'], intents=intents)
+        self.async_session = None
 
     async def on_ready(self):
+        self.async_session = await models_init()
         await self.user.edit(username="Chester")
         await self.server_manage.on_ready()
         await self.console_dst_checker.on_ready(self.loop)
         await self.wipe_manage.on_ready()
         await self.dashboards.on_ready()
-        await models_init()
 
 
     async def init(self):

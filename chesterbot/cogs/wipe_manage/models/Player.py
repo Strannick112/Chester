@@ -1,7 +1,7 @@
 from typing import List, Optional
 import re
 
-from sqlalchemy import ForeignKey
+from sqlalchemy import ForeignKey, select, Integer
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from chesterbot import main_config
@@ -26,20 +26,22 @@ class Player(Base):
         return f"Player(id={str(self.id)!r}, steam_account_id={str(self.steam_account_id)!r}, discord_account_id={str(self.discord_account_id)!r})"
 
     @staticmethod
-    def get_or_create(session, **kwargs):
-        if instance := session.query(Player).filter_by(**kwargs).first():
+    async def get_or_create(session, **kwargs):
+        if instance := (await session.execute(select(Player).filter_by(**kwargs))).scalars().first():
             return instance
-        if instance := session.query(Player).filter_by(discord_account=kwargs.get("discord_account")).first():
-            instance.steam_account = kwargs.get("steam_account")
-            # session.add(instance)
+        if instance := (await session.execute(select(Player).filter_by(discord_account_id=kwargs.get("discord_account_id")))).scalars().first():
+            instance.awaitable_attrs.steam_account = kwargs.get("steam_account_id")
+            session.add(instance)
+            await session.flush()
             return instance
         else:
             instance = Player(**kwargs)
-            # session.add(instance)
+            session.add(instance)
+        await session.flush()
         return instance
 
     async def is_player_online(self, console_dst_checker: ConsoleDSTChecker):
-        _dst_nickname = re.sub(r'\'', r"\\\\\'", self.steam_account.nickname)
+        _dst_nickname = re.sub(r'\'', r"\\\\\'", (await self.awaitable_attrs.steam_account).nickname)
         _dst_nickname = re.sub(r'\"', r"\\\\\"", _dst_nickname)
         screen_name = main_config['short_server_name'] + main_config["worlds"][0]["shard_id"]
         result = await console_dst_checker.check(
@@ -53,4 +55,4 @@ class Player(Base):
             "",
             5
         )
-        return result == self.steam_account.nickname
+        return result == (await self.awaitable_attrs.steam_account).nickname

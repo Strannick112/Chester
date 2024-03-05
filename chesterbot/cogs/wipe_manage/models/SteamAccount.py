@@ -1,6 +1,6 @@
 from typing import Optional
 
-from sqlalchemy import String, select
+from sqlalchemy import String, select, Integer
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .Base import Base
@@ -20,12 +20,15 @@ class SteamAccount(Base):
 
 
     @staticmethod
-    def get_or_create(session, ku_id, nickname):
-        instance = session.query(SteamAccount).filter_by(ku_id=ku_id).first()
+    async def get_or_create(session, ku_id, nickname):
+        instance = (await session.execute(select(SteamAccount).filter_by(ku_id=ku_id))).scalars().first()
         if instance:
             if nickname != instance.nickname:
                 instance.nickname = nickname
+                session.add(instance)
+                session.flush()
         else:
             instance = SteamAccount(ku_id=ku_id, nickname=nickname)
             session.add(instance)
+            await session.flush()
         return instance
