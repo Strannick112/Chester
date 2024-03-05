@@ -83,7 +83,7 @@ class Claim(Base):
                 for item in self.items:
                     dst_nickname = re.sub(r'\'', r"\\\\\'", self.player.steam_account.nickname)
                     dst_nickname = re.sub(r'\"', r"\\\\\"", dst_nickname)
-                    item_id = shlex.quote(item.id)
+                    item_id = shlex.quote(item.console_id)
                     command = f"""screen -S {world["screen_name"]} -X stuff"""\
                         f""" "UserToPlayer(\\\"{dst_nickname}\\\").components.inventory:"""\
                         f"""GiveItem(SpawnPrefab(\\\"{item_id}\\\"))\n\""""
