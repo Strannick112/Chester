@@ -323,6 +323,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
         и если все правила соблюдены - изменяет состояние заявки.
         Принимает один аргумент: ник игрока в дискорде
         """
+        print("APPROVE")
         to_approve = {'bot_ok': False, 'admin_ok': False}
         for reaction in msg.reactions:
             if reaction.__str__() == self.__replies['claim_accepted_is_ok']:
@@ -339,6 +340,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                             break
                 continue
         if to_approve['bot_ok'] and to_approve['admin_ok']:
+            print("APPROVE_2")
             claim.approve(session=session)
             await msg.add_reaction(self.__replies['claim_full_approved'])
             return True

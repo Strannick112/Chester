@@ -157,7 +157,9 @@ class Claim(Base):
         if self.status_id == statuses.get("not_approved"):
             self.approved = func.now()
             self.status_id = statuses.get("approved")
+            print("APPROVE_3")
             session.add(self)
+            print("APPROVE_4")
             return True
         else:
             return False
