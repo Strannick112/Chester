@@ -217,6 +217,11 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
         Параметры:
         discord_id: уникальный целочисленный ид пользователя в дискорде
         """
+        try:
+            if discord_id is not None:
+                discord_id = int(discord_id)
+        except:
+            await ctx.reply("Параметры команды указаны не верно")
         if discord_id is None:
             discord_id = ctx.author.id
         message = ctx if type(ctx) is WebhookMessage else ctx.message
@@ -291,7 +296,11 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
         Изменяет у определённого игрока статус заявки с "Выполнена" на "Одобрена", таким образом, позволяя взять вещи
         еще раз. Принимает один аргумент: ник игрока в дискорде
         """
-        discord_id = int(discord_id)
+        try:
+            if discord_id is not None:
+                discord_id = int(discord_id)
+        except:
+            await ctx.reply("Параметры команды указаны не верно")
         # with session.begin():
         if True:
             if claim := await self.get_claim_by_discord_id(discord_id=discord_id):
