@@ -190,14 +190,16 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
         )
         with session.begin():
             if claim := await self.get_claim_by_steam_nickname(steam_nickname):
-                await self.give_items_from_discord(message, claim.player.discord_account.discord_id)
-                return
-            else:
-                await message.reply(
-                    content=self.__replies['give_items_fail_who_are_you'],
-                )
-                await message.add_reaction(self.__replies['claim_error'])
-                await send_message_to_game("Chester_bot", self.__replies['give_items_fail_who_are_you'])
+                discord_id = claim.player.discord_account.discord_id
+        if discord_id:
+            await self.give_items_from_discord(message, claim.player.discord_account.discord_id)
+            return
+        else:
+            await message.reply(
+                content=self.__replies['give_items_fail_who_are_you'],
+            )
+            await message.add_reaction(self.__replies['claim_error'])
+            await send_message_to_game("Chester_bot", self.__replies['give_items_fail_who_are_you'])
 
     @commands.command(name=main_config['short_server_name'] + "_give_items")
     async def give_items_from_discord(self, ctx, discord_id=None):
