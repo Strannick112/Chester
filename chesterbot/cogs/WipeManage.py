@@ -79,12 +79,13 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
         user_name: имя пользователя, чья заявка будет отправлена в чат.
         """
         try:
-            discord_id = int(discord_id)
+            if discord_id is not None:
+                discord_id = int(discord_id)
         except:
             ctx.reply("Параметры команды указаны не верно")
         requested_discord_id = None
         if discord_id is None:
-            requested_discord_id = ctx.author.__str__()
+            requested_discord_id = ctx.author.id
         else:
             for role in ctx.author.roles:
                 if role.id == int(self.chester_bot.replies["admin_role_id"]):
@@ -109,9 +110,10 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
         discord_id: id пользователя, чья заявка будет отправлена в чат.
         """
         try:
-            discord_id = int(discord_id)
+            if discord_id is not None:
+                discord_id = int(discord_id)
         except:
-            ctx.reply("Параметры команды указаны не верно")
+            await ctx.reply("Параметры команды указаны не верно")
         requested_discord_id = None
         if discord_id is None:
             requested_discord_id = ctx.author.id
@@ -167,7 +169,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
             ))
             return True
         except:
-            ctx.reply("Параметры команды указаны не верно")
+            await ctx.reply("Параметры команды указаны не верно")
 
 
     @commands.command(name=main_config['short_server_name'] + "_wipe_list")

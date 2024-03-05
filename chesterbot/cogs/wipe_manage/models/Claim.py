@@ -7,7 +7,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from chesterbot import main_config
 from chesterbot.ConsoleDSTChecker import ConsoleDSTChecker
-from . import Status, statuses
+from . import Status, statuses, session
 from .Base import Base
 
 import re
@@ -99,6 +99,7 @@ class Claim(Base):
                 else:
                     self.executed = func.now()
                     self.status_id = statuses.get("executed")
+                    session.add(self)
                     return True
         return False
 
@@ -147,6 +148,7 @@ class Claim(Base):
         if self.status_id == statuses.get("executed"):
             self.executed = self.started
             self.status_id = statuses.get("approved")
+            session.add(self)
             return True
         else:
             return False
@@ -155,6 +157,7 @@ class Claim(Base):
         if self.status_id == statuses.get("not_approved"):
             self.approved = func.now()
             self.status_id = statuses.get("approved")
+            session.add(self)
             return True
         else:
             return False
