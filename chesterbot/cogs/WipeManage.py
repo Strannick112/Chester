@@ -295,7 +295,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
         # with session.begin():
         if True:
             if claim := await self.get_claim_by_discord_id(discord_id=discord_id):
-                if claim.rollback_claim():
+                if claim.rollback_claim(session=session):
                     if msg := await self.chester_bot.get_channel(claim.channel_id).fetch_message(claim.message_id):
                         for reaction in msg.reactions:
                             if reaction.__str__() == self.__replies['claim_items_executed']:
@@ -330,7 +330,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                             break
                 continue
         if to_approve['bot_ok'] and to_approve['admin_ok']:
-            claim.approve()
+            claim.approve(session=session)
             await msg.add_reaction(self.__replies['claim_full_approved'])
             return True
 
@@ -343,7 +343,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
             for claim in session.query(models.Claim).where(
                 models.Wipe.id == session.query(models.Wipe).order_by(models.Wipe.id.desc()).first().id
             ).all():
-                if claim.rollback_claim():
+                if claim.rollback_claim(session=session):
                     if msg := await self.chester_bot.get_channel(claim.channel_id).fetch_message(claim.message_id):
                         for reaction in msg.reactions:
                             if reaction.__str__() == self.__replies['claim_items_executed']:

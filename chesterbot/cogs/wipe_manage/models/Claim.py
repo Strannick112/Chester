@@ -7,7 +7,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from chesterbot import main_config
 from chesterbot.ConsoleDSTChecker import ConsoleDSTChecker
-from . import Status, statuses, session
+from . import Status, statuses
 from .Base import Base
 
 import re
@@ -144,7 +144,7 @@ class Claim(Base):
     #             return int(result) > is_ok
     #     return False
 
-    def rollback_claim(self) -> bool:
+    def rollback_claim(self, *, session) -> bool:
         if self.status_id == statuses.get("executed"):
             self.executed = self.started
             self.status_id = statuses.get("approved")
@@ -153,7 +153,7 @@ class Claim(Base):
         else:
             return False
 
-    def approve(self) -> bool:
+    def approve(self, *, session) -> bool:
         if self.status_id == statuses.get("not_approved"):
             self.approved = func.now()
             self.status_id = statuses.get("approved")
