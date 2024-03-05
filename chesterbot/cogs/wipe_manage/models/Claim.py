@@ -152,7 +152,7 @@ class Claim(Base):
             return False
 
     def approve(self) -> bool:
-        if self.status == statuses.get("not_approved"):
+        if self.status_id == statuses.get("not_approved"):
             self.approved = func.now()
             self.status_id = statuses.get("approved")
             return True
