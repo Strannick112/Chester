@@ -30,7 +30,7 @@ class Player(Base):
         if instance := (await session.execute(select(Player).filter_by(**kwargs))).scalars().first():
             return instance
         if instance := (await session.execute(select(Player).filter_by(discord_account_id=kwargs.get("discord_account_id")))).scalars().first():
-            instance.awaitable_attrs.steam_account = kwargs.get("steam_account_id")
+            instance.steam_account_id = kwargs.get("steam_account_id")
             session.add(instance)
             await session.flush()
             return instance
