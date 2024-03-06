@@ -484,7 +484,11 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                             name=message.author.name,
                             display_name=message.author.display_name
                         )
-                        steam_account = await SteamAccount.get_or_create(session=session, ku_id=raw_claim[0][1], nickname=raw_claim[0][0])
+                        steam_account = await SteamAccount.get_or_create(
+                            session=session,
+                            ku_id=raw_claim[0][1],
+                            nickname=raw_claim[0][0]
+                        )
                         player = await models.Player.get_or_create(
                             session=session,
                             discord_account_id=discord_account.id,
