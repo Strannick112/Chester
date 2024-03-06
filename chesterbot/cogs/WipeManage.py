@@ -40,37 +40,40 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                 ))).all():
                     print(claim)
                     print(claim.channel_id)
-                    if msg := await self.chester_bot.get_channel(claim.channel_id).fetch_message(claim.message_id):
-                        has_reactions = {
-                            "claim_accepted_is_ok": False,
-                            "claim_full_approved": False,
-                            "claim_items_executed": False
-                        }
-                        for reaction in msg.reactions:
-                            if reaction.me:
-                                if reaction.__str__() == self.__replies['claim_accepted_is_ok']:
-                                    has_reactions['claim_accepted_is_ok'] = True
-                                if reaction.__str__() == self.__replies['claim_full_approved']:
-                                    has_reactions['claim_items_executed'] = True
-                                if reaction.__str__() == self.__replies['claim_items_executed']:
-                                    has_reactions['claim_items_executed'] = True
+                    try:
+                        if msg := await self.chester_bot.get_channel(claim.channel_id).fetch_message(claim.message_id):
+                            has_reactions = {
+                                "claim_accepted_is_ok": False,
+                                "claim_full_approved": False,
+                                "claim_items_executed": False
+                            }
+                            for reaction in msg.reactions:
+                                if reaction.me:
+                                    if reaction.__str__() == self.__replies['claim_accepted_is_ok']:
+                                        has_reactions['claim_accepted_is_ok'] = True
+                                    if reaction.__str__() == self.__replies['claim_full_approved']:
+                                        has_reactions['claim_items_executed'] = True
+                                    if reaction.__str__() == self.__replies['claim_items_executed']:
+                                        has_reactions['claim_items_executed'] = True
 
-                        if not has_reactions['claim_accepted_is_ok']:
-                            await msg.add_reaction(self.__replies['claim_accepted_is_ok'])
+                            if not has_reactions['claim_accepted_is_ok']:
+                                await msg.add_reaction(self.__replies['claim_accepted_is_ok'])
 
-                        if has_reactions['claim_full_approved']:
-                            if claim.status_id not in (models.statuses.get("approved"), models.statuses.get("executed")):
-                                msg.remove_reaction(self.__replies['claim_full_approved'], self.chester_bot.user)
-                        else:
-                            if claim.status_id in (models.statuses.get("approved"), models.statuses.get("executed")):
-                                await msg.add_reaction(self.__replies['claim_full_approved'])
+                            if has_reactions['claim_full_approved']:
+                                if claim.status_id not in (models.statuses.get("approved"), models.statuses.get("executed")):
+                                    msg.remove_reaction(self.__replies['claim_full_approved'], self.chester_bot.user)
+                            else:
+                                if claim.status_id in (models.statuses.get("approved"), models.statuses.get("executed")):
+                                    await msg.add_reaction(self.__replies['claim_full_approved'])
 
-                        if has_reactions['claim_items_executed']:
-                            if claim.status_id != models.statuses.get("executed"):
-                                await msg.remove_reaction(self.__replies['claim_items_executed'], self.chester_bot.user)
-                        else:
-                            if claim.status_id == models.statuses.get("executed"):
-                                await msg.add_reaction(self.__replies['claim_items_executed'])
+                            if has_reactions['claim_items_executed']:
+                                if claim.status_id != models.statuses.get("executed"):
+                                    await msg.remove_reaction(self.__replies['claim_items_executed'], self.chester_bot.user)
+                            else:
+                                if claim.status_id == models.statuses.get("executed"):
+                                    await msg.add_reaction(self.__replies['claim_items_executed'])
+                    except Exception as error:
+                        print(error)
 
         await ctx.reply(self.__replies['checkout_marks_on_executed_claims_success'])
         return True
@@ -98,8 +101,11 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
             async with session.begin():
         # if True:
                 if claim := await self.get_claim_by_discord_id(requested_discord_id, session=session):
-                    if msg := await self.chester_bot.get_channel(claim.channel_id).fetch_message(claim.message_id):
-                        await msg.add_reaction(self.__replies['claim_deleted'])
+                    try:
+                        if msg := await self.chester_bot.get_channel(claim.channel_id).fetch_message(claim.message_id):
+                            await msg.add_reaction(self.__replies['claim_deleted'])
+                    except Exception as error:
+                        print(error)
                     await session.delete(claim)
                     await ctx.reply(self.__replies['delete_claim_success'])
                     return True
@@ -326,15 +332,18 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
         # if True:
                 if claim := await self.get_claim_by_discord_id(discord_id=discord_id, session=session):
                     if await claim.rollback_claim(session=session):
-                        if msg := await self.chester_bot.get_channel(claim.channel_id).fetch_message(claim.message_id):
-                            for reaction in msg.reactions:
-                                if reaction.__str__() == self.__replies['claim_items_executed']:
-                                    if reaction.me:
-                                        await msg.remove_reaction(self.__replies['claim_items_executed'],
-                                                                  self.chester_bot.user)
+                        try:
+                            if msg := await self.chester_bot.get_channel(claim.channel_id).fetch_message(claim.message_id):
+                                for reaction in msg.reactions:
+                                    if reaction.__str__() == self.__replies['claim_items_executed']:
+                                        if reaction.me:
+                                            await msg.remove_reaction(self.__replies['claim_items_executed'],
+                                                                      self.chester_bot.user)
 
-                            await ctx.reply(self.__replies['rollback_claim_success'])
-                            return True
+                                await ctx.reply(self.__replies['rollback_claim_success'])
+                                return True
+                        except Exception as error:
+                            print(error)
                     else:
                         await ctx.reply(self.__replies['rollback_claim_fall'])
 
@@ -346,25 +355,28 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
         """
         print("APPROVE")
         to_approve = {'bot_ok': False, 'admin_ok': False}
-        for reaction in msg.reactions:
-            if reaction.__str__() == self.__replies['claim_accepted_is_ok']:
-                if reaction.me:
-                    to_approve['bot_ok'] = True
-                continue
-            if reaction.__str__() == self.__replies['claim_admin_approved_is_ok']:
-                async for user in reaction.users():
-                    if user == self.chester_bot.user:
-                        continue
-                    for role in user.roles:
-                        if int(self.chester_bot.replies["admin_role_id"]) == role.id:
-                            to_approve['admin_ok'] = True
-                            break
-                continue
-        if to_approve['bot_ok'] and to_approve['admin_ok']:
-            print("APPROVE_2")
-            await claim.approve(session=session)
-            await msg.add_reaction(self.__replies['claim_full_approved'])
-            return True
+        try:
+            for reaction in msg.reactions:
+                if reaction.__str__() == self.__replies['claim_accepted_is_ok']:
+                    if reaction.me:
+                        to_approve['bot_ok'] = True
+                    continue
+                if reaction.__str__() == self.__replies['claim_admin_approved_is_ok']:
+                    async for user in reaction.users():
+                        if user == self.chester_bot.user:
+                            continue
+                        for role in user.roles:
+                            if int(self.chester_bot.replies["admin_role_id"]) == role.id:
+                                to_approve['admin_ok'] = True
+                                break
+                    continue
+            if to_approve['bot_ok'] and to_approve['admin_ok']:
+                print("APPROVE_2")
+                await claim.approve(session=session)
+                await msg.add_reaction(self.__replies['claim_full_approved'])
+                return True
+        except Exception as error:
+            print(error)
 
     @commands.command(name=main_config['short_server_name'] + "_rollback_claims")
     @commands.has_role(main_config['master_role'])
@@ -377,12 +389,15 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                     models.Wipe.id == (await session.execute(select(models.Wipe).order_by(models.Wipe.id.desc()))).scalars().first().id
                 ))).scalars().all():
                     if await claim.rollback_claim(session=session):
-                        if msg := await self.chester_bot.get_channel(claim.channel_id).fetch_message(claim.message_id):
-                            for reaction in msg.reactions:
-                                if reaction.__str__() == self.__replies['claim_items_executed']:
-                                    if reaction.me:
-                                        await msg.remove_reaction(self.__replies['claim_items_executed'],
-                                                                  self.chester_bot.user)
+                        try:
+                            if msg := await self.chester_bot.get_channel(claim.channel_id).fetch_message(claim.message_id):
+                                for reaction in msg.reactions:
+                                    if reaction.__str__() == self.__replies['claim_items_executed']:
+                                        if reaction.me:
+                                            await msg.remove_reaction(self.__replies['claim_items_executed'],
+                                                                      self.chester_bot.user)
+                        except Exception as error:
+                            print(error)
         await ctx.reply(self.__replies['rollback_claims_success'])
         return True
 
@@ -402,19 +417,22 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                     ).where(
                         models.Claim.wipe_id == (await session.execute(select(models.Wipe).order_by(models.Wipe.id.desc()))).scalars().first().id
                     ))).scalars().all():
-                        if msg := await self.chester_bot.get_channel(claim.channel_id).fetch_message(claim.message_id):
-                            to_approve = {'approved_twice': False, 'executed': False}
-                            for reaction in msg.reactions:
-                                if reaction.__str__() == self.__replies['claim_full_approved']:
-                                    if reaction.me:
-                                        to_approve['approved_twice'] = True
-                                    continue
-                                if reaction.__str__() == self.__replies['claim_items_executed']:
-                                    if reaction.me:
-                                        to_approve['executed'] = True
-                                    continue
-                            if to_approve['approved_twice'] and not to_approve['executed']:
-                                await msg.add_reaction(self.__replies['claim_is_overdue'])
+                        try:
+                            if msg := await self.chester_bot.get_channel(claim.channel_id).fetch_message(claim.message_id):
+                                to_approve = {'approved_twice': False, 'executed': False}
+                                for reaction in msg.reactions:
+                                    if reaction.__str__() == self.__replies['claim_full_approved']:
+                                        if reaction.me:
+                                            to_approve['approved_twice'] = True
+                                        continue
+                                    if reaction.__str__() == self.__replies['claim_items_executed']:
+                                        if reaction.me:
+                                            to_approve['executed'] = True
+                                        continue
+                                if to_approve['approved_twice'] and not to_approve['executed']:
+                                    await msg.add_reaction(self.__replies['claim_is_overdue'])
+                        except Exception as error:
+                            print(error)
                     await ctx.reply(self.__replies['start_success'])
                     return True
                 else:
@@ -436,8 +454,11 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                     for claim in (await session.execute(select(models.Claim).where(
                             models.Wipe.id == (await session.execute(select(models.Wipe).order_by(models.Wipe.id.desc()))).scalars().first().id
                     ))).scalars().all():
-                        if msg := await self.chester_bot.get_channel(claim.channel_id).fetch_message(claim.message_id):
-                            await self.approve(msg, claim, session)
+                        try:
+                            if msg := await self.chester_bot.get_channel(claim.channel_id).fetch_message(claim.message_id):
+                                await self.approve(msg, claim, session)
+                        except Exception as error:
+                            print(error)
                     return True
                 else:
                     await ctx.reply(self.__replies['stop_fail'])
@@ -447,7 +468,6 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
         # Проверка на открытость вайпа
         async with self.chester_bot.async_session() as session:
             async with session.begin():
-        # if True:
                 last_wipe = (await session.execute(select(models.Wipe).order_by(models.Wipe.id.desc()))).scalars().first()
                 if last_wipe.stopped != last_wipe.started:
                     return
@@ -487,7 +507,6 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                         await message.add_reaction(self.__replies['claim_accepted_is_ok'])
                         count_days = await claim.check_days(console_dst_checker=self.chester_bot.console_dst_checker)
                         await self.sync_reactions(count_days, message)
-                        # session.add(claim)
                     except Exception as error:
                         print(error)
 
@@ -498,36 +517,44 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
         )
         async with self.chester_bot.async_session() as session:
             async with session.begin():
-        # if True:
                 if claim := await self.get_claim_by_steam_nickname(dst_player_name, session):
-                    if msg := await self.chester_bot.get_channel(claim.channel_id).fetch_message(claim.message_id):
-                        count_days = await claim.check_days(console_dst_checker=self.chester_bot.console_dst_checker)
-                        await self.sync_reactions(count_days, msg)
-                        return
+                    try:
+                        if msg := await self.chester_bot.get_channel(claim.channel_id).fetch_message(claim.message_id):
+                            count_days = await claim.check_days(console_dst_checker=self.chester_bot.console_dst_checker)
+                            await self.sync_reactions(count_days, msg)
+                            return
+                    except Exception as error:
+                        print(error)
         await send_message_to_game(
             "",
             "Заявка не обнаружена, обратитесь к администратору"
         )
 
     async def sync_reactions(self, count_days, msg):
-        if count_days == 0:
-            await msg.add_reaction(self.__replies['claim_warning'])
-        else:
-            try:
-                await msg.remove_reaction(self.__replies['claim_warning'], self.chester_bot.user)
-            finally:
-                for day, reaction in self.__replies["claim_days_count"].items():
-                    if count_days > int(day):
-                        await msg.add_reaction(reaction)
+        try:
+            if count_days == 0:
+                await msg.add_reaction(self.__replies['claim_warning'])
+            else:
+                try:
+                    await msg.remove_reaction(self.__replies['claim_warning'], self.chester_bot.user)
+                finally:
+                    for day, reaction in self.__replies["claim_days_count"].items():
+                        if count_days > int(day):
+                            await msg.add_reaction(reaction)
+        except Exception as error:
+            print(error)
 
     async def mark_claim_executed(self, claim):
-        if msg := await self.chester_bot.get_channel(claim.channel_id).fetch_message(claim.message_id):
-            for reaction in msg.reactions:
-                if reaction.__str__() == self.__replies['claim_full_approved']:
-                    if reaction.me:
-                        await msg.add_reaction(self.__replies['claim_items_executed'])
-                        return True
-        return False
+        try:
+            if msg := await self.chester_bot.get_channel(claim.channel_id).fetch_message(claim.message_id):
+                for reaction in msg.reactions:
+                    if reaction.__str__() == self.__replies['claim_full_approved']:
+                        if reaction.me:
+                            await msg.add_reaction(self.__replies['claim_items_executed'])
+                            return True
+            return False
+        except Exception as error:
+            print(error)
 
     async def get_claim_by_steam_nickname(self, steam_nickname, session):
         return (await session.execute(select(
@@ -562,10 +589,13 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
             ).discord_id,
             session=session
         ):
-            if msg := await self.chester_bot.get_channel(claim.channel_id).fetch_message(claim.message_id):
-                for reaction in msg.reactions:
-                    if reaction.me:
-                        await reaction.remove(self.chester_bot.user)
-                    continue
-                await msg.add_reaction(self.__replies["claim_deleted"])
+            try:
+                if msg := await self.chester_bot.get_channel(claim.channel_id).fetch_message(claim.message_id):
+                    for reaction in msg.reactions:
+                        if reaction.me:
+                            await reaction.remove(self.chester_bot.user)
+                        continue
+                    await msg.add_reaction(self.__replies["claim_deleted"])
+            except Exception as error:
+                print(error)
         return claim
