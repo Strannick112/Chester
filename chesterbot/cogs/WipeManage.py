@@ -466,55 +466,56 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
 
     async def make_claim(self, message: Message):
         # Проверка на открытость вайпа
-        async with self.chester_bot.async_session() as session:
-            async with session.begin():
-                last_wipe = (await session.execute(select(models.Wipe).order_by(models.Wipe.id.desc()))).scalars().first()
-                if last_wipe.stopped != last_wipe.started:
-                    return
-                if raw_claim := re.findall(
-                    r'''Сервер: ''' + main_config['server_name']
-                    + r'''[\s]*?Игровой ник: ([\w\W]+?)\sИдентификатор:\s(.+?)\sПрошу:[\s]*?([\w\W]+)''',
-                        message.content
-                ):
-                    loot = re.findall(r'''([\w\s]+?)\s*\(\"([\w]+?)\"\)''', raw_claim[0][2])
-                    try:
-                        discord_account = await DiscordAccount.get_or_create(
-                            session=session,
-                            discord_id=message.author.id,
-                            name=message.author.name,
-                            display_name=message.author.display_name
-                        )
-                        steam_account = await SteamAccount.get_or_create(
-                            session=session,
-                            ku_id=raw_claim[0][1],
-                            nickname=raw_claim[0][0]
-                        )
-                        player = await models.Player.get_or_create(
-                            session=session,
-                            discord_account_id=discord_account.id,
-                            steam_account_id=steam_account.id
-                        )
-                        items = [
-                            await models.Item.get_or_create(session=session, name=item[0].strip(), console_id=item[1])
-                            for item in loot
-                        ]
-                        claim = await models.Claim.get_or_create(
-                            session=session,
-                            message_id=message.id,
-                            message_link=message.jump_url,
-                            channel_id=message.channel.id,
-                            player_id=player.id,
-                            items=items,
-                            wipe_id=last_wipe.id,
-                            revoke=self.revoke_reactions
-                        )
-                        await message.add_reaction(self.__replies['claim_accepted_is_ok'])
-                        count_days = await claim.check_days(console_dst_checker=self.chester_bot.console_dst_checker)
-                        await self.sync_reactions(count_days, message)
-                    except Exception as error:
-                        print(error)
-                # else:
-                #     await message.add_reaction(self.__replies['claim_warning'])
+        if message.channel.id in self.__replies['claim_channel_id']:
+            async with self.chester_bot.async_session() as session:
+                async with session.begin():
+                    last_wipe = (await session.execute(select(models.Wipe).order_by(models.Wipe.id.desc()))).scalars().first()
+                    if last_wipe.stopped != last_wipe.started:
+                        return
+                    if raw_claim := re.findall(
+                        r'''Сервер: ''' + main_config['server_name']
+                        + r'''[\s]*?Игровой ник: ([\w\W]+?)\sИдентификатор:\s(.+?)\sПрошу:[\s]*?([\w\W]+)''',
+                            message.content
+                    ):
+                        loot = re.findall(r'''([\w\s]+?)\s*\(\"([\w]+?)\"\)''', raw_claim[0][2])
+                        try:
+                            discord_account = await DiscordAccount.get_or_create(
+                                session=session,
+                                discord_id=message.author.id,
+                                name=message.author.name,
+                                display_name=message.author.display_name
+                            )
+                            steam_account = await SteamAccount.get_or_create(
+                                session=session,
+                                ku_id=raw_claim[0][1],
+                                nickname=raw_claim[0][0]
+                            )
+                            player = await models.Player.get_or_create(
+                                session=session,
+                                discord_account_id=discord_account.id,
+                                steam_account_id=steam_account.id
+                            )
+                            items = [
+                                await models.Item.get_or_create(session=session, name=item[0].strip(), console_id=item[1])
+                                for item in loot
+                            ]
+                            claim = await models.Claim.get_or_create(
+                                session=session,
+                                message_id=message.id,
+                                message_link=message.jump_url,
+                                channel_id=message.channel.id,
+                                player_id=player.id,
+                                items=items,
+                                wipe_id=last_wipe.id,
+                                revoke=self.revoke_reactions
+                            )
+                            await message.add_reaction(self.__replies['claim_accepted_is_ok'])
+                            count_days = await claim.check_days(console_dst_checker=self.chester_bot.console_dst_checker)
+                            await self.sync_reactions(count_days, message)
+                        except Exception as error:
+                            print(error)
+                    else:
+                        await message.add_reaction(self.__replies['claim_warning'])
 
     async def check_claim(self, dst_player_name):
         await send_message_to_game(
