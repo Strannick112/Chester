@@ -509,6 +509,8 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                         await self.sync_reactions(count_days, message)
                     except Exception as error:
                         print(error)
+                else:
+                    await message.add_reaction(self.__replies['claim_warning'])
 
     async def check_claim(self, dst_player_name):
         await send_message_to_game(
