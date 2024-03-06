@@ -58,7 +58,8 @@ class Claim(Base):
             f"Игровой ник={str((await (await self.awaitable_attrs.player).awaitable_attrs.steam_account).nickname)},\n"
             f"Статус={str((await self.awaitable_attrs.status).name)},\nПредметы={items},\n"
             f"Создана={str(self.started)!r},\nОдобрена={approved!r},\n"
-            f"Выполнена={executed!r},\nЗаявка={str(self.message_link)}\n"
+            f"Выполнена={executed!r},\nЗаявка={str(self.message_link)},\n"
+            f"ИД канала={self.channel_id!r}\n"
         )
 
     @staticmethod
