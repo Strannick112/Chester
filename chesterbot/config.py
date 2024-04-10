@@ -45,7 +45,7 @@ for world in main_config["worlds"]:
     world["full_path_to_server_log_file"] = main_config['path_to_save'] + "/" + world["folder_name"] + "/server_log.txt"
     world["file_log_size"] = os.path.getsize(world["full_path_to_server_log_file"])
     world["file_log_iter"] = codecs.open(
-        world["full_path_to_server_log_file"], "r", encoding="utf-8"
+        world["full_path_to_server_log_file"], "r", encoding="utf-8", errors='ignore'
     )
     world["file_log_iter"].seek(0, 2)
     world["screen_name"] = main_config['short_server_name'] + world["shard_id"]
@@ -53,6 +53,8 @@ for world in main_config["worlds"]:
 main_config["full_path_to_server_chat_log_file"] = \
     main_config['path_to_save'] + "/" + main_config["worlds"][0]["folder_name"] + "/server_chat_log.txt"
 main_config["file_chat_size"] = os.path.getsize(main_config["full_path_to_server_chat_log_file"])
-main_config["file_chat_iter"] = codecs.open(main_config["full_path_to_server_chat_log_file"], "r", encoding="utf-8")
+main_config["file_chat_iter"] = codecs.open(
+    main_config["full_path_to_server_chat_log_file"], "r", encoding="utf-8", errors='ignore'
+)
 main_config["file_chat_iter"].seek(0, 2)
 
