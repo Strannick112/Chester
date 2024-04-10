@@ -25,7 +25,7 @@ async def models_init():
     global async_session
 
     engine = create_async_engine(
-        "sqlite+aiosqlite:///dst_keriwell", echo=True
+        "postgresql+psycopg2://admin:admin@localhost/dst_keriwell", echo=True
     )
 
     async_session = async_sessionmaker(engine, expire_on_commit=False)
