@@ -25,7 +25,7 @@ async def models_init():
     global async_session
 
     engine = create_async_engine(
-        "postgresql+asyncpg://admin:admin@localhost/dst_keriwell", echo=True, ssl='disable'
+        "postgresql+asyncpg://admin:admin@localhost/dst_keriwell", echo=True
     )
 
     async_session = async_sessionmaker(engine, expire_on_commit=False)
