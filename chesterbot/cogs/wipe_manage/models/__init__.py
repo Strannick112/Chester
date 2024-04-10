@@ -1,4 +1,4 @@
-from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
+from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 from sqlalchemy.orm import Session
 
 statuses = dict()
@@ -19,16 +19,17 @@ from .Claim import Claim
 
 from sqlalchemy import func, select
 
-
 async def models_init():
     global engine
     global async_session
 
+
     engine = create_async_engine(
-        "postgresql+asyncpg://admin:admin@localhost/dst_keriwell", echo=True
+        "postgresql+asyncpg://admin:admin@localhost/dst_keriwell", echo=True,
+        connect_args={'ssl': 'disable'}
     )
 
-    async_session = async_sessionmaker(engine, expire_on_commit=False)
+    async_session = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
 
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
@@ -44,3 +45,4 @@ async def models_init():
                     session.add(Wipe())
 
     return async_session
+
