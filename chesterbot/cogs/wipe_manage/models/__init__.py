@@ -44,7 +44,7 @@ async def models_init():
                 session.add(await Status.get_or_create(session=session, name="executing"))
                 if (await session.execute(select(func.count(Wipe.id)))).scalar() == 0:
                     session.add(Wipe())
-                session.flush()
+                await session.flush()
 
     return globals()["async_session"]
 

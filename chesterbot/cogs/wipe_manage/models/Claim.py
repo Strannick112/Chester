@@ -90,7 +90,7 @@ class Claim(Base):
         if self.status_id == statuses.get("approved"):
             self.status_id = statuses.get("executing")
             session.add(self)
-            session.flush()
+            await session.flush()
             for world in main_config["worlds"]:
                 for numbered_item in await self.awaitable_attrs.numbered_items:
                     item = await numbered_item.awaitable_attrs.item
@@ -116,7 +116,7 @@ class Claim(Base):
                     self.executed = func.now()
                     self.status_id = statuses.get("executed")
                     session.add(self)
-                    session.flush()
+                    await session.flush()
                     return True
             return False
 
