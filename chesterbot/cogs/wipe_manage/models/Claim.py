@@ -90,9 +90,12 @@ class Claim(Base):
     semaphore_give_items = asyncio.Semaphore(1)
 
     async def give_items(self, *, session, console_dst_checker: ConsoleDSTChecker) -> bool:
+        print("Meaw 0")
         async with self.semaphore_give_items:
+            print("Meaw -1")
             await session.refresh(self)
             if self.status_id == statuses.get("approved"):
+                print("Meaw -2")
                 self.status_id = statuses.get("executing")
                 session.add(self)
                 # session.commit()
