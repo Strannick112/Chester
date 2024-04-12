@@ -128,8 +128,12 @@ class Claim(Base):
                         self.status_id = statuses.get("executed")
                         session.add(self)
                         session.commit()
+                        await session.refresh(self)
                         return True
                 self.status_id = statuses.get("approved")
+                session.add(self)
+                session.commit()
+                await session.refresh(self)
                 return False
 
     async def check_days(self, *, console_dst_checker: ConsoleDSTChecker):
