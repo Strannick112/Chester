@@ -89,57 +89,59 @@ class Claim(Base):
 
     semaphore_give_items = asyncio.Semaphore(1)
 
-    async def give_items(self, *, session, console_dst_checker: ConsoleDSTChecker) -> bool:
+    async def give_items(self, *, async_session, console_dst_checker: ConsoleDSTChecker) -> bool:
         print("Meaw 0")
         async with self.semaphore_give_items:
-            print("Meaw -1")
-            await session.refresh(self)
-            if self.status_id == statuses.get("approved"):
-                print("Meaw 1")
-                dst_nickname = re.sub(
-                    r'\'', r"\\\\\'",
-                    (await (await self.awaitable_attrs.player).awaitable_attrs.steam_account).nickname
-                )
-                dst_nickname = re.sub(r'\"', r"\\\\\"", dst_nickname)
-                tasks = []
-                print("Meaw 2")
-                for world in main_config["worlds"]:
-                    for numbered_item in await self.awaitable_attrs.numbered_items:
-                        item_id = shlex.quote(
-                            (await numbered_item.awaitable_attrs.item).console_id
+            async with async_session() as session:
+                async with session.begin():
+                    print("Meaw -1")
+                    await session.refresh(self)
+                    if self.status_id == statuses.get("approved"):
+                        print("Meaw 1")
+                        dst_nickname = re.sub(
+                            r'\'', r"\\\\\'",
+                            (await (await self.awaitable_attrs.player).awaitable_attrs.steam_account).nickname
                         )
-                        command = f"""screen -S {world["screen_name"]} -X stuff"""\
-                            f""" "UserToPlayer(\\\"{dst_nickname}\\\").components.inventory:"""\
-                            f"""GiveItem(SpawnPrefab(\\\"{item_id}\\\"))\n\""""
-                        tasks.append(
-                            asyncio.create_task(
-                                console_dst_checker.check(
-                                    command,
-                                    r'\[string "UserToPlayer\("(' +
-                                    dst_nickname +
-                                    r')"\)[\w\W]*?\.\.\."\]\:1\: attempt to index a nil value',
-                                    world["shard_id"], world["screen_name"], "is_normal", 5
+                        dst_nickname = re.sub(r'\"', r"\\\\\"", dst_nickname)
+                        tasks = []
+                        print("Meaw 2")
+                        for world in main_config["worlds"]:
+                            for numbered_item in await self.awaitable_attrs.numbered_items:
+                                item_id = shlex.quote(
+                                    (await numbered_item.awaitable_attrs.item).console_id
                                 )
-                            )
-                        )
-                print("Meaw 3")
-                print(f"TASKS: {tasks}\n")
-                for task in asyncio.as_completed(tasks):
-                    result = await task
-                    print(f"RESULT: {result}\n")
-                    if result == dst_nickname:
-                        self.executed = func.now()
-                        self.status_id = statuses.get("executed")
+                                command = f"""screen -S {world["screen_name"]} -X stuff"""\
+                                    f""" "UserToPlayer(\\\"{dst_nickname}\\\").components.inventory:"""\
+                                    f"""GiveItem(SpawnPrefab(\\\"{item_id}\\\"))\n\""""
+                                tasks.append(
+                                    asyncio.create_task(
+                                        console_dst_checker.check(
+                                            command,
+                                            r'\[string "UserToPlayer\("(' +
+                                            dst_nickname +
+                                            r')"\)[\w\W]*?\.\.\."\]\:1\: attempt to index a nil value',
+                                            world["shard_id"], world["screen_name"], "is_normal", 5
+                                        )
+                                    )
+                                )
+                        print("Meaw 3")
+                        print(f"TASKS: {tasks}\n")
+                        for task in asyncio.as_completed(tasks):
+                            result = await task
+                            print(f"RESULT: {result}\n")
+                            if result == dst_nickname:
+                                self.executed = func.now()
+                                self.status_id = statuses.get("executed")
+                                session.add(self)
+                                await session.flush()
+                                # await session.refresh(self)
+                                return True
+                        print("SIGNIFICANTLY!!!")
+                        self.status_id = statuses.get("approved")
                         session.add(self)
                         await session.flush()
                         # await session.refresh(self)
-                        return True
-                print("SIGNIFICANTLY!!!")
-                self.status_id = statuses.get("approved")
-                session.add(self)
-                await session.flush()
-                # await session.refresh(self)
-                return False
+                        return False
 
     async def check_days(self, *, console_dst_checker: ConsoleDSTChecker):
         dst_nickname = re.sub(r'\'', r"\\\\\'", (await (await self.awaitable_attrs.player).awaitable_attrs.steam_account).nickname)
@@ -209,3 +211,9 @@ class Claim(Base):
                 return True
             else:
                 return False
+
+    async def get_discord_id(self):
+        return (await (await self.awaitable_attrs.player).awaitable_attrs.discord_account).discord_id
+
+    async def get_steam_nickname(self):
+        return (await (await self.awaitable_attrs.player).awaitable_attrs.steam_account).nickname
