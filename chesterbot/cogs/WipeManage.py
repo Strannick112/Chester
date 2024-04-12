@@ -294,28 +294,34 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                     await message.add_reaction(self.__replies['player_is_not_online'])
                     return False
                 # Попытка выдать вещи
-
-                if await claim.give_items(async_session=self.chester_bot.async_session, console_dst_checker=self.chester_bot.console_dst_checker):
-                    await message.reply(
-                        content="[" + main_config["server_name"] + "] <@" +
-                                discord_id + "> , " +
-                                self.__replies['give_items_success']
-                    )
-                    await message.add_reaction(self.__replies['claim_items_executed'])
-                    await send_message_to_game("Chester_bot",
-                                               steam_nickname + ", " + self.__replies['give_items_success'])
-                    await self.mark_claim_executed(channel_id=channel_id, message_id=message_id)
-                    return True
-                else:
-                    await message.reply(
-                        content="[" + main_config["server_name"] + "] <@" +
-                                discord_id + "> , " +
-                                self.__replies['give_items_fail']
-                    )
-                    await message.add_reaction(self.__replies['claim_error'])
-                    await send_message_to_game("Chester_bot",
-                                               steam_nickname + ", " + self.__replies['give_items_fail'])
-                    return False
+                async with self.chester_bot.async_session() as session:
+                    async with session.begin():
+                        if await (
+                            await self.get_claim_by_discord_id(discord_id=discord_id, session=session)
+                        ).give_items(
+                            session=session,
+                            console_dst_checker=self.chester_bot.console_dst_checker
+                        ):
+                            await message.reply(
+                                content="[" + main_config["server_name"] + "] <@" +
+                                        discord_id + "> , " +
+                                        self.__replies['give_items_success']
+                            )
+                            await message.add_reaction(self.__replies['claim_items_executed'])
+                            await send_message_to_game("Chester_bot",
+                                                       steam_nickname + ", " + self.__replies['give_items_success'])
+                            await self.mark_claim_executed(channel_id=channel_id, message_id=message_id)
+                            return True
+                        else:
+                            await message.reply(
+                                content="[" + main_config["server_name"] + "] <@" +
+                                        discord_id + "> , " +
+                                        self.__replies['give_items_fail']
+                            )
+                            await message.add_reaction(self.__replies['claim_error'])
+                            await send_message_to_game("Chester_bot",
+                                                       steam_nickname + ", " + self.__replies['give_items_fail'])
+                            return False
         except Exception as error:
             print(error)
         await message.reply(

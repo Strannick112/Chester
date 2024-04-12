@@ -89,47 +89,47 @@ class Claim(Base):
 
     semaphore_give_items = asyncio.Semaphore(1)
 
-    async def give_items(self, *, async_session, console_dst_checker: ConsoleDSTChecker) -> bool:
+    async def give_items(self, *, session, console_dst_checker: ConsoleDSTChecker) -> bool:
         async with self.semaphore_give_items:
-            async with async_session() as session:
-                async with session.begin():
-                    await session.refresh(self)
-                    if self.status_id == statuses.get("approved"):
-                        self.executed = func.now()
-                        self.status_id = statuses.get("executed")
-                        session.add(self)
-                        dst_nickname = re.sub(
-                            r'\'', r"\\\\\'",
-                            (await (await self.awaitable_attrs.player).awaitable_attrs.steam_account).nickname
+            # async with async_session() as session:
+            #     async with session.begin():
+            await session.refresh(self)
+            if self.status_id == statuses.get("approved"):
+                self.executed = func.now()
+                self.status_id = statuses.get("executed")
+                session.add(self)
+                dst_nickname = re.sub(
+                    r'\'', r"\\\\\'",
+                    (await (await self.awaitable_attrs.player).awaitable_attrs.steam_account).nickname
+                )
+                dst_nickname = re.sub(r'\"', r"\\\\\"", dst_nickname)
+                tasks = []
+                for world in main_config["worlds"]:
+                    for numbered_item in await self.awaitable_attrs.numbered_items:
+                        item_id = shlex.quote(
+                            (await numbered_item.awaitable_attrs.item).console_id
                         )
-                        dst_nickname = re.sub(r'\"', r"\\\\\"", dst_nickname)
-                        tasks = []
-                        for world in main_config["worlds"]:
-                            for numbered_item in await self.awaitable_attrs.numbered_items:
-                                item_id = shlex.quote(
-                                    (await numbered_item.awaitable_attrs.item).console_id
+                        command = f"""screen -S {world["screen_name"]} -X stuff"""\
+                            f""" "UserToPlayer(\\\"{dst_nickname}\\\").components.inventory:"""\
+                            f"""GiveItem(SpawnPrefab(\\\"{item_id}\\\"))\n\""""
+                        tasks.append(
+                            asyncio.create_task(
+                                console_dst_checker.check(
+                                    command,
+                                    r'\[string "UserToPlayer\("(' +
+                                    dst_nickname +
+                                    r')"\)[\w\W]*?\.\.\."\]\:1\: attempt to index a nil value',
+                                    world["shard_id"], world["screen_name"], "is_normal", 5
                                 )
-                                command = f"""screen -S {world["screen_name"]} -X stuff"""\
-                                    f""" "UserToPlayer(\\\"{dst_nickname}\\\").components.inventory:"""\
-                                    f"""GiveItem(SpawnPrefab(\\\"{item_id}\\\"))\n\""""
-                                tasks.append(
-                                    asyncio.create_task(
-                                        console_dst_checker.check(
-                                            command,
-                                            r'\[string "UserToPlayer\("(' +
-                                            dst_nickname +
-                                            r')"\)[\w\W]*?\.\.\."\]\:1\: attempt to index a nil value',
-                                            world["shard_id"], world["screen_name"], "is_normal", 5
-                                        )
-                                    )
-                                )
-                        for task in asyncio.as_completed(tasks):
-                            result = await task
-                            if result == dst_nickname:
-                                await session.commit()
-                                return True
-                        await session.rollback()
-                        return False
+                            )
+                        )
+                for task in asyncio.as_completed(tasks):
+                    result = await task
+                    if result == dst_nickname:
+                        await session.commit()
+                        return True
+                await session.rollback()
+                return False
 
     async def check_days(self, *, console_dst_checker: ConsoleDSTChecker):
         dst_nickname = re.sub(r'\'', r"\\\\\'", (await (await self.awaitable_attrs.player).awaitable_attrs.steam_account).nickname)
