@@ -93,11 +93,9 @@ class Claim(Base):
         async with self.semaphore_give_items:
             await session.refresh(self)
             if self.status_id == statuses.get("approved"):
-                print(f"STATUS_ID 1: {self.status_id}\n")
                 self.status_id = statuses.get("executing")
                 session.add(self)
-                await session.flush()
-                print(f"STATUS_ID 2: {self.status_id}\n")
+                session.commit()
                 for world in main_config["worlds"]:
                     for numbered_item in await self.awaitable_attrs.numbered_items:
                         item = await numbered_item.awaitable_attrs.item
@@ -122,10 +120,8 @@ class Claim(Base):
                     else:
                         self.executed = func.now()
                         self.status_id = statuses.get("executed")
-                        print(f"STATUS_ID 3: {self.status_id}\n")
                         session.add(self)
                         session.commit()
-                        print(f"STATUS_ID 4: {self.status_id}\n")
                         return True
                 return False
 
