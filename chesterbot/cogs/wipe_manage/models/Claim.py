@@ -122,6 +122,7 @@ class Claim(Base):
                                 )
                             )
                         )
+                print(f"TASKS: {tasks}\n")
                 for task in asyncio.as_completed(tasks):
                     result = await task
                     print(f"RESULT: {result}\n")
