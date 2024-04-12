@@ -7,6 +7,7 @@ statuses = dict()
 statuses["not_approved"] = 1
 statuses["approved"] = 2
 statuses["executed"] = 3
+statuses["executing"] = 4
 
 engine = None
 async_session = None
@@ -40,6 +41,7 @@ async def models_init():
                 session.add(Status(name="not_approved"))
                 session.add(Status(name="approved"))
                 session.add(Status(name="executed"))
+                session.add(Status(name="executing"))
                 if (await session.execute(select(func.count(Wipe.id)))).scalar() == 0:
                     session.add(Wipe())
 
