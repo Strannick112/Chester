@@ -1,3 +1,4 @@
+import asyncio
 from typing import List, Optional
 
 from sqlalchemy import DateTime, ForeignKey, func, BigInteger, String, select, update
@@ -86,39 +87,42 @@ class Claim(Base):
         await session.flush()
         return instance
 
+    semaphore_give_items = asyncio.Semaphore(1)
+
     async def give_items(self, *, session, console_dst_checker: ConsoleDSTChecker) -> bool:
-        if self.status_id == statuses.get("approved"):
-            self.status_id = statuses.get("executing")
-            session.add(self)
-            await session.flush()
-            for world in main_config["worlds"]:
-                for numbered_item in await self.awaitable_attrs.numbered_items:
-                    item = await numbered_item.awaitable_attrs.item
-                    dst_nickname = re.sub(
-                        r'\'', r"\\\\\'",
-                        (await (await self.awaitable_attrs.player).awaitable_attrs.steam_account).nickname
-                    )
-                    dst_nickname = re.sub(r'\"', r"\\\\\"", dst_nickname)
-                    item_id = shlex.quote(item.console_id)
-                    command = f"""screen -S {world["screen_name"]} -X stuff"""\
-                        f""" "UserToPlayer(\\\"{dst_nickname}\\\").components.inventory:"""\
-                        f"""GiveItem(SpawnPrefab(\\\"{item_id}\\\"))\n\""""
-                    result = await console_dst_checker.check(
-                        command,
-                        r'\[string "UserToPlayer\("(' +
-                        dst_nickname +
-                        r')"\)[\w\W]*?\.\.\."\]\:1\: attempt to index a nil value',
-                        world["shard_id"], world["screen_name"], "is_normal", 5
+        async with self.semaphore_give_items:
+            if self.status_id == statuses.get("approved"):
+                self.status_id = statuses.get("executing")
+                session.add(self)
+                await session.flush()
+                for world in main_config["worlds"]:
+                    for numbered_item in await self.awaitable_attrs.numbered_items:
+                        item = await numbered_item.awaitable_attrs.item
+                        dst_nickname = re.sub(
+                            r'\'', r"\\\\\'",
+                            (await (await self.awaitable_attrs.player).awaitable_attrs.steam_account).nickname
                         )
-                    if result == dst_nickname:
-                        break
-                else:
-                    self.executed = func.now()
-                    self.status_id = statuses.get("executed")
-                    session.add(self)
-                    await session.flush()
-                    return True
-            return False
+                        dst_nickname = re.sub(r'\"', r"\\\\\"", dst_nickname)
+                        item_id = shlex.quote(item.console_id)
+                        command = f"""screen -S {world["screen_name"]} -X stuff"""\
+                            f""" "UserToPlayer(\\\"{dst_nickname}\\\").components.inventory:"""\
+                            f"""GiveItem(SpawnPrefab(\\\"{item_id}\\\"))\n\""""
+                        result = await console_dst_checker.check(
+                            command,
+                            r'\[string "UserToPlayer\("(' +
+                            dst_nickname +
+                            r')"\)[\w\W]*?\.\.\."\]\:1\: attempt to index a nil value',
+                            world["shard_id"], world["screen_name"], "is_normal", 5
+                            )
+                        if result == dst_nickname:
+                            break
+                    else:
+                        self.executed = func.now()
+                        self.status_id = statuses.get("executed")
+                        session.add(self)
+                        await session.flush()
+                        return True
+                return False
 
     async def check_days(self, *, console_dst_checker: ConsoleDSTChecker):
         dst_nickname = re.sub(r'\'', r"\\\\\'", (await (await self.awaitable_attrs.player).awaitable_attrs.steam_account).nickname)
@@ -161,22 +165,28 @@ class Claim(Base):
     #             return int(result) > is_ok
     #     return False
 
+    semaphore_rollback_claim = asyncio.Semaphore(1)
+
     async def rollback_claim(self, *, session) -> bool:
-        if self.status_id == statuses.get("executed"):
-            self.executed = self.started
-            self.status_id = statuses.get("approved")
-            session.add(self)
-            return True
-        else:
-            return False
+        async with self.semaphore_rollback_claim:
+            if self.status_id == statuses.get("executed"):
+                self.executed = self.started
+                self.status_id = statuses.get("approved")
+                session.add(self)
+                return True
+            else:
+                return False
+
+    semaphore_approve = asyncio.Semaphore(1)
 
     async def approve(self, *, session) -> bool:
-        if self.status_id == statuses.get("not_approved"):
-            self.approved = func.now()
-            self.status_id = statuses.get("approved")
-            print("APPROVE_3")
-            session.add(self)
-            print("APPROVE_4")
-            return True
-        else:
-            return False
+        async with self.semaphore_approve:
+            if self.status_id == statuses.get("not_approved"):
+                self.approved = func.now()
+                self.status_id = statuses.get("approved")
+                print("APPROVE_3")
+                session.add(self)
+                print("APPROVE_4")
+                return True
+            else:
+                return False
