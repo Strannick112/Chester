@@ -1,6 +1,6 @@
 from typing import List, Optional
 
-from sqlalchemy import DateTime, ForeignKey, func, BigInteger, String, select, update, Integer
+from sqlalchemy import DateTime, ForeignKey, func, BigInteger, String, select, update
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from chesterbot import main_config

@@ -1,6 +1,6 @@
 from typing import Optional
 
-from sqlalchemy import String, Integer, select
+from sqlalchemy import String, select, BigInteger
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .Base import Base
@@ -10,7 +10,7 @@ class DiscordAccount(Base):
     __tablename__ = "discord_account"
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    discord_id: Mapped[int] = mapped_column(Integer)
+    discord_id: Mapped[int] = mapped_column(BigInteger)
     name: Mapped[str] = mapped_column(String(100))
     display_name: Mapped[str] = mapped_column(String(100))
 
