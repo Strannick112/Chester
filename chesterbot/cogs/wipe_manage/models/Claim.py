@@ -5,7 +5,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship, Session
 
 from chesterbot import main_config
 from chesterbot.ConsoleDSTChecker import ConsoleDSTChecker
-from . import Status, statuses, engine
+from . import Status, statuses
 from .Base import Base
 
 import re
