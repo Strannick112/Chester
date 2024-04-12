@@ -95,12 +95,7 @@ class Claim(Base):
             print("Meaw -1")
             await session.refresh(self)
             if self.status_id == statuses.get("approved"):
-                print("Meaw -2")
-                self.status_id = statuses.get("executing")
-                session.add(self)
-                # session.commit()
                 print("Meaw 1")
-                await session.flush()
                 dst_nickname = re.sub(
                     r'\'', r"\\\\\'",
                     (await (await self.awaitable_attrs.player).awaitable_attrs.steam_account).nickname
