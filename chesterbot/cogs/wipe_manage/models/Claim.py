@@ -131,12 +131,12 @@ class Claim(Base):
                         self.executed = func.now()
                         self.status_id = statuses.get("executed")
                         session.add(self)
-                        session.commit()
+                        await session.commit()
                         await session.refresh(self)
                         return True
                 self.status_id = statuses.get("approved")
                 session.add(self)
-                session.commit()
+                await session.commit()
                 await session.refresh(self)
                 return False
 
