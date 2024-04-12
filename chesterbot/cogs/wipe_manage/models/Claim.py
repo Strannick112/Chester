@@ -123,6 +123,7 @@ class Claim(Base):
                         )
                 for task in asyncio.as_completed(tasks):
                     result = await task
+                    print(f"RESULT: {result}\n")
                     if result == dst_nickname:
                         self.executed = func.now()
                         self.status_id = statuses.get("executed")
