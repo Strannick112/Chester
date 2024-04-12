@@ -131,13 +131,13 @@ class Claim(Base):
                         self.executed = func.now()
                         self.status_id = statuses.get("executed")
                         session.add(self)
-                        await session.commit()
+                        await session.flush()
                         # await session.refresh(self)
                         return True
                 print("SIGNIFICANTLY!!!")
                 self.status_id = statuses.get("approved")
                 session.add(self)
-                await session.commit()
+                await session.flush()
                 # await session.refresh(self)
                 return False
 
