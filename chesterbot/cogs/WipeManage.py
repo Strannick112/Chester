@@ -241,72 +241,75 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
         message = ctx if type(ctx) is WebhookMessage else ctx.message
         async with self.chester_bot.async_session() as session:
             async with session.begin():
-                # Проверка на наличие заявки у игрока
-                if claim := await self.get_claim_by_discord_id(discord_id=discord_id, session=session):
-                    # Проверка на одобренность заявки
-                    if claim.status_id == models.statuses.get("not_approved"):
-                        await message.reply(
-                            content="[" + main_config["server_name"] + "] <@" +
-                                    str((await (await claim.awaitable_attrs.player).awaitable_attrs.discord_account).discord_id) + "> , " +
-                                    self.__replies['give_items_fail_not_approved']
-                        )
-                        await message.add_reaction(self.__replies['claim_error'])
-                        await send_message_to_game("Chester_bot", (
-                                await (await claim.awaitable_attrs.player).awaitable_attrs.steam_account
-                            ).nickname + ", " + self.__replies[
-                            'give_items_fail_not_approved']
-                        )
-                        return False
-                    # Проверка на выполненность заявки
-                    if claim.status_id == models.statuses.get("executed"):
-                        await message.reply(
-                            content="[" + main_config["server_name"] + "] <@" +
-                                    str((await (await claim.awaitable_attrs.player).awaitable_attrs.discord_account).discord_id) + "> , " +
-                                    self.__replies['give_items_fail_executed']
-                        )
-                        await message.add_reaction(self.__replies['claim_error'])
-                        await send_message_to_game("Chester_bot", (
-                                await (await claim.awaitable_attrs.player).awaitable_attrs.steam_account
-                            ).nickname + ", " + self.__replies[
-                            'give_items_fail_executed'])
-                        return False
-                    # Проверка на наличие игрока в игре
-                    if not await (await claim.awaitable_attrs.player).is_player_online(self.chester_bot.console_dst_checker):
-                        await message.reply(
-                            content="[" + main_config["server_name"] + "] <@" +
-                                    str((await (await claim.awaitable_attrs.player).awaitable_attrs.discord_account).discord_id) + "> , " +
-                                    self.__replies['player_is_not_online_phrase']
-                        )
-                        await message.add_reaction(self.__replies['player_is_not_online'])
-                        return False
-                    # Попытка выдать вещи
-                    if await claim.give_items(session=session, console_dst_checker=self.chester_bot.console_dst_checker):
-                        await message.reply(
-                            content="[" + main_config["server_name"] + "] <@" +
-                                    str((await (await claim.awaitable_attrs.player).awaitable_attrs.discord_account).discord_id) + "> , " +
-                                    self.__replies['give_items_success']
-                        )
-                        await message.add_reaction(self.__replies['claim_items_executed'])
-                        await send_message_to_game("Chester_bot",
-                                                   (
-                                                       await (
-                                                           await claim.awaitable_attrs.player).awaitable_attrs.steam_account
-                                                   ).nickname + ", " + self.__replies['give_items_success'])
-                        await self.mark_claim_executed(claim)
-                        return True
-                    else:
-                        await message.reply(
-                            content="[" + main_config["server_name"] + "] <@" +
-                                    str((await (await claim.awaitable_attrs.player).awaitable_attrs.discord_account).discord_id) + "> , " +
-                                    self.__replies['give_items_fail']
-                        )
-                        await message.add_reaction(self.__replies['claim_error'])
-                        await send_message_to_game("Chester_bot",
-                                                   (
-                                                       await (
-                                                           await claim.awaitable_attrs.player).awaitable_attrs.steam_account
-                                                   ).nickname + ", " + self.__replies['give_items_fail'])
-                        return False
+                try:
+                    # Проверка на наличие заявки у игрока
+                    if claim := await self.get_claim_by_discord_id(discord_id=discord_id, session=session):
+                        # Проверка на одобренность заявки
+                        if claim.status_id == models.statuses.get("not_approved"):
+                            await message.reply(
+                                content="[" + main_config["server_name"] + "] <@" +
+                                        str((await (await claim.awaitable_attrs.player).awaitable_attrs.discord_account).discord_id) + "> , " +
+                                        self.__replies['give_items_fail_not_approved']
+                            )
+                            await message.add_reaction(self.__replies['claim_error'])
+                            await send_message_to_game("Chester_bot", (
+                                    await (await claim.awaitable_attrs.player).awaitable_attrs.steam_account
+                                ).nickname + ", " + self.__replies[
+                                'give_items_fail_not_approved']
+                            )
+                            return False
+                        # Проверка на выполненность заявки
+                        if claim.status_id == models.statuses.get("executed"):
+                            await message.reply(
+                                content="[" + main_config["server_name"] + "] <@" +
+                                        str((await (await claim.awaitable_attrs.player).awaitable_attrs.discord_account).discord_id) + "> , " +
+                                        self.__replies['give_items_fail_executed']
+                            )
+                            await message.add_reaction(self.__replies['claim_error'])
+                            await send_message_to_game("Chester_bot", (
+                                    await (await claim.awaitable_attrs.player).awaitable_attrs.steam_account
+                                ).nickname + ", " + self.__replies[
+                                'give_items_fail_executed'])
+                            return False
+                        # Проверка на наличие игрока в игре
+                        if not await (await claim.awaitable_attrs.player).is_player_online(self.chester_bot.console_dst_checker):
+                            await message.reply(
+                                content="[" + main_config["server_name"] + "] <@" +
+                                        str((await (await claim.awaitable_attrs.player).awaitable_attrs.discord_account).discord_id) + "> , " +
+                                        self.__replies['player_is_not_online_phrase']
+                            )
+                            await message.add_reaction(self.__replies['player_is_not_online'])
+                            return False
+                        # Попытка выдать вещи
+                        if await claim.give_items(session=session, console_dst_checker=self.chester_bot.console_dst_checker):
+                            await message.reply(
+                                content="[" + main_config["server_name"] + "] <@" +
+                                        str((await (await claim.awaitable_attrs.player).awaitable_attrs.discord_account).discord_id) + "> , " +
+                                        self.__replies['give_items_success']
+                            )
+                            await message.add_reaction(self.__replies['claim_items_executed'])
+                            await send_message_to_game("Chester_bot",
+                                                       (
+                                                           await (
+                                                               await claim.awaitable_attrs.player).awaitable_attrs.steam_account
+                                                       ).nickname + ", " + self.__replies['give_items_success'])
+                            await self.mark_claim_executed(claim)
+                            return True
+                        else:
+                            await message.reply(
+                                content="[" + main_config["server_name"] + "] <@" +
+                                        str((await (await claim.awaitable_attrs.player).awaitable_attrs.discord_account).discord_id) + "> , " +
+                                        self.__replies['give_items_fail']
+                            )
+                            await message.add_reaction(self.__replies['claim_error'])
+                            await send_message_to_game("Chester_bot",
+                                                       (
+                                                           await (
+                                                               await claim.awaitable_attrs.player).awaitable_attrs.steam_account
+                                                       ).nickname + ", " + self.__replies['give_items_fail'])
+                            return False
+                except Exception as error:
+                    print(error)
         await message.reply(
             content=self.__replies['give_items_fail_who_are_you']
         )
