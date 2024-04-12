@@ -89,7 +89,8 @@ class Claim(Base):
     async def give_items(self, *, session, console_dst_checker: ConsoleDSTChecker) -> bool:
         if self.status_id == statuses.get("approved"):
             for world in main_config["worlds"]:
-                for item in await (await self.awaitable_attrs.numbered_items).awaitable_attrs.items:
+                for numbered_item in await self.awaitable_attrs.numbered_items:
+                    item = await numbered_item.awaitable_attrs.item
                     dst_nickname = re.sub(r'\'', r"\\\\\'", (await (await self.awaitable_attrs.player).awaitable_attrs.steam_account).nickname)
                     dst_nickname = re.sub(r'\"', r"\\\\\"", dst_nickname)
                     item_id = shlex.quote(item.console_id)
