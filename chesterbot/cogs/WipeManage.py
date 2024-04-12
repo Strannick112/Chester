@@ -500,13 +500,17 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                             await models.Item.get_or_create(session=session, name=item[0].strip(), console_id=item[1])
                             for item in loot
                         ]
+                        numbered_items = [
+                            await models.NumberedItem.get_or_create(session=session, number=number, item_id=item.id)
+                            for number, item in enumerate(items)
+                        ]
                         claim = await models.Claim.get_or_create(
                             session=session,
                             message_id=message.id,
                             message_link=message.jump_url,
                             channel_id=message.channel.id,
                             player_id=player.id,
-                            items=items,
+                            numbered_items=numbered_items,
                             wipe_id=last_wipe.id,
                             revoke=self.revoke_reactions
                         )

@@ -1,6 +1,8 @@
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 from sqlalchemy.orm import Session
 
+from chesterbot import main_config
+
 statuses = dict()
 statuses["not_approved"] = 1
 statuses["approved"] = 2
@@ -13,6 +15,7 @@ from .Player import Player
 from .Wipe import Wipe
 from .Status import Status
 from .Item import Item
+from .NumberedItem import NumberedItem
 from .ClaimItem import ClaimItem
 from .Claim import Claim
 
@@ -23,12 +26,7 @@ async def models_init():
     global engine
     global async_session
 
-
-    engine = create_async_engine(
-        "postgresql+asyncpg://admin:admin@localhost/dst_keriwell", echo=True,
-        connect_args={'ssl': 'disable'}
-    )
-
+    engine = create_async_engine(main_config["sql_connection_row"], echo=True, connect_args=main_config["connect_args"])
     async_session = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
 
     async with engine.begin() as conn:

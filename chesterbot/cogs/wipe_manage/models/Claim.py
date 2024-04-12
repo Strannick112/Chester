@@ -33,7 +33,7 @@ class Claim(Base):
     approved: Mapped[int] = mapped_column(DateTime, default=func.now())
     executed: Mapped[int] = mapped_column(DateTime, default=func.now())
 
-    items: Mapped[List["Item"]] = relationship("Item",
+    numbered_items: Mapped[List["NumberedItem"]] = relationship("NumberedItem",
         secondary='claim_item', back_populates="claim"
     )
 
@@ -46,8 +46,9 @@ class Claim(Base):
 
     async def to_str(self):
         items = "[\n"
-        for index, item in enumerate(await self.awaitable_attrs.items):
-            items += f'ᅠᅠ{index + 1}. ' + {'console_id': item.console_id, 'name': item.name}.__str__() + ',\n'
+        for numbered_item in await self.awaitable_attrs.numbered_items:
+            item = await numbered_item.awaitable_attrs.item
+            items += f'ᅠᅠ{numbered_item.number + 1}. ' + {'console_id': item.console_id, 'name': item.name}.__str__() + ',\n'
         items += "]"
         approved = '?' if self.approved == self.started else str(self.approved)
         executed = '?' if self.executed == self.started else str(self.executed)
@@ -63,7 +64,7 @@ class Claim(Base):
         )
 
     @staticmethod
-    async def get_or_create(*, session, items, revoke, player_id, **kwargs):
+    async def get_or_create(*, session, numbered_items, revoke, player_id, **kwargs):
         if instance := (await session.execute(select(Claim).filter_by(**kwargs, player_id=player_id))).scalars().first():
             return instance
         if old_claim := await revoke(player_id, session):
@@ -73,14 +74,14 @@ class Claim(Base):
                 message_link=kwargs.get("message_link"),
                 status_id=statuses.get("not_approved"),
             ))
-            (await old_claim.awaitable_attrs.items).clear()
+            (await old_claim.awaitable_attrs.numbered_items).clear()
             session.add(old_claim)
             await session.flush()
-            old_claim.items = items
+            old_claim.numbered_items = numbered_items
             session.add(old_claim)
             await session.flush()
             return old_claim
-        instance = Claim(items=items, player_id=player_id, **kwargs)
+        instance = Claim(numbered_items=numbered_items, player_id=player_id, **kwargs)
         session.add(instance)
         await session.flush()
         return instance
@@ -88,7 +89,7 @@ class Claim(Base):
     async def give_items(self, *, session, console_dst_checker: ConsoleDSTChecker) -> bool:
         if self.status_id == statuses.get("approved"):
             for world in main_config["worlds"]:
-                for item in await self.awaitable_attrs.items:
+                for item in await (await self.awaitable_attrs.numbered_items).awaitable_attrs.items:
                     dst_nickname = re.sub(r'\'', r"\\\\\'", (await (await self.awaitable_attrs.player).awaitable_attrs.steam_account).nickname)
                     dst_nickname = re.sub(r'\"', r"\\\\\"", dst_nickname)
                     item_id = shlex.quote(item.console_id)
