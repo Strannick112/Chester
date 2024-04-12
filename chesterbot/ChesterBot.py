@@ -6,7 +6,7 @@ import subprocess
 import discord
 from discord.ext import commands
 
-from chesterbot import main_config, wipes
+from chesterbot import main_config
 from chesterbot.ConsoleDSTChecker import ConsoleDSTChecker
 from chesterbot.cogs import BotManage, WipeManage
 from chesterbot.cogs.Halloween import Halloween
@@ -14,6 +14,7 @@ from chesterbot.cogs.ResourceDashBoard import ResourceDashBoard
 from chesterbot.cogs.DashBoardEmbed import DashBoardEmbed
 from chesterbot.cogs.server_manage import ServerManage
 from chesterbot.cogs.server_manage.commands import send_message_to_game
+from chesterbot.cogs.wipe_manage.models import models_init
 
 
 class ChesterBot(commands.Bot):
@@ -35,8 +36,10 @@ class ChesterBot(commands.Bot):
         self.halloween = Halloween(self)
         self.event(self.on_ready)
         super().__init__(command_prefix=main_config['prefix'], intents=intents)
+        self.async_session = None
 
     async def on_ready(self):
+        self.async_session = await models_init()
         await self.user.edit(username="Chester")
         await self.server_manage.on_ready()
         await self.console_dst_checker.on_ready(self.loop)
@@ -78,12 +81,8 @@ class ChesterBot(commands.Bot):
                         await send_message_to_game("Admin " + message.author.display_name, message.content)
                     if message.channel.id == main_config["game_chat_sync_channel"]:
                         await send_message_to_game(message.author.display_name, message.content)
-                    elif wipes.last_wipe.stoped_at == "":
-                        claim = await self.wipe_manage.make_claim(message)
-                        if claim is not None:
-                            author = message.author.__str__()
-                            wipes.last_wipe.claims[author] = claim
-                            wipes.last_wipe.claims[author].save()
+                    else:
+                        await self.wipe_manage.make_claim(message)
 
     async def on_member_join(self, member):
         if self.default_role is None:

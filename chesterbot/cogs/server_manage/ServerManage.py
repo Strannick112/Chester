@@ -203,7 +203,10 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                                 return
                         elif "@admin" in message:
                             await self.chat_webhook.send(
-                                content=re.sub(r'@admin', self.chester_bot.replies['admin_role_id'], message).strip(),
+                                content=re.sub(
+                                    r'@admin',
+                                    "<@&" + str(self.chester_bot.replies['admin_role_id_for_mention']) + ">", message
+                                ).strip(),
                                 username=player_name,
                                 avatar_url=avatar_url if avatar_url is not None else self.chester_bot.replies["unknown"]
                             )
