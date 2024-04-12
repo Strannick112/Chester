@@ -95,7 +95,8 @@ class Claim(Base):
             if self.status_id == statuses.get("approved"):
                 self.status_id = statuses.get("executing")
                 session.add(self)
-                session.commit()
+                # session.commit()
+                await session.flush()
                 dst_nickname = re.sub(
                     r'\'', r"\\\\\'",
                     (await (await self.awaitable_attrs.player).awaitable_attrs.steam_account).nickname
