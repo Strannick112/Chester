@@ -27,15 +27,12 @@ from sqlalchemy import func, select
 
 
 async def models_init():
-    global engine
-    global async_session
+    globals()["engine"] = create_async_engine(main_config["sql_connection_row"], echo=True, connect_args=main_config["connect_args"])
+    globals()["async_session"] = async_sessionmaker(globals()["engine"], class_=AsyncSession, expire_on_commit=False)
 
-    engine = create_async_engine(main_config["sql_connection_row"], echo=True, connect_args=main_config["connect_args"])
-    async_session = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
-
-    async with engine.begin() as conn:
+    async with globals()["engine"].begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
-    async with async_session() as session:
+    async with globals()["async_session"]() as session:
         async with session.begin():
             row_count = (await session.execute(select(func.count(Status.id)))).scalar()
             if row_count < 3:
@@ -46,5 +43,5 @@ async def models_init():
                 if (await session.execute(select(func.count(Wipe.id)))).scalar() == 0:
                     session.add(Wipe())
 
-    return async_session
+    return globals()["async_session"]
 
