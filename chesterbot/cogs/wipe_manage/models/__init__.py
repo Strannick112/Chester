@@ -8,6 +8,9 @@ statuses["not_approved"] = 1
 statuses["approved"] = 2
 statuses["executed"] = 3
 
+engine = None
+async_session = None
+
 from .Base import Base
 from .DiscordAccount import DiscordAccount
 from .SteamAccount import SteamAccount
@@ -22,8 +25,6 @@ from .Claim import Claim
 
 from sqlalchemy import func, select
 
-engine = None
-async_session = None
 
 async def models_init():
     global engine
