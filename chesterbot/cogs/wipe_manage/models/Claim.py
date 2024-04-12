@@ -111,14 +111,12 @@ class Claim(Base):
                             f""" "UserToPlayer(\\\"{dst_nickname}\\\").components.inventory:"""\
                             f"""GiveItem(SpawnPrefab(\\\"{item_id}\\\"))\n\""""
                         tasks.append(
-                            asyncio.create_task(
-                                console_dst_checker.check(
-                                    command,
-                                    r'\[string "UserToPlayer\("(' +
-                                    dst_nickname +
-                                    r')"\)[\w\W]*?\.\.\."\]\:1\: attempt to index a nil value',
-                                    world["shard_id"], world["screen_name"], "is_normal", 5
-                                )
+                            console_dst_checker.check(
+                                command,
+                                r'\[string "UserToPlayer\("(' +
+                                dst_nickname +
+                                r')"\)[\w\W]*?\.\.\."\]\:1\: attempt to index a nil value',
+                                world["shard_id"], world["screen_name"], "is_normal", 5
                             )
                         )
                 for result in asyncio.as_completed(tasks):
