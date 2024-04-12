@@ -22,6 +22,9 @@ from .Claim import Claim
 
 from sqlalchemy import func, select
 
+engine = None
+async_session = None
+
 async def models_init():
     global engine
     global async_session
