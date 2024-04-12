@@ -38,10 +38,10 @@ async def models_init():
             row_count = (await session.execute(select(func.count(Status.id)))).scalar()
             if row_count < 4:
                 print("Инициализация таблицы Status")
-                session.add(Status.get_or_create(session=session, name="not_approved"))
-                session.add(Status.get_or_create(session=session, name="approved"))
-                session.add(Status.get_or_create(session=session, name="executed"))
-                session.add(Status.get_or_create(session=session, name="executing"))
+                session.add(await Status.get_or_create(session=session, name="not_approved"))
+                session.add(await Status.get_or_create(session=session, name="approved"))
+                session.add(await Status.get_or_create(session=session, name="executed"))
+                session.add(await Status.get_or_create(session=session, name="executing"))
                 if (await session.execute(select(func.count(Wipe.id)))).scalar() == 0:
                     session.add(Wipe())
                 session.flush()
