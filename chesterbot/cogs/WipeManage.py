@@ -297,7 +297,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                 async with self.chester_bot.async_session() as session:
                     async with session.begin():
                         if await (
-                            await self.get_claim_by_discord_id(discord_id=discord_id, session=session)
+                            await self.get_claim_by_discord_id(discord_id=int(discord_id), session=session)
                         ).give_items(
                             session=session,
                             console_dst_checker=self.chester_bot.console_dst_checker
