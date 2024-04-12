@@ -1,7 +1,7 @@
 from typing import List, Optional
 
 from sqlalchemy import DateTime, ForeignKey, func, BigInteger, String, select, update
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column, relationship, Session
 
 from chesterbot import main_config
 from chesterbot.ConsoleDSTChecker import ConsoleDSTChecker
@@ -87,13 +87,15 @@ class Claim(Base):
         return instance
 
     async def give_items(self, *, session, console_dst_checker: ConsoleDSTChecker) -> bool:
-        with engine.connect() as conn:
-            transaction = conn.begin()
+        with Session() as sess:
             if self.status_id == statuses.get("approved"):
                 for world in main_config["worlds"]:
                     for numbered_item in await self.awaitable_attrs.numbered_items:
                         item = await numbered_item.awaitable_attrs.item
-                        dst_nickname = re.sub(r'\'', r"\\\\\'", (await (await self.awaitable_attrs.player).awaitable_attrs.steam_account).nickname)
+                        dst_nickname = re.sub(
+                            r'\'', r"\\\\\'",
+                            (await (await self.awaitable_attrs.player).awaitable_attrs.steam_account).nickname
+                        )
                         dst_nickname = re.sub(r'\"', r"\\\\\"", dst_nickname)
                         item_id = shlex.quote(item.console_id)
                         command = f"""screen -S {world["screen_name"]} -X stuff"""\
@@ -111,10 +113,10 @@ class Claim(Base):
                     else:
                         self.executed = func.now()
                         self.status_id = statuses.get("executed")
-                        session.add(self)
-                        transaction.commit()
+                        sess.add(self)
+                        sess.commit()
                         return True
-            transaction.rollback()
+            sess.rollback()
             return False
 
     async def check_days(self, *, console_dst_checker: ConsoleDSTChecker):
