@@ -96,33 +96,40 @@ class Claim(Base):
                 self.status_id = statuses.get("executing")
                 session.add(self)
                 session.commit()
+                dst_nickname = re.sub(
+                    r'\'', r"\\\\\'",
+                    (await (await self.awaitable_attrs.player).awaitable_attrs.steam_account).nickname
+                )
+                dst_nickname = re.sub(r'\"', r"\\\\\"", dst_nickname)
+                tasks = []
                 for world in main_config["worlds"]:
                     for numbered_item in await self.awaitable_attrs.numbered_items:
-                        item = await numbered_item.awaitable_attrs.item
-                        dst_nickname = re.sub(
-                            r'\'', r"\\\\\'",
-                            (await (await self.awaitable_attrs.player).awaitable_attrs.steam_account).nickname
+                        item_id = shlex.quote(
+                            (await numbered_item.awaitable_attrs.item).console_id
                         )
-                        dst_nickname = re.sub(r'\"', r"\\\\\"", dst_nickname)
-                        item_id = shlex.quote(item.console_id)
                         command = f"""screen -S {world["screen_name"]} -X stuff"""\
                             f""" "UserToPlayer(\\\"{dst_nickname}\\\").components.inventory:"""\
                             f"""GiveItem(SpawnPrefab(\\\"{item_id}\\\"))\n\""""
-                        result = await console_dst_checker.check(
-                            command,
-                            r'\[string "UserToPlayer\("(' +
-                            dst_nickname +
-                            r')"\)[\w\W]*?\.\.\."\]\:1\: attempt to index a nil value',
-                            world["shard_id"], world["screen_name"], "is_normal", 5
+                        tasks.append(
+                            asyncio.create_task(
+                                console_dst_checker.check(
+                                    command,
+                                    r'\[string "UserToPlayer\("(' +
+                                    dst_nickname +
+                                    r')"\)[\w\W]*?\.\.\."\]\:1\: attempt to index a nil value',
+                                    world["shard_id"], world["screen_name"], "is_normal", 5
+                                )
                             )
-                        if result == dst_nickname:
-                            break
-                    else:
+                        )
+                results = await asyncio.gather(*tasks, return_exceptions=True)
+                for result in results:
+                    if result == dst_nickname:
                         self.executed = func.now()
                         self.status_id = statuses.get("executed")
                         session.add(self)
                         session.commit()
                         return True
+                self.status_id = statuses.get("approved")
                 return False
 
     async def check_days(self, *, console_dst_checker: ConsoleDSTChecker):
