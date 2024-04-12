@@ -134,6 +134,7 @@ class Claim(Base):
                         await session.commit()
                         # await session.refresh(self)
                         return True
+                print("SIGNIFICANTLY!!!")
                 self.status_id = statuses.get("approved")
                 session.add(self)
                 await session.commit()
