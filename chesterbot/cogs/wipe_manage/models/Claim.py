@@ -91,6 +91,7 @@ class Claim(Base):
 
     async def give_items(self, *, session, console_dst_checker: ConsoleDSTChecker) -> bool:
         async with self.semaphore_give_items:
+            await session.refresh(self)
             if self.status_id == statuses.get("approved"):
                 print(f"STATUS_ID 1: {self.status_id}\n")
                 self.status_id = statuses.get("executing")
@@ -123,7 +124,7 @@ class Claim(Base):
                         self.status_id = statuses.get("executed")
                         print(f"STATUS_ID 3: {self.status_id}\n")
                         session.add(self)
-                        await session.flush()
+                        session.commit()
                         print(f"STATUS_ID 4: {self.status_id}\n")
                         return True
                 return False
@@ -173,6 +174,7 @@ class Claim(Base):
 
     async def rollback_claim(self, *, session) -> bool:
         async with self.semaphore_rollback_claim:
+            await session.refresh(self)
             if self.status_id == statuses.get("executed"):
                 self.executed = self.started
                 self.status_id = statuses.get("approved")
@@ -185,6 +187,7 @@ class Claim(Base):
 
     async def approve(self, *, session) -> bool:
         async with self.semaphore_approve:
+            await session.refresh(self)
             if self.status_id == statuses.get("not_approved"):
                 self.approved = func.now()
                 self.status_id = statuses.get("approved")

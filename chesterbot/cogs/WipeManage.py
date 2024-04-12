@@ -241,7 +241,6 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
         message = ctx if type(ctx) is WebhookMessage else ctx.message
         async with self.chester_bot.async_session() as session:
             async with session.begin():
-        # if True:
                 # Проверка на наличие заявки у игрока
                 if claim := await self.get_claim_by_discord_id(discord_id=discord_id, session=session):
                     # Проверка на одобренность заявки
