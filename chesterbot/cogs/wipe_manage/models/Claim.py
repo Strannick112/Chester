@@ -90,21 +90,20 @@ class Claim(Base):
     semaphore_give_items = asyncio.Semaphore(1)
 
     async def give_items(self, *, async_session, console_dst_checker: ConsoleDSTChecker) -> bool:
-        print("Meaw 0")
         async with self.semaphore_give_items:
             async with async_session() as session:
                 async with session.begin():
-                    print("Meaw -1")
                     await session.refresh(self)
                     if self.status_id == statuses.get("approved"):
-                        print("Meaw 1")
+                        self.executed = func.now()
+                        self.status_id = statuses.get("executed")
+                        session.add(self)
                         dst_nickname = re.sub(
                             r'\'', r"\\\\\'",
                             (await (await self.awaitable_attrs.player).awaitable_attrs.steam_account).nickname
                         )
                         dst_nickname = re.sub(r'\"', r"\\\\\"", dst_nickname)
                         tasks = []
-                        print("Meaw 2")
                         for world in main_config["worlds"]:
                             for numbered_item in await self.awaitable_attrs.numbered_items:
                                 item_id = shlex.quote(
@@ -124,23 +123,12 @@ class Claim(Base):
                                         )
                                     )
                                 )
-                        print("Meaw 3")
-                        print(f"TASKS: {tasks}\n")
                         for task in asyncio.as_completed(tasks):
                             result = await task
-                            print(f"RESULT: {result}\n")
                             if result == dst_nickname:
-                                self.executed = func.now()
-                                self.status_id = statuses.get("executed")
-                                session.add(self)
-                                await session.flush()
-                                # await session.refresh(self)
+                                await session.commit()
                                 return True
-                        print("SIGNIFICANTLY!!!")
-                        self.status_id = statuses.get("approved")
-                        session.add(self)
-                        await session.flush()
-                        # await session.refresh(self)
+                        await session.rollback()
                         return False
 
     async def check_days(self, *, console_dst_checker: ConsoleDSTChecker):
