@@ -96,6 +96,7 @@ class Claim(Base):
                 self.status_id = statuses.get("executing")
                 session.add(self)
                 # session.commit()
+                print("Meaw 1")
                 await session.flush()
                 dst_nickname = re.sub(
                     r'\'', r"\\\\\'",
@@ -103,6 +104,7 @@ class Claim(Base):
                 )
                 dst_nickname = re.sub(r'\"', r"\\\\\"", dst_nickname)
                 tasks = []
+                print("Meaw 2")
                 for world in main_config["worlds"]:
                     for numbered_item in await self.awaitable_attrs.numbered_items:
                         item_id = shlex.quote(
@@ -122,6 +124,7 @@ class Claim(Base):
                                 )
                             )
                         )
+                print("Meaw 3")
                 print(f"TASKS: {tasks}\n")
                 for task in asyncio.as_completed(tasks):
                     result = await task
