@@ -121,8 +121,7 @@ class Claim(Base):
                                 )
                             )
                         )
-                results = await asyncio.gather(*tasks, return_exceptions=True)
-                for result in results:
+                for result in asyncio.as_completed(tasks):
                     if result == dst_nickname:
                         self.executed = func.now()
                         self.status_id = statuses.get("executed")
