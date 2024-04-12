@@ -1,7 +1,7 @@
 from typing import List, Optional
 import re
 
-from sqlalchemy import ForeignKey, select, Integer
+from sqlalchemy import ForeignKey, select
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from chesterbot import main_config

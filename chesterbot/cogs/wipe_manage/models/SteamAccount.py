@@ -1,6 +1,6 @@
 from typing import Optional
 
-from sqlalchemy import String, select, Integer
+from sqlalchemy import String, select
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .Base import Base
