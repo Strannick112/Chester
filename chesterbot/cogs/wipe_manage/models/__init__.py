@@ -36,14 +36,15 @@ async def models_init():
     async with globals()["async_session"]() as session:
         async with session.begin():
             row_count = (await session.execute(select(func.count(Status.id)))).scalar()
-            if row_count < 3:
+            if row_count < 4:
                 print("Инициализация таблицы Status")
-                session.add(Status(name="not_approved"))
-                session.add(Status(name="approved"))
-                session.add(Status(name="executed"))
-                session.add(Status(name="executing"))
+                session.add(Status.get_or_create(session=session, name="not_approved"))
+                session.add(Status.get_or_create(session=session, name="approved"))
+                session.add(Status.get_or_create(session=session, name="executed"))
+                session.add(Status.get_or_create(session=session, name="executing"))
                 if (await session.execute(select(func.count(Wipe.id)))).scalar() == 0:
                     session.add(Wipe())
+                session.flush()
 
     return globals()["async_session"]
 
