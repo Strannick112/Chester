@@ -537,6 +537,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                         await session.flush()
                         await message.add_reaction(self.__replies['claim_accepted_is_ok'])
                         count_days = await claim.check_days(console_dst_checker=self.chester_bot.console_dst_checker)
+                        await session.commit()
                 await self.sync_reactions(count_days, message)
             else:
                 await message.add_reaction(self.__replies['claim_warning'])
