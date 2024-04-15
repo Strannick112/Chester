@@ -41,14 +41,11 @@ class Player(Base):
         return instance
 
     async def is_player_online(self, console_dst_checker: ConsoleDSTChecker):
-        _dst_nickname = re.sub(r'\'', r"\\\\\'", (await self.awaitable_attrs.steam_account).nickname)
-        _dst_nickname = re.sub(r'\"', r"\\\\\"", _dst_nickname)
+        ku_id = (await self.awaitable_attrs.steam_account).ku_id
         screen_name = main_config['short_server_name'] + main_config["worlds"][0]["shard_id"]
         result = await console_dst_checker.check(
-            """for _, player in pairs(GetPlayerClientTable()) do """
-            f"""if player.name == \\\"{_dst_nickname}\\\" """
-            """then print(\\\"PlayerName: \\\", player.name) end end""",
-            r"PlayerName:\s*(" + _dst_nickname + r")\s*",
+            """print(\\\"PlayerID: \\\", LookupPlayerInstByUserID("\\\"{ku_id}\\\").userid)""",
+            r"PlayerID:\s*(" + ku_id + r")\s*",
             main_config["worlds"][0]["shard_id"],
             screen_name,
             "",

@@ -96,11 +96,6 @@ class Claim(Base):
                 self.executed = func.now()
                 self.status_id = statuses.get("executed")
                 session.add(self)
-                # dst_nickname = re.sub(
-                #     r'\'', r"\\\\\'",
-                #     (await (await self.awaitable_attrs.player).awaitable_attrs.steam_account).nickname
-                # )
-                # dst_nickname = re.sub(r'\"', r"\\\\\"", dst_nickname)
                 ku_id = (await (await self.awaitable_attrs.player).awaitable_attrs.steam_account).ku_id
                 tasks = []
                 for world in main_config["worlds"]:
@@ -130,15 +125,14 @@ class Claim(Base):
                 return False
 
     async def check_days(self, *, console_dst_checker: ConsoleDSTChecker):
-        dst_nickname = re.sub(r'\'', r"\\\\\'", (await (await self.awaitable_attrs.player).awaitable_attrs.steam_account).nickname)
-        dst_nickname = re.sub(r'\"', r"\\\\\"", dst_nickname)
+        ku_id = (await (await self.awaitable_attrs.player).awaitable_attrs.steam_account).ku_id
         raw_results = set()
         for world in main_config["worlds"]:
-            command = f"""for k,v in pairs(AllPlayers) do print('CheckDaysForPlayer: ', v.name, TheNet:GetClientTableForUser(v.userid).playerage) end"""
+            command = f"""print('CheckDaysForPlayer: ', \\\"{ku_id}\\\", TheNet:GetClientTableForUser(\\\"{ku_id}\\\").playerage)"""
             raw_results.add(
                 await console_dst_checker.check(
                     command,
-                    r'CheckDaysForPlayer:\s+' + dst_nickname + r'\s+([\d]+)',
+                    r'CheckDaysForPlayer:\s+' + ku_id + r'\s+([\d]+)',
                     world["shard_id"], world["screen_name"], "0", 5
                 )
             )
@@ -146,30 +140,6 @@ class Claim(Base):
             if int(result) > 0:
                 return int(result)
         return 0
-
-    # f"""screen -S {world["screen_name"]} -X stuff "LookupPlayerInstByUserID(\\\"{ku_id}\\\").components.inventory:GiveItem(SpawnPrefab(\\\"{item_id}\\\"))\n\""""
-
-    # В РАЗРАБОТКЕ!!!
-    # async def check_items(self, console_dst_checker: ConsoleDSTChecker, is_ok: int):
-    #     dst_nickname = re.sub(r'\'', r"\\\\\'", self.player.steam_account.nickname)
-    #     dst_nickname = re.sub(r'\"', r"\\\\\"", dst_nickname)
-    #     raw_results = dict()
-    #     for world in main_config["worlds"]:
-    #         raw_results[world["shard_id"]] = []
-    #         for item in self.items:
-    #             command = f"""screen -S {world["screen_name"]} -X stuff""" \
-    #                       f""" "for k,v in pairs(AllPlayers) do print('CheckDaysForPlayer: ', v.name, TheNet:GetClientTableForUser(v.userid).playerage) end\n\""""
-    #             raw_results[world["shard_id"]].append(
-    #                 await console_dst_checker.check(
-    #                     command,
-    #                     r'CheckDaysForPlayer:\s+' + dst_nickname + r'\s+([\d]+)',
-    #                     world["shard_id"], world["screen_name"], "0", 5
-    #                 )
-    #             )
-    #     for result in raw_results:
-    #         if int(result) > 0:
-    #             return int(result) > is_ok
-    #     return False
 
     semaphore_rollback_claim = asyncio.Semaphore(1)
 
