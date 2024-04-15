@@ -105,10 +105,9 @@ class ResourceDashBoard:
         for group_name, group in self.data.items():
             for prefab_name, prefab_info in group.items():
                 for prefab_code, prefab_count in prefab_info.items():
-                    command = f"screen -S {self.screen_name} -X stuff "\
-                                     f"\"local count = 0 local prefab = \\\"{prefab_code}\\\" "\
+                    command = f"local count = 0 local prefab = \\\"{prefab_code}\\\" "\
                                      "for k,v in pairs(Ents) do if v.prefab == prefab then "\
-                                     "count = count + 1 end end print(\\\"CountPrefab\\\", prefab, count)\n\""
+                                     "count = count + 1 end end print(\\\"CountPrefab\\\", prefab, count)"
                     self.data[group_name][prefab_name][prefab_code] = int(
                         await asyncio.create_task(
                             self.chester_bot.console_dst_checker.check(

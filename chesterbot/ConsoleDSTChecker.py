@@ -36,6 +36,7 @@ class ConsoleDSTChecker:
                 if world["shard_id"] == shard_id and screen_name in screen_list:
                     self.__all_commands[shard_id][reg_answer] = self.__loop.create_future()
                     asyncio.ensure_future(self.__all_commands[shard_id][reg_answer])
+                    command = f'''screen -S {screen_name} -X stuff "''' + command + '''\n"'''
                     subprocess.call(command, shell=True)
                     result = await asyncio.wait_for(self.__all_commands[shard_id][reg_answer], timeout)
                     return result

@@ -23,19 +23,19 @@ class ServerDashBoard:
 
     async def _get_season(self):
         return await self.chester_bot.console_dst_checker.check(
-            f"screen -S {self.screen_name} -X stuff \"print(\\\"Season\\\", TheWorld.components.worldstate.data.season)\n\"",
+            f"print(\\\"Season\\\", TheWorld.components.worldstate.data.season)",
             r"Season\s*([\w]+)\s*", self.shard_id, self.screen_name, "unknown_emoji", 5
         )
 
     async def _get_cycles(self):
         return await self.chester_bot.console_dst_checker.check(
-            f"screen -S {self.screen_name} -X stuff \"print(\\\"Cycles\\\", TheWorld.components.worldstate.data.cycles)\n\"",
+            f"print(\\\"Cycles\\\", TheWorld.components.worldstate.data.cycles)",
             r"Cycles\s*([\d]+)\s*", self.shard_id, self.screen_name, 0, 5
         )
 
     async def _get_day_phase(self):
         return await self.chester_bot.console_dst_checker.check(
-            f"screen -S {self.screen_name} -X stuff \"print(\\\"Day phase\\\", TheWorld.components.worldstate.data.phase)\n\"",
+            f"print(\\\"Day phase\\\", TheWorld.components.worldstate.data.phase)",
             r"Day phase\s*([\w]+)\s*", self.shard_id, self.screen_name, "unknown_emoji", 5
         )
 

@@ -91,33 +91,31 @@ class Claim(Base):
 
     async def give_items(self, *, session, console_dst_checker: ConsoleDSTChecker) -> bool:
         async with self.semaphore_give_items:
-            # async with async_session() as session:
-            #     async with session.begin():
             await session.refresh(self)
             if self.status_id == statuses.get("approved"):
                 self.executed = func.now()
                 self.status_id = statuses.get("executed")
                 session.add(self)
-                dst_nickname = re.sub(
-                    r'\'', r"\\\\\'",
-                    (await (await self.awaitable_attrs.player).awaitable_attrs.steam_account).nickname
-                )
-                dst_nickname = re.sub(r'\"', r"\\\\\"", dst_nickname)
+                # dst_nickname = re.sub(
+                #     r'\'', r"\\\\\'",
+                #     (await (await self.awaitable_attrs.player).awaitable_attrs.steam_account).nickname
+                # )
+                # dst_nickname = re.sub(r'\"', r"\\\\\"", dst_nickname)
+                ku_id = (await (await self.awaitable_attrs.player).awaitable_attrs.steam_account).ku_id
                 tasks = []
                 for world in main_config["worlds"]:
                     for numbered_item in await self.awaitable_attrs.numbered_items:
                         item_id = shlex.quote(
                             (await numbered_item.awaitable_attrs.item).console_id
                         )
-                        command = f"""screen -S {world["screen_name"]} -X stuff"""\
-                            f""" "UserToPlayer(\\\"{dst_nickname}\\\").components.inventory:"""\
-                            f"""GiveItem(SpawnPrefab(\\\"{item_id}\\\"))\n\""""
+                        command = f"""LookupPlayerInstByUserID(\\\"{ku_id}\\\").components.inventory:""" \
+                            f"""GiveItem(SpawnPrefab(\\\"{item_id}\\\"))"""
                         tasks.append(
                             asyncio.create_task(
                                 console_dst_checker.check(
                                     command,
-                                    r'\[string "UserToPlayer\("(' +
-                                    dst_nickname +
+                                    r'\[string "LookupPlayerInstByUserID\("(' +
+                                    ku_id +
                                     r')"\)[\w\W]*?\.\.\."\]\:1\: attempt to index a nil value',
                                     world["shard_id"], world["screen_name"], "is_normal", 5
                                 )
@@ -125,7 +123,7 @@ class Claim(Base):
                         )
                 for task in asyncio.as_completed(tasks):
                     result = await task
-                    if result == dst_nickname:
+                    if result == ku_id:
                         await session.commit()
                         return True
                 await session.rollback()
@@ -136,8 +134,7 @@ class Claim(Base):
         dst_nickname = re.sub(r'\"', r"\\\\\"", dst_nickname)
         raw_results = set()
         for world in main_config["worlds"]:
-            command = f"""screen -S {world["screen_name"]} -X stuff""" \
-                      f""" "for k,v in pairs(AllPlayers) do print('CheckDaysForPlayer: ', v.name, TheNet:GetClientTableForUser(v.userid).playerage) end\n\""""
+            command = f"""for k,v in pairs(AllPlayers) do print('CheckDaysForPlayer: ', v.name, TheNet:GetClientTableForUser(v.userid).playerage) end"""
             raw_results.add(
                 await console_dst_checker.check(
                     command,
@@ -149,6 +146,8 @@ class Claim(Base):
             if int(result) > 0:
                 return int(result)
         return 0
+
+    # f"""screen -S {world["screen_name"]} -X stuff "LookupPlayerInstByUserID(\\\"{ku_id}\\\").components.inventory:GiveItem(SpawnPrefab(\\\"{item_id}\\\"))\n\""""
 
     # В РАЗРАБОТКЕ!!!
     # async def check_items(self, console_dst_checker: ConsoleDSTChecker, is_ok: int):

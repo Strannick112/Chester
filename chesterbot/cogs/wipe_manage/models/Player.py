@@ -45,10 +45,9 @@ class Player(Base):
         _dst_nickname = re.sub(r'\"', r"\\\\\"", _dst_nickname)
         screen_name = main_config['short_server_name'] + main_config["worlds"][0]["shard_id"]
         result = await console_dst_checker.check(
-            f"""screen -S {screen_name} -X stuff \""""
             """for _, player in pairs(GetPlayerClientTable()) do """
             f"""if player.name == \\\"{_dst_nickname}\\\" """
-            """then print(\\\"PlayerName: \\\", player.name) end end \n\"""",
+            """then print(\\\"PlayerName: \\\", player.name) end end""",
             r"PlayerName:\s*(" + _dst_nickname + r")\s*",
             main_config["worlds"][0]["shard_id"],
             screen_name,
