@@ -248,9 +248,11 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                 async with session.begin():
                     if claim := await self.get_claim_by_discord_id(discord_id=discord_id, session=session):
                         status_id = claim.status_id
+                        print("meaw-5")
                         steam_nickname = await claim.get_steam_nickname()
                         channel_id = claim.channel_id
                         message_id = claim.message_id
+                        print("meaw-4")
                         is_player_online = not await (
                             await claim.awaitable_attrs.player
                         ).is_player_online(self.chester_bot.console_dst_checker)
