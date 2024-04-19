@@ -51,4 +51,4 @@ class Player(Base):
             "",
             5
         )
-        return result == (await self.awaitable_attrs.steam_account).nickname
+        return result == (await self.awaitable_attrs.steam_account).ku_id
