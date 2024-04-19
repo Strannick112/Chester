@@ -91,7 +91,6 @@ class Claim(Base):
 
     async def give_items(self, *, session, console_dst_checker: ConsoleDSTChecker) -> bool:
         async with self.semaphore_give_items:
-            print("meaw1")
             await session.refresh(self)
             if self.status_id == statuses.get("approved"):
                 self.executed = func.now()
@@ -99,7 +98,6 @@ class Claim(Base):
                 session.add(self)
                 ku_id = (await (await self.awaitable_attrs.player).awaitable_attrs.steam_account).ku_id
                 tasks = []
-                print("meaw2")
                 for world in main_config["worlds"]:
                     for numbered_item in await self.awaitable_attrs.numbered_items:
                         item_id = shlex.quote(
@@ -107,7 +105,6 @@ class Claim(Base):
                         )
                         command = f"""LookupPlayerInstByUserID(\\\"{ku_id}\\\").components.inventory:""" \
                             f"""GiveItem(SpawnPrefab(\\\"{item_id}\\\"))"""
-                        print(command)
                         tasks.append(
                             asyncio.create_task(
                                 console_dst_checker.check(
