@@ -44,7 +44,7 @@ class Player(Base):
         ku_id = (await self.awaitable_attrs.steam_account).ku_id
         screen_name = main_config['short_server_name'] + main_config["worlds"][0]["shard_id"]
         result = await console_dst_checker.check(
-            """print(\\\"PlayerID: \\\", LookupPlayerInstByUserID(\\\"{ku_id}\\\").userid)""",
+            f"""print(\\\"PlayerID: \\\", LookupPlayerInstByUserID(\\\"{ku_id}\\\").userid)""",
             r"PlayerID:\s*(" + ku_id + r")\s*",
             main_config["worlds"][0]["shard_id"],
             screen_name,
