@@ -242,7 +242,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
 
         try:
             status_id = None
-
+            print("meaw-3")
             # Проверка на наличие заявки у игрока
             async with self.chester_bot.async_session() as session:
                 async with session.begin():
@@ -254,7 +254,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                         is_player_online = not await (
                             await claim.awaitable_attrs.player
                         ).is_player_online(self.chester_bot.console_dst_checker)
-
+            print("meaw-2")
             if status_id is not None:
                 discord_id = str(discord_id)
 
@@ -294,6 +294,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                     await message.add_reaction(self.__replies['player_is_not_online'])
                     return False
                 # Попытка выдать вещи
+                print("meaw-1")
                 async with self.chester_bot.async_session() as session:
                     async with session.begin():
                         if await (
