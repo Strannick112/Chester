@@ -98,6 +98,7 @@ class Claim(Base):
                 session.add(self)
                 ku_id = (await (await self.awaitable_attrs.player).awaitable_attrs.steam_account).ku_id
                 tasks = []
+                print("meaw")
                 for world in main_config["worlds"]:
                     for numbered_item in await self.awaitable_attrs.numbered_items:
                         item_id = shlex.quote(
