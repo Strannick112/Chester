@@ -105,6 +105,7 @@ class Claim(Base):
                         )
                         command = f"""LookupPlayerInstByUserID(\\\"{ku_id}\\\").components.inventory:""" \
                             f"""GiveItem(SpawnPrefab(\\\"{item_id}\\\"))"""
+                        print(command)
                         tasks.append(
                             asyncio.create_task(
                                 console_dst_checker.check(
