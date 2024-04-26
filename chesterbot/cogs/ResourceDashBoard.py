@@ -26,6 +26,9 @@ class ResourceDashBoard:
             "Муравьиный лев": {"antlion": 0},
             "Король-краб": {"crabking": 0},
             "Скелеты игроков": {"skeleton": 0},
+            "Одержимый варг": {"mutatedwarg": 0},
+            "Кристальный циклоп-олень": {"mutateddeerclops": 0},
+            "Бронированный медведь-барсук": {"mutatedbearger": 0},
     },
         "Существа":{
             "Вольт-козы": {"lightninggoat": 0},
