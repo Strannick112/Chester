@@ -36,7 +36,7 @@ class Wipe(Base):
         status_max_lenght = 12
         for index, claim in enumerate(await self.awaitable_attrs.claims):
             claims += f"ᅠᅠ{index + 1}. [Заявка](" + str(claim.message_link) + ")ᅠ"
-            status = str(await (await claim.awaitable_attrs.status).name)
+            status = str((await claim.awaitable_attrs.status).name)
             # claims += status + str(((status_max_lenght - len(status)) // 2) * "ᅠ")
             claims += f"<@" + str(
                 (
