@@ -163,7 +163,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
         embed = discord.Embed(color=0x2F3136, title=f"Информация о вайпе", description="")
         embed.add_field(name="Номер вайпа", value=wipe_dict["Номер вайпа"], inline=True)
         embed.add_field(name="Начало", value=wipe_dict["Начало"], inline=True)
-        embed.add_field(name="Конец", value=wipe_dict["Конец"], inline=False)
+        embed.add_field(name="Конец", value=wipe_dict["Конец"], inline=True)
         embed.add_field(name="", value=wipe_dict["Заявки"]["discord_id"], inline=True)
         # embed.add_field(name="", value=wipe_dict["Заявки"]["claim_link"], inline=True)
         embed.add_field(name="", value=wipe_dict["Заявки"]["status"], inline=True)
