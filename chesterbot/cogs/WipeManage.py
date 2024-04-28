@@ -155,16 +155,19 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                 async with session.begin():
                     if wipe_id is None:
                         if last_wipe := (await session.execute(select(models.Wipe).order_by(models.Wipe.id.desc()))).scalars().first():
-                            text = await last_wipe.to_str()
+                            wipe_dict = await last_wipe.to_dict()
                     else:
                         wipe_id = int(wipe_id)
                         if last_wipe := (await session.execute(select(models.Wipe).filter_by(id=wipe_id))).scalars().first():
-                            text = await last_wipe.to_str()
-            await ctx.reply(embed=discord.Embed(
-                title="Информация о вайпе",
-                description=text,
-                colour=discord.Colour.dark_teal()
-            ))
+                            wipe_dict = await last_wipe.to_dict()
+            embed = discord.Embed(colour=discord.Colour.dark_teal(), title=f"Информация о вайпе")
+            embed.add_field(name="Номер вайпа", value=wipe_dict["Номер вайпа"], inline=True)
+            embed.add_field(name="Начало", value=wipe_dict["Начало"], inline=True)
+            embed.add_field(name="Конец", value=wipe_dict["Конец"], inline=True)
+            embed.add_field(name="", value=wipe_dict["claim"]["discord_id"], inline=False)
+            embed.add_field(name="", value=wipe_dict["claim"]["claim_link"], inline=True)
+            embed.add_field(name="", value=wipe_dict["claim"]["status"], inline=True)
+            await ctx.reply(embed=embed)
             return True
         except:
             await ctx.reply("Параметры команды указаны не верно")
