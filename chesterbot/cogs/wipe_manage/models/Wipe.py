@@ -38,6 +38,7 @@ class Wipe(Base):
                     await (await claim.awaitable_attrs.player).awaitable_attrs.discord_account
                 ).discord_id) + ">ᅠᅠ"
             claims += claim.message_link
+            claims += (await claim.awaitable_attrs.status).name
             claims += ";\n"
         claims += "]"
         stopped = '?' if self.stopped == self.started else str(self.stopped)
