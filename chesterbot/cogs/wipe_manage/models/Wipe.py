@@ -52,7 +52,7 @@ class Wipe(Base):
                 (
                     await (await claim.awaitable_attrs.player).awaitable_attrs.discord_account
                 ).discord_id) + ">\n"
-            claims['claim_link'] += "[Заявка](" + claim.message_link + ")\n"
+            claims['claim_link'] += claim.message_link + "\n"
             claims['status'] += (await claim.awaitable_attrs.status).name + "\n"
         stopped = '?' if self.stopped == self.started else str(self.stopped)
         return {"Номер вайпа": str(self.id), "Начало": str(self.started), "Конец": stopped, "Заявки": claims}
