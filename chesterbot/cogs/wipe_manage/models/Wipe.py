@@ -37,7 +37,7 @@ class Wipe(Base):
                 (
                     await (await claim.awaitable_attrs.player).awaitable_attrs.discord_account
                 ).discord_id) + ">ᅠᅠ"
-            claims += claim.message_link + "ᅠᅠ"
+            claims += "[Заявка](" + claim.message_link + ")ᅠᅠ"
             claims += (await claim.awaitable_attrs.status).name
             claims += ";\n"
         claims += "]"
