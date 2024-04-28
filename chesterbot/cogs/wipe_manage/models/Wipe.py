@@ -45,7 +45,8 @@ class Wipe(Base):
         output = t2a(
             header=["Автор", "Заявка", "Статус"],
             body=claims,
-            style=PresetStyle.thin_compact
+            style=PresetStyle.thin_compact,
+            column_widths=[35, 8, 15]
         )
         stopped = '?' if self.stopped == self.started else str(self.stopped)
         return (f"Номер вайпа={str(self.id)},\nНачало={str(self.started)},\nКонец={stopped!r},\n"
