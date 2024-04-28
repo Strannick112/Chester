@@ -1,4 +1,5 @@
 from datetime import datetime
+from table2ascii import table2ascii as t2a, PresetStyle
 from typing import List
 
 from sqlalchemy import DateTime, func, select
@@ -31,19 +32,24 @@ class Wipe(Base):
     #             f"Заявки={str(claims)}\n")
 
     async def to_str(self):
-        claims = "[\n"
+        claims = list()
         for index, claim in enumerate(await self.awaitable_attrs.claims):
-            claims += f"ᅠᅠ{index + 1}. <@" + str(
+            claims.append(list())
+            claims[-1].append(f"ᅠᅠ{index + 1}. <@" + str(
                 (
                     await (await claim.awaitable_attrs.player).awaitable_attrs.discord_account
-                ).discord_id) + ">ᅠᅠ"
-            claims += claim.message_link
-            claims += (await claim.awaitable_attrs.status).name
-            claims += ";\n"
-        claims += "]"
+                ).discord_id) + ">")
+            claims[-1].append(claim.message_link)
+            claims[-1].append((await claim.awaitable_attrs.status).name)
+
+        output = t2a(
+            header=["Автор", "Заявка", "Статус"],
+            body=claims,
+            style=PresetStyle.thin_compact
+        )
         stopped = '?' if self.stopped == self.started else str(self.stopped)
         return (f"Номер вайпа={str(self.id)},\nНачало={str(self.started)},\nКонец={stopped!r},\n"
-                f"Заявки={str(claims)}\n")
+                f"Заявки={str(output)}\n")
 
     @staticmethod
     async def get_or_create(session, **kwargs):
