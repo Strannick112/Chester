@@ -39,7 +39,7 @@ class Wipe(Base):
                 (
                     await (await claim.awaitable_attrs.player).awaitable_attrs.discord_account
                 ).discord_id) + ">")
-            claims[-1].append(claim.message_link)
+            claims[-1].append("[Заявка](" + claim.message_link + ")")
             claims[-1].append((await claim.awaitable_attrs.status).name)
 
         output = t2a(
@@ -49,7 +49,7 @@ class Wipe(Base):
         )
         stopped = '?' if self.stopped == self.started else str(self.stopped)
         return (f"Номер вайпа={str(self.id)},\nНачало={str(self.started)},\nКонец={stopped!r},\n"
-                f"Заявки={str(output)}\n")
+                f"Заявки:\n{str(output)}\n")
 
     @staticmethod
     async def get_or_create(session, **kwargs):
