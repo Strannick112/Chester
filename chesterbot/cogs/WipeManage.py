@@ -160,6 +160,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                         wipe_id = int(wipe_id)
                         if last_wipe := (await session.execute(select(models.Wipe).filter_by(id=wipe_id))).scalars().first():
                             wipe_dict = await last_wipe.to_dict()
+            print("meaw")
             embed = discord.Embed(colour=discord.Colour.dark_teal(), title=f"Информация о вайпе")
             embed.add_field(name="Номер вайпа", value=wipe_dict["Номер вайпа"], inline=True)
             embed.add_field(name="Начало", value=wipe_dict["Начало"], inline=True)
