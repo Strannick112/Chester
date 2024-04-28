@@ -166,7 +166,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
         embed.add_field(name="Конец", value=wipe_dict["Конец"], inline=True)
         embed.add_field(name="", value=wipe_dict["Заявки"]["discord_id"], inline=False)
         embed.add_field(name="", value=wipe_dict["Заявки"]["claim_link"], inline=True)
-        embed.add_field(name="", value=wipe_dict["Заявки"]["status"], inline=True)
+        # embed.add_field(name="", value=wipe_dict["Заявки"]["status"], inline=True)
         await ctx.reply(embed=embed)
         print("meaw-8")
         return True
