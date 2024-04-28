@@ -161,14 +161,22 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                         if last_wipe := (await session.execute(select(models.Wipe).filter_by(id=wipe_id))).scalars().first():
                             wipe_dict = await last_wipe.to_dict()
             print("meaw")
-            embed = discord.Embed(colour=discord.Colour.dark_teal(), title=f"Информация о вайпе")
+            embed = discord.Embed(color=0x2F3136, title=f"Информация о вайпе")
+            print("meaw-1")
             embed.add_field(name="Номер вайпа", value=wipe_dict["Номер вайпа"], inline=True)
+            print("meaw-2")
             embed.add_field(name="Начало", value=wipe_dict["Начало"], inline=True)
+            print("meaw-3")
             embed.add_field(name="Конец", value=wipe_dict["Конец"], inline=True)
+            print("meaw-4")
             embed.add_field(name="", value=wipe_dict["Заявки"]["discord_id"], inline=False)
+            print("meaw-5")
             embed.add_field(name="", value=wipe_dict["Заявки"]["claim_link"], inline=True)
+            print("meaw-6")
             embed.add_field(name="", value=wipe_dict["Заявки"]["status"], inline=True)
+            print("meaw-7")
             await ctx.reply(embed=embed)
+            print("meaw-8")
             return True
         except:
             await ctx.reply("Параметры команды указаны не верно")
