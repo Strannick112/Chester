@@ -150,28 +150,24 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
         Администратор может указать номер вайпа, информацию о котором он хочет получить. Принимает один аргумент:
         wipe_id: номер вайпа, информация о котором будет отправлена в чат.
         """
-        # try:
-        async with self.chester_bot.async_session() as session:
-            async with session.begin():
-                if wipe_id is None:
-                    if last_wipe := (await session.execute(select(models.Wipe).order_by(models.Wipe.id.desc()))).scalars().first():
-                        wipe_dict = await last_wipe.to_dict()
-                else:
-                    wipe_id = int(wipe_id)
-                    if last_wipe := (await session.execute(select(models.Wipe).filter_by(id=wipe_id))).scalars().first():
-                        wipe_dict = await last_wipe.to_dict()
-        embed = discord.Embed(color=0x2F3136, title=f"Информация о вайпе", description="")
-        embed.add_field(name="Номер вайпа", value=wipe_dict["Номер вайпа"], inline=True)
-        embed.add_field(name="Начало", value=wipe_dict["Начало"], inline=True)
-        embed.add_field(name="Конец", value=wipe_dict["Конец"], inline=True)
-        embed.add_field(name="", value=wipe_dict["Заявки"]["discord_id"], inline=True)
-        # embed.add_field(name="", value=wipe_dict["Заявки"]["claim_link"], inline=True)
-        embed.add_field(name="", value=wipe_dict["Заявки"]["status"], inline=True)
-        await ctx.reply(embed=embed)
-        print("meaw-8")
-        return True
-        # except:
-        #     await ctx.reply("Параметры команды указаны не верно")
+        try:
+            async with self.chester_bot.async_session() as session:
+                async with session.begin():
+                    if wipe_id is None:
+                        if last_wipe := (await session.execute(select(models.Wipe).order_by(models.Wipe.id.desc()))).scalars().first():
+                            text = await last_wipe.to_str()
+                    else:
+                        wipe_id = int(wipe_id)
+                        if last_wipe := (await session.execute(select(models.Wipe).filter_by(id=wipe_id))).scalars().first():
+                            text = await last_wipe.to_str()
+            await ctx.reply(embed=discord.Embed(
+                title="Информация о вайпе",
+                description=text,
+                colour=discord.Colour.dark_teal()
+            ))
+            return True
+        except:
+            await ctx.reply("Параметры команды указаны не верно")
 
 
     @commands.command(name=main_config['short_server_name'] + "_wipe_list")
