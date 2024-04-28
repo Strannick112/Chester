@@ -32,11 +32,10 @@ class Wipe(Base):
 
     async def to_str(self):
         claims = "[\n"
+        discord_name_lenght = 32
         for index, claim in enumerate(await self.awaitable_attrs.claims):
-            claims += f"ᅠᅠ{index + 1}. <@" + str(
-                (
-                    await (await claim.awaitable_attrs.player).awaitable_attrs.discord_account
-                ).discord_id) + ">ᅠᅠ"
+            discord_id = str((await (await claim.awaitable_attrs.player).awaitable_attrs.discord_account).discord_id)
+            claims += f"ᅠᅠ{index + 1}. <@" + discord_id + ">" + ((discord_name_lenght - len(discord_id)) * "ᅠ")
             claims += "[Заявка](" + claim.message_link + ")ᅠᅠ"
             claims += (await claim.awaitable_attrs.status).name
             claims += ";\n"
@@ -44,6 +43,7 @@ class Wipe(Base):
         stopped = '?' if self.stopped == self.started else str(self.stopped)
         return (f"Номер вайпа={str(self.id)},\nНачало={str(self.started)},\nКонец={stopped!r},\n"
                 f"Заявки={str(claims)}\n")
+
 
     @staticmethod
     async def get_or_create(session, **kwargs):
