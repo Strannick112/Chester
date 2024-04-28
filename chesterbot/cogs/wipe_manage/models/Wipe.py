@@ -35,7 +35,7 @@ class Wipe(Base):
         discord_name_lenght = 32
         for index, claim in enumerate(await self.awaitable_attrs.claims):
             discord_id = str((await (await claim.awaitable_attrs.player).awaitable_attrs.discord_account).discord_id)
-            claims += f"ᅠᅠ{index + 1}. <@" + discord_id + ">" + ((discord_name_lenght - len(discord_id)) * "ᅠ")
+            claims += f"ᅠᅠ{index + 1}. <@" + discord_id + ">" + (((discord_name_lenght - len(discord_id)) // 2) * "ᅠ")
             claims += "[Заявка](" + claim.message_link + ")ᅠᅠ"
             claims += (await claim.awaitable_attrs.status).name
             claims += ";\n"
