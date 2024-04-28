@@ -49,7 +49,7 @@ class Wipe(Base):
         )
         stopped = '?' if self.stopped == self.started else str(self.stopped)
         return (f"Номер вайпа={str(self.id)},\nНачало={str(self.started)},\nКонец={stopped!r},\n"
-                f"Заявки:\n{str(output)}\n")
+                f"Заявки:\n```{str(output)}```\n")
 
     @staticmethod
     async def get_or_create(session, **kwargs):
