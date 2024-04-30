@@ -1,7 +1,5 @@
 import codecs
 import json
-import re
-import subprocess
 
 import discord
 from discord.ext import commands
@@ -10,7 +8,6 @@ from chesterbot import main_config
 from chesterbot.ConsoleDSTChecker import ConsoleDSTChecker
 from chesterbot.cogs import BotManage, WipeManage
 from chesterbot.cogs.Halloween import Halloween
-from chesterbot.cogs.ResourceDashBoard import ResourceDashBoard
 from chesterbot.cogs.DashBoardEmbed import DashBoardEmbed
 from chesterbot.cogs.server_manage import ServerManage
 from chesterbot.cogs.server_manage.commands import send_message_to_game

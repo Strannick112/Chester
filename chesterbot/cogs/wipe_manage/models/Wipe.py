@@ -1,5 +1,3 @@
-from datetime import datetime
-from table2ascii import table2ascii as t2a, PresetStyle
 from typing import List
 
 from sqlalchemy import DateTime, func, select
@@ -19,17 +17,6 @@ class Wipe(Base):
 
     def __repr__(self) -> str:
         return f"Wipe(id={str(self.id)!r}, started={str(self.started)!r}, stopped={str(self.stopped)!r})"
-
-    # def __str__(self):
-    #     claims = "[\n"
-    #     for index, claim in enumerate(self.claims):
-    #         claims += f"ᅠᅠ{index + 1}. <@" + str(claim.player.discord_account.discord_id) + ">ᅠᅠ"
-    #         claims += claim.message_link
-    #         claims += ";\n"
-    #     claims += "]"
-    #     stopped = '?' if self.stopped == self.started else str(self.stopped)
-    #     return (f"Номер вайпа={str(self.id)},\nНачало={str(self.started)},\nКонец={stopped!r},\n"
-    #             f"Заявки={str(claims)}\n")
 
     async def to_str(self):
         claims = "[\n"

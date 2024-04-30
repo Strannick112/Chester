@@ -1,7 +1,5 @@
 import codecs
 import os
-import select
-import subprocess
 
 main_config = {
     'token': 'token',

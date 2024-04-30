@@ -1,4 +1,3 @@
-import asyncio
 import discord
 
 from chesterbot import main_config

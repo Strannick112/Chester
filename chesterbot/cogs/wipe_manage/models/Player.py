@@ -1,5 +1,4 @@
 from typing import List, Optional
-import re
 
 from sqlalchemy import ForeignKey, select
 from sqlalchemy.orm import Mapped, mapped_column, relationship

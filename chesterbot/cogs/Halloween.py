@@ -1,11 +1,6 @@
-import codecs
-import json
-import os
 import random
-import re
 
 from discord.ext import commands
-from chesterbot import main_config
 
 
 class Halloween(commands.Cog, name="Хеллоуин"):
