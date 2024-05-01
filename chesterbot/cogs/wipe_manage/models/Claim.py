@@ -90,6 +90,7 @@ class Claim(Base):
         new_claim = Claim(player_id=player_id, **kwargs)
         print(numbered_items)
         new_claim.numbered_items.clear()
+        new_claim.numbered_items = numbered_items
         print(new_claim.numbered_items)
         session.add(new_claim)
         return new_claim
