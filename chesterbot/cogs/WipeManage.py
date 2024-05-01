@@ -522,6 +522,15 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                 async with self.chester_bot.async_session() as session:
                     async with session.begin():
                         claim_without_items = await self.get_claim_by_discord_id(message.author.id, session=session)
+                        items = [
+                            await models.Item.get_or_create(session=session, name=item[0].strip(), console_id=item[1])
+                            for item in loot
+                        ]
+                        # await session.flush()
+                        numbered_items = [
+                            await models.NumberedItem.get_or_create(session=session, number=number, item_id=item.id)
+                            for number, item in enumerate(items)
+                        ]
                         for numbered_item in numbered_items:
                             claim_without_items.numbered_items.append(numbered_item)
                             session.add(claim_without_items)  # Добавляем только если нужно сохранять изменения
