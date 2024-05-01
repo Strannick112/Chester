@@ -99,8 +99,9 @@ class Claim(Base):
         # print(new_claim.numbered_items)
         session.add(new_claim)
         new_claim.numbered_items.clear()
-        new_claim.numbered_items = numbered_items
-        session.add(new_claim)  # Добавляем только если нужно сохранять изменения
+        for numbered_item in numbered_items:
+            new_claim.numbered_items.append(numbered_item)
+            session.add(new_claim)  # Добавляем только если нужно сохранять изменения
         # print(new_claim.numbered_items)
         return new_claim
 
