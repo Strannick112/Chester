@@ -521,25 +521,6 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                 print("meaw5")
                 async with self.chester_bot.async_session() as session:
                     async with session.begin():
-                        claim_without_items = await self.get_claim_by_discord_id(message.author.id, session=session)
-                        items = [
-                            await models.Item.get_or_create(session=session, name=item[0].strip(), console_id=item[1])
-                            for item in loot
-                        ]
-                        # await session.flush()
-                        numbered_items = [
-                            await models.NumberedItem.get_or_create(session=session, number=number, item_id=item.id)
-                            for number, item in enumerate(items)
-                        ]
-                        for numbered_item in numbered_items:
-                            claim_without_items.numbered_items.append(numbered_item)
-                            # session.add(claim_without_items)  # Добавляем только если нужно сохранять изменения
-                            # cur_claim_item = ClaimItem(claim_id=done_claim.id, numbered_item_id=numbered_item.id)
-                            # session.add(cur_claim_item)
-                        session.add(claim_without_items)
-                        await session.flush()
-                async with self.chester_bot.async_session() as session:
-                    async with session.begin():
                         await message.add_reaction(self.__replies['claim_accepted_is_ok'])
                         done_claim = await self.get_claim_by_discord_id(message.author.id, session=session)
                         print(await done_claim.awaitable_attrs.numbered_items)

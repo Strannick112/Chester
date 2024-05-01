@@ -92,21 +92,9 @@ class Claim(Base):
             session.expunge(old_claim)
         except:
             pass
-        new_claim = Claim(player_id=player_id, **kwargs)
-        # print(numbered_items)
-        # new_claim.numbered_items.clear()
-        # for numbered_item in numbered_items:
-        #     new_claim.numbered_items.append(numbered_item)
-        # print(new_claim.numbered_items)
+        new_claim = Claim(player_id=player_id, numbered_items=numbered_items, **kwargs)
         session.add(new_claim)
-        # new_claim.numbered_items.clear()
-        # for numbered_item in numbered_items:
-        #     # new_claim.numbered_items.append(numbered_item)
-        #     # session.add(new_claim)  # Добавляем только если нужно сохранять изменения
-        #     cur_claim_item = ClaimItem(claim_id=new_claim.id, numbered_item_id=numbered_item.id)
-        #     session.add(cur_claim_item)
-        #     await session.flush()
-        # print(new_claim.numbered_items)
+        await session.flush()
         return new_claim
 
     semaphore_give_items = asyncio.Semaphore(1)

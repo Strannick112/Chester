@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 
 from sqlalchemy import select, BigInteger, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -16,7 +16,7 @@ class NumberedItem(Base):
     item_id: Mapped[int] = mapped_column(ForeignKey("item.id"))
     item: Mapped[Optional["Item"]] = relationship("Item", back_populates="numbered_item")
 
-    claim: Mapped[Optional["Claim"]] = relationship("Claim",
+    claim: Mapped[List["Claim"]] = relationship("Claim",
         secondary='claim_item', back_populates="numbered_items"
     )
 
