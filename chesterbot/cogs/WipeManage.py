@@ -513,6 +513,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                             wipe_id=last_wipe.id,
                             revoke=self.revoke_reactions
                         )
+                        print(await claim.awaitable_attrs.numbered_items)
                         # await session.flush()
                         print("meaw3")
                         # await session.commit()
@@ -522,6 +523,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                     async with session.begin():
                         await message.add_reaction(self.__replies['claim_accepted_is_ok'])
                         done_claim = await self.get_claim_by_discord_id(message.author.id, session=session)
+                        print(await done_claim.awaitable_attrs.numbered_items)
                         count_days = await done_claim.check_days(console_dst_checker=self.chester_bot.console_dst_checker)
                 await self.sync_reactions(count_days, message)
             else:

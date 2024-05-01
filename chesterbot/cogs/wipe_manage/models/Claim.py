@@ -87,10 +87,11 @@ class Claim(Base):
             old_claim.numbered_items = numbered_items
             session.add(old_claim)  # Добавляем только если нужно сохранять изменения
             return old_claim
-        new_claim = Claim(numbered_items=numbered_items, player_id=player_id, **kwargs)
-        print("meaw1")
+        new_claim = Claim(player_id=player_id, **kwargs)
+        print(numbered_items)
+        new_claim.numbered_items.clear()
+        print(new_claim.numbered_items)
         session.add(new_claim)
-        print("meaw2")
         return new_claim
 
     semaphore_give_items = asyncio.Semaphore(1)
