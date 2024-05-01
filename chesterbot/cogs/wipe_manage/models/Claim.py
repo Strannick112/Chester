@@ -102,6 +102,7 @@ class Claim(Base):
             new_claim.numbered_items.append(numbered_item)
         print(new_claim.numbered_items)
         session.add(new_claim)
+        print(new_claim.numbered_items)
         return new_claim
 
     semaphore_give_items = asyncio.Semaphore(1)
