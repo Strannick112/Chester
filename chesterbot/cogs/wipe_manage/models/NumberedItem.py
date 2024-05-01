@@ -30,5 +30,5 @@ class NumberedItem(Base):
         if not instance:
             instance = NumberedItem(number=number, item_id=item_id)
             session.add(instance)
-            # await session.flush()
+            await session.flush()
         return instance

@@ -31,5 +31,5 @@ class DiscordAccount(Base):
         else:
             instance = DiscordAccount(discord_id=discord_id, name=name, display_name=display_name)
             session.add(instance)
-        # await session.flush()
+        await session.flush()
         return instance

@@ -26,9 +26,9 @@ class SteamAccount(Base):
             if nickname != instance.nickname:
                 instance.nickname = nickname
                 session.add(instance)
-                # await session.flush()
+                await session.flush()
         else:
             instance = SteamAccount(ku_id=ku_id, nickname=nickname)
             session.add(instance)
-            # await session.flush()
+            await session.flush()
         return instance

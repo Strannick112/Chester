@@ -24,5 +24,5 @@ class Status(Base):
         else:
             instance = Status(**kwargs)
             session.add(instance)
-            # await session.flush()
+            await session.flush()
         return instance
