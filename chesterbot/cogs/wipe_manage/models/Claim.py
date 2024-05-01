@@ -103,6 +103,7 @@ class Claim(Base):
         for numbered_item in numbered_items:
             new_claim.numbered_items.append(numbered_item)
             session.add(new_claim)  # Добавляем только если нужно сохранять изменения
+            await session.flush()
         # print(new_claim.numbered_items)
         return new_claim
 
