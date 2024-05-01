@@ -7,7 +7,7 @@ from sqlalchemy import func, select
 
 from chesterbot import main_config
 from chesterbot.cogs.server_manage.commands import send_message_to_game
-from chesterbot.cogs.wipe_manage.models import DiscordAccount, SteamAccount
+from chesterbot.cogs.wipe_manage.models import DiscordAccount, SteamAccount, ClaimItem
 import chesterbot.cogs.wipe_manage.models as models
 
 
@@ -519,6 +519,16 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                         # await session.commit()
                         print("meaw4")
                 print("meaw5")
+                async with self.chester_bot.async_session() as session:
+                    async with session.begin():
+                        claim_without_items = await self.get_claim_by_discord_id(message.author.id, session=session)
+                        for numbered_item in numbered_items:
+                            claim_without_items.numbered_items.append(numbered_item)
+                            session.add(claim_without_items)  # Добавляем только если нужно сохранять изменения
+                            # cur_claim_item = ClaimItem(claim_id=done_claim.id, numbered_item_id=numbered_item.id)
+                            # session.add(cur_claim_item)
+                        session.add(claim_without_items)
+                        await session.flush()
                 async with self.chester_bot.async_session() as session:
                     async with session.begin():
                         await message.add_reaction(self.__replies['claim_accepted_is_ok'])
