@@ -65,7 +65,8 @@ class Claim(Base):
 
     @staticmethod
     async def get_or_create(*, session, numbered_items, revoke, player_id, **kwargs):
-        result = await session.execute(select(Claim).filter_by(**kwargs, player_id=player_id))
+        query = select(Claim).filter_by(**kwargs, player_id=player_id)
+        result = await session.execute(query)
         claim = result.scalars().first()
         if claim:
             return claim
@@ -84,12 +85,10 @@ class Claim(Base):
             )
             old_claim.numbered_items.clear()
             old_claim.numbered_items = numbered_items
-            session.add(old_claim)
-            await session.flush()
+            session.add(old_claim)  # Добавляем только если нужно сохранять изменения
             return old_claim
         new_claim = Claim(numbered_items=numbered_items, player_id=player_id, **kwargs)
         session.add(new_claim)
-        await session.flush()
         return new_claim
 
     semaphore_give_items = asyncio.Semaphore(1)
