@@ -43,5 +43,5 @@ class Wipe(Base):
         else:
             instance = Wipe(**kwargs)
             session.add(instance)
-            await session.flush()
+            # await session.flush()
         return instance

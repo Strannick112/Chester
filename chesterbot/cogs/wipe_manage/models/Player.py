@@ -31,12 +31,12 @@ class Player(Base):
         if instance := (await session.execute(select(Player).filter_by(discord_account_id=kwargs.get("discord_account_id")))).scalars().first():
             instance.steam_account_id = kwargs.get("steam_account_id")
             session.add(instance)
-            await session.flush()
+            # await session.flush()
             return instance
         else:
             instance = Player(**kwargs)
             session.add(instance)
-        await session.flush()
+        # await session.flush()
         return instance
 
     async def is_player_online(self, console_dst_checker: ConsoleDSTChecker):

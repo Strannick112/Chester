@@ -22,5 +22,5 @@ class ClaimItem(Base):
         else:
             instance = ClaimItem(**kwargs)
             session.add(instance)
-        await session.flush()
+        # await session.flush()
         return instance

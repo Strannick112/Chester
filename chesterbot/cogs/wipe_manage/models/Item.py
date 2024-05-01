@@ -24,5 +24,5 @@ class Item(Base):
         if not instance:
             instance = Item(**kwargs)
             session.add(instance)
-            await session.flush()
+            # await session.flush()
         return instance
