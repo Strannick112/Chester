@@ -502,6 +502,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                             for number, item in enumerate(items)
                         ]
                         await session.flush()
+                        print(numbered_items)
                         claim = await models.Claim.get_or_create(
                             session=session,
                             message_id=message.id,
