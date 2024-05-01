@@ -70,6 +70,10 @@ class Claim(Base):
         claim = result.scalars().first()
         if claim:
             return claim
+        try:
+            session.expunge(claim)
+        except:
+            pass
         old_claim = await revoke(player_id, session)
         if old_claim:
             print("How Rare!!!")
@@ -87,6 +91,10 @@ class Claim(Base):
             old_claim.numbered_items = numbered_items
             session.add(old_claim)  # Добавляем только если нужно сохранять изменения
             return old_claim
+        try:
+            session.expunge(old_claim)
+        except:
+            pass
         new_claim = Claim(player_id=player_id, **kwargs)
         print(numbered_items)
         new_claim.numbered_items.clear()
