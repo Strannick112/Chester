@@ -85,7 +85,7 @@ class Claim(Base):
                     status_id=statuses.get("not_approved")
                 )
             )
-            (await old_claim.awaitable_attrs.numbered_items)
+            (await old_claim.awaitable_attrs.numbered_items).clear()
             session.add(old_claim)
             await session.flush()
             old_claim.numbered_items = numbered_items
