@@ -8,8 +8,8 @@ class ClaimItem(Base):
     __tablename__ = "claim_item"
 
     # id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    claim_id: Mapped[int] = mapped_column(ForeignKey("claim.id"))
-    numbered_item_id: Mapped[int] = mapped_column(ForeignKey("numbered_item.id"))
+    claim_id: Mapped[int] = mapped_column(ForeignKey("claim.id"), primary_key=True)
+    numbered_item_id: Mapped[int] = mapped_column(ForeignKey("numbered_item.id"), primary_key=True)
 
     def __repr__(self) -> str:
         return f"ClaimItem(id={str(self.id)!r}, claim_id={str(self.claim_id)!r}, numbered_item_id={str(self.numbered_item_id)!r})"
