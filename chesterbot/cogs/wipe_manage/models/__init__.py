@@ -20,8 +20,8 @@ from .Wipe import Wipe
 from .Status import Status
 from .Item import Item
 # from .ClaimItem import claim_item
-from .NumberedItem import NumberedItem
 from .ClaimItem import ClaimItem
+from .NumberedItem import NumberedItem
 from .Claim import Claim
 
 

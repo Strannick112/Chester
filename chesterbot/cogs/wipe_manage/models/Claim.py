@@ -6,7 +6,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from chesterbot import main_config
 from chesterbot.ConsoleDSTChecker import ConsoleDSTChecker
-from . import Status, statuses
+from . import Status, statuses, ClaimItem
 from .Base import Base
 # from .ClaimItem import claim_item
 
@@ -103,7 +103,7 @@ class Claim(Base):
         for numbered_item in numbered_items:
             # new_claim.numbered_items.append(numbered_item)
             # session.add(new_claim)  # Добавляем только если нужно сохранять изменения
-            cur_claim_item = claim_item(claim_id=new_claim.id, numbered_item_id=numbered_item.id)
+            cur_claim_item = ClaimItem(claim_id=new_claim.id, numbered_item_id=numbered_item.id)
             session.add(cur_claim_item)
             await session.flush()
         # print(new_claim.numbered_items)
