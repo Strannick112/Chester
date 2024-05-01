@@ -533,7 +533,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                         ]
                         for numbered_item in numbered_items:
                             claim_without_items.numbered_items.append(numbered_item)
-                            session.add(claim_without_items)  # Добавляем только если нужно сохранять изменения
+                            # session.add(claim_without_items)  # Добавляем только если нужно сохранять изменения
                             # cur_claim_item = ClaimItem(claim_id=done_claim.id, numbered_item_id=numbered_item.id)
                             # session.add(cur_claim_item)
                         session.add(claim_without_items)
