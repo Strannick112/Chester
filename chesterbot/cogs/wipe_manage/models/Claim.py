@@ -8,7 +8,7 @@ from chesterbot import main_config
 from chesterbot.ConsoleDSTChecker import ConsoleDSTChecker
 from . import Status, statuses
 from .Base import Base
-from .ClaimItem import claim_item
+# from .ClaimItem import claim_item
 
 import re
 import shlex
@@ -36,7 +36,7 @@ class Claim(Base):
     executed: Mapped[int] = mapped_column(DateTime, default=func.now())
 
     numbered_items: Mapped[List["NumberedItem"]] = relationship("NumberedItem",
-        secondary=claim_item, back_populates="claim"
+        secondary='claim_item', back_populates="claim"
     )
 
     def __repr__(self) -> str:

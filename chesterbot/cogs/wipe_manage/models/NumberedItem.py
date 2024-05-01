@@ -4,7 +4,7 @@ from sqlalchemy import select, BigInteger, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .Base import Base
-from .ClaimItem import claim_item
+# from .ClaimItem import claim_item
 
 
 class NumberedItem(Base):
@@ -17,7 +17,7 @@ class NumberedItem(Base):
     item: Mapped[Optional["Item"]] = relationship("Item", back_populates="numbered_item")
 
     claim: Mapped[Optional["Claim"]] = relationship("Claim",
-        secondary=claim_item, back_populates="numbered_items"
+        secondary='claim_item', back_populates="numbered_items"
     )
 
     def __repr__(self) -> str:
