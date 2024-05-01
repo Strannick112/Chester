@@ -65,29 +65,32 @@ class Claim(Base):
 
     @staticmethod
     async def get_or_create(*, session, numbered_items, revoke, player_id, **kwargs):
-        if already_claim := (await session.execute(select(Claim).filter_by(**kwargs, player_id=player_id))).scalars().first():
-            return already_claim
-        if old_claim := await revoke(player_id, session):
+        result = await session.execute(select(Claim).filter_by(**kwargs, player_id=player_id))
+        claim = result.scalars().first()
+        if claim:
+            return claim
+        old_claim = await revoke(player_id, session)
+        if old_claim:
             print("How Rare!!!")
-            await session.execute(update(Claim).where(Claim.player_id == player_id).values(
-                message_id=kwargs.get("message_id"),
-                channel_id=kwargs.get("channel_id"),
-                message_link=kwargs.get("message_link"),
-                status_id=statuses.get("not_approved"),
-            ))
-            (await old_claim.awaitable_attrs.numbered_items).clear()
-            session.add(old_claim)
-            await session.flush()
+            await session.execute(
+                update(Claim)
+                .where(Claim.player_id == player_id)
+                .values(
+                    message_id=kwargs.get("message_id"),
+                    channel_id=kwargs.get("channel_id"),
+                    message_link=kwargs.get("message_link"),
+                    status_id=statuses.get("not_approved")
+                )
+            )
+            old_claim.numbered_items.clear()
             old_claim.numbered_items = numbered_items
             session.add(old_claim)
             await session.flush()
             return old_claim
-        instance = Claim(numbered_items=numbered_items, player_id=player_id, **kwargs)
-        session.add(instance)
-        print("meaw2")
+        new_claim = Claim(numbered_items=numbered_items, player_id=player_id, **kwargs)
+        session.add(new_claim)
         await session.flush()
-        print("meaw3")
-        return instance
+        return new_claim
 
     semaphore_give_items = asyncio.Semaphore(1)
 
