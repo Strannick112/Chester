@@ -515,8 +515,9 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                         )
                         # await session.flush()
                         print("meaw3")
-                        await session.commit()
+                        # await session.commit()
                         print("meaw4")
+                print("meaw5")
                 async with self.chester_bot.async_session() as session:
                     async with session.begin():
                         await message.add_reaction(self.__replies['claim_accepted_is_ok'])
