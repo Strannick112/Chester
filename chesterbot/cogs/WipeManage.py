@@ -503,7 +503,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                         ]
                         # await session.flush()
                         print(numbered_items)
-                        claim = await models.Claim.get_or_create(
+                        await models.Claim.get_or_create(
                             session=session,
                             message_id=message.id,
                             message_link=message.jump_url,
@@ -513,7 +513,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                             wipe_id=last_wipe.id,
                             revoke=self.revoke_reactions
                         )
-                        print(await claim.awaitable_attrs.numbered_items)
+                        # print(await claim.awaitable_attrs.numbered_items)
                         # await session.flush()
                         print("meaw3")
                         # await session.commit()
