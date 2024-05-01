@@ -68,6 +68,7 @@ class Claim(Base):
         if already_claim := (await session.execute(select(Claim).filter_by(**kwargs, player_id=player_id))).scalars().first():
             return already_claim
         if old_claim := await revoke(player_id, session):
+            print("How Rare!!!")
             await session.execute(update(Claim).where(Claim.player_id == player_id).values(
                 message_id=kwargs.get("message_id"),
                 channel_id=kwargs.get("channel_id"),
