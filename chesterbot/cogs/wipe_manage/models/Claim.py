@@ -74,7 +74,6 @@ class Claim(Base):
                 message_link=kwargs.get("message_link"),
                 status_id=statuses.get("not_approved"),
             ))
-            print("How Rare!!!")
             (await old_claim.awaitable_attrs.numbered_items).clear()
             session.add(old_claim)
             await session.flush()
@@ -82,10 +81,12 @@ class Claim(Base):
             session.add(old_claim)
             await session.flush()
             return old_claim
-        print("meaw?")
         instance = Claim(numbered_items=numbered_items, player_id=player_id, **kwargs)
+        print("meaw1")
         session.add(instance)
+        print("meaw2")
         await session.flush()
+        print("meaw3")
         return instance
 
     semaphore_give_items = asyncio.Semaphore(1)
