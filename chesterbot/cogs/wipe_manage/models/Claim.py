@@ -6,7 +6,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from chesterbot import main_config
 from chesterbot.ConsoleDSTChecker import ConsoleDSTChecker
-from . import Status, statuses, ClaimItem
+from . import Status, statuses, ClaimItem, Wipe
 from .Base import Base
 # from .ClaimItem import claim_item
 
@@ -77,6 +77,7 @@ class Claim(Base):
             await session.execute(
                 update(Claim)
                 .where(Claim.player_id == player_id)
+                .where(Claim.wipe_id == (await session.execute(select(Wipe).order_by(Wipe.id.desc()))).scalars().first().id)
                 .values(
                     message_id=kwargs.get("message_id"),
                     channel_id=kwargs.get("channel_id"),
@@ -84,9 +85,10 @@ class Claim(Base):
                     status_id=statuses.get("not_approved")
                 )
             )
-            old_claim.numbered_items.clear()
+            # old_claim.numbered_items.clear()
             old_claim.numbered_items = numbered_items
             session.add(old_claim)  # Добавляем только если нужно сохранять изменения
+            await session.flush()
             return old_claim
         try:
             session.expunge(old_claim)

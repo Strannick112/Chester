@@ -479,29 +479,24 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                             name=message.author.name,
                             display_name=message.author.display_name
                         )
-                        # await session.flush()
                         steam_account = await SteamAccount.get_or_create(
                             session=session,
                             ku_id=raw_claim[0][1],
                             nickname=raw_claim[0][0]
                         )
-                        # await session.flush()
                         player = await models.Player.get_or_create(
                             session=session,
                             discord_account_id=discord_account.id,
                             steam_account_id=steam_account.id
                         )
-                        # await session.flush()
                         items = [
                             await models.Item.get_or_create(session=session, name=item[0].strip(), console_id=item[1])
                             for item in loot
                         ]
-                        # await session.flush()
                         numbered_items = [
                             await models.NumberedItem.get_or_create(session=session, number=number, item_id=item.id)
                             for number, item in enumerate(items)
                         ]
-                        # await session.flush()
                         print(numbered_items)
                         await models.Claim.get_or_create(
                             session=session,
@@ -513,10 +508,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                             wipe_id=last_wipe.id,
                             revoke=self.revoke_reactions
                         )
-                        # print(await claim.awaitable_attrs.numbered_items)
-                        # await session.flush()
                         print("meaw3")
-                        # await session.commit()
                         print("meaw4")
                 print("meaw5")
                 async with self.chester_bot.async_session() as session:
