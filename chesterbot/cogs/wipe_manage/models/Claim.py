@@ -65,8 +65,8 @@ class Claim(Base):
 
     @staticmethod
     async def get_or_create(*, session, numbered_items, revoke, player_id, **kwargs):
-        if instance := (await session.execute(select(Claim).filter_by(**kwargs, player_id=player_id))).scalars().first():
-            return instance
+        if already_claim := (await session.execute(select(Claim).filter_by(**kwargs, player_id=player_id))).scalars().first():
+            return already_claim
         if old_claim := await revoke(player_id, session):
             await session.execute(update(Claim).where(Claim.player_id == player_id).values(
                 message_id=kwargs.get("message_id"),
@@ -82,7 +82,6 @@ class Claim(Base):
             await session.flush()
             return old_claim
         instance = Claim(numbered_items=numbered_items, player_id=player_id, **kwargs)
-        print("meaw1")
         session.add(instance)
         print("meaw2")
         await session.flush()

@@ -513,15 +513,10 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                             wipe_id=last_wipe.id,
                             revoke=self.revoke_reactions
                         )
-                        print("meaw4")
                         await session.flush()
-                        print("meaw5")
                         await message.add_reaction(self.__replies['claim_accepted_is_ok'])
-                        print("meaw6")
                         count_days = await claim.check_days(console_dst_checker=self.chester_bot.console_dst_checker)
-                        print("meaw7")
                         await session.commit()
-                        print("meaw8")
                 await self.sync_reactions(count_days, message)
             else:
                 await message.add_reaction(self.__replies['claim_warning'])
