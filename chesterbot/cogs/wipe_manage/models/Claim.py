@@ -82,11 +82,12 @@ class Claim(Base):
                     message_id=kwargs.get("message_id"),
                     channel_id=kwargs.get("channel_id"),
                     message_link=kwargs.get("message_link"),
-                    status_id=statuses.get("not_approved")
+                    status_id=statuses.get("not_approved"),
+                    numbered_items=numbered_items
                 )
             )
             # old_claim.numbered_items.clear()
-            old_claim.numbered_items = numbered_items
+            # old_claim.numbered_items = numbered_items
             session.add(old_claim)  # Добавляем только если нужно сохранять изменения
             await session.flush()
             return old_claim
