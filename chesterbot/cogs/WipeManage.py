@@ -114,6 +114,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
         Администратор может указать уникальный идентификатор пользователя, заявку которого он хочет получить. Принимает один аргумент:
         discord_id: id пользователя, чья заявка будет отправлена в чат.
         """
+        text = None
         try:
             if discord_id is not None:
                 discord_id = int(discord_id)
