@@ -206,6 +206,127 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
             await message.add_reaction(self.__replies['claim_error'])
             await send_message_to_game("Chester_bot", self.__replies['give_items_fail_who_are_you'])
 
+    async def take_items_from_game(self, steam_nickname):
+        message = await self.command_webhook.send(
+            content="Игрок с ником " + steam_nickname + " просит забрать вещи", wait=True,
+            avatar_url=self.__replies["info_picture"]
+        )
+        async with self.chester_bot.async_session() as session:
+            async with session.begin():
+                if claim := await self.get_claim_by_steam_nickname(steam_nickname, session):
+                    discord_id = await claim.get_discord_id()
+        if discord_id:
+            await self.take_items_from_discord(message, discord_id)
+            return
+        else:
+            await message.reply(
+                content=self.__replies['take_items_fail'],
+            )
+            await message.add_reaction(self.__replies['claim_error'])
+            await send_message_to_game("Chester_bot", self.__replies['take_items_fail'])
+
+    @commands.command(name=main_config['short_server_name'] + "_take_items")
+    async def take_items_from_discord(self, ctx, discord_id=None):
+        """
+        Забирает у игрока предметы на сервере по оставленной заявке
+        Администратор может выполнить эту команду от имени любого другого игрока.
+        Параметры:
+        discord_id: уникальный целочисленный ид пользователя в дискорде
+        """
+
+        # ДОБАВИТЬ ПРОВЕРКУ ДНЕЙ
+        # ДОБАВИТЬ ПРОВЕРКУ РОЛЕЙ И КОЛИЧЕСТВО ПРЕДМЕТОВ
+        # ДОБАВИТЬ ВОЗВРАЩЕНИЕ ПРЕДМЕТОВ ОБРАТНО ДО ВАЙПА
+        # РЕАЛИЗОВАТЬ СПИСОК ЗАПРЕЩЕННЫХ ДЛЯ ПЕРЕНОСА ПРЕДМЕТОВ
+        # Проверить функцию @check_me
+        # Добавить общую функцию @check_me и @take_me
+        # Подумать на счет удаления сообщения с заявкой
+        try:
+            if discord_id is not None:
+                discord_id = int(discord_id)
+        except:
+            await ctx.reply("Параметры команды указаны не верно")
+        if discord_id is None:
+            discord_id = ctx.author.id
+        message = ctx if type(ctx) is WebhookMessage else ctx.message
+
+        try:
+            status_id = None
+            # Проверка на наличие заявки у игрока
+            async with self.chester_bot.async_session() as session:
+                async with session.begin():
+                    if claim := await self.get_claim_by_discord_id(discord_id=discord_id, session=session):
+                        status_id = claim.status_id
+                        steam_nickname = await claim.get_steam_nickname()
+                        channel_id = claim.channel_id
+                        message_id = claim.message_id
+                        is_player_online = not await (
+                            await claim.awaitable_attrs.player
+                        ).is_player_online(self.chester_bot.console_dst_checker)
+            if status_id is not None:
+                discord_id = str(discord_id)
+
+                # Проверка на неодобренность заявки
+                if status_id != models.statuses.get("not_approved"):
+                    await message.reply(
+                        content="[" + main_config["server_name"] + "] <@" +
+                                discord_id + "> , " +
+                                self.__replies['take_items_fail_approved']
+                    )
+                    await message.add_reaction(self.__replies['claim_error'])
+                    await send_message_to_game("Chester_bot", steam_nickname + ", " + self.__replies[
+                        'take_items_fail_approved']
+                    )
+                    return False
+
+                # Проверка на наличие игрока в игре
+                if is_player_online:
+                    await message.reply(
+                        content="[" + main_config["server_name"] + "] <@" +
+                                discord_id + "> , " +
+                                self.__replies['player_is_not_online_phrase']
+                    )
+                    await message.add_reaction(self.__replies['player_is_not_online'])
+                    return False
+
+                # Попытка забрать вещи
+                async with self.chester_bot.async_session() as session:
+                    async with session.begin():
+                        if await (
+                                await self.get_claim_by_discord_id(discord_id=int(discord_id), session=session)
+                        ).take_items(
+                            session=session,
+                            console_dst_checker=self.chester_bot.console_dst_checker
+                        ):
+                            await message.reply(
+                                content="[" + main_config["server_name"] + "] <@" +
+                                        discord_id + "> , " +
+                                        self.__replies['take_items_success']
+                            )
+                            await message.add_reaction(self.__replies['take_items_success'])
+                            await send_message_to_game("Chester_bot",
+                                                       steam_nickname + ", " + self.__replies['take_items_success'])
+                            await self.mark_claim_approved(channel_id=channel_id, message_id=message_id)
+                            return True
+                        else:
+                            await message.reply(
+                                content="[" + main_config["server_name"] + "] <@" +
+                                        discord_id + "> , " +
+                                        self.__replies['take_items_fail']
+                            )
+                            await message.add_reaction(self.__replies['claim_error'])
+                            await send_message_to_game("Chester_bot",
+                                                       steam_nickname + ", " + self.__replies['take_items_fail'])
+                            return False
+        except Exception as error:
+            print(error)
+        await message.reply(
+            content=self.__replies['take_items_fail']
+        )
+        await message.add_reaction(self.__replies['claim_error'])
+        await send_message_to_game("Chester_bot", self.__replies['take_items_fail'])
+        return False
+
     @commands.command(name=main_config['short_server_name'] + "_give_items")
     async def give_items_from_discord(self, ctx, discord_id=None):
         """
@@ -358,9 +479,10 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                         to_approve['bot_ok'] = True
                     continue
                 if reaction.__str__() == self.__replies['claim_admin_approved_is_ok']:
+                    if reaction.me:
+                        to_approve['admin_ok'] = True
+                        break
                     async for user in reaction.users():
-                        if user == self.chester_bot.user:
-                            continue
                         for role in user.roles:
                             if int(self.chester_bot.replies["admin_role_id"]) == role.id:
                                 to_approve['admin_ok'] = True
@@ -563,6 +685,15 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                         if reaction.me:
                             await msg.add_reaction(self.__replies['claim_items_executed'])
                             return True
+            return False
+        except Exception as error:
+            print(error)
+
+    async def mark_claim_approved(self, channel_id, message_id):
+        try:
+            if msg := await self.chester_bot.get_channel(channel_id).fetch_message(message_id):
+                await msg.add_reaction(self.__replies['claim_admin_approved_is_ok'])
+                return True
             return False
         except Exception as error:
             print(error)

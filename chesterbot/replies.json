@@ -20,6 +20,8 @@
     "rollback_claim_success": "Откат заявки успешно выполенен",
     "rollback_claim_fall": "Откат заявки не выполнен",
     "player_is_not_online_phrase": "Кажется, след потерян… но я буду все еще здесь, когда вы появитесь в игре",
+    "take_items_success": "Отправка предметов в следующий вайп выполнена успешно",
+    "take_items_fail_approved": "Ваши предметы уже изъяты!",
 
     "claim_warning": "⚠",
     "claim_accepted_is_ok": "<:3hmm:872133257649594499>",
@@ -33,6 +35,7 @@
     "commands_channel_id": "[1025151299391586304, 1025743931947896844, 1021843197942579320, 1163507216154894397]",
     "admin_role_id": "1022121631814000650",
     "admin_role_id_for_mention": "794688406948151308",
+    "take_items_fail": "Изъятие предметов не выполнено",
 
     "unknown": "https://media.discordapp.net/attachments/871824345780080690/1112422709352206336/unknown.png",
     "walter": "https://media.discordapp.net/attachments/871824345780080690/1112422709616443502/Walter.png",

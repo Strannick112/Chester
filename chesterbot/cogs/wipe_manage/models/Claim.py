@@ -138,6 +138,36 @@ class Claim(Base):
                 await session.rollback()
                 return False
 
+    semaphore_take_items = asyncio.Semaphore(1)
+
+    async def take_items(self, *, console_dst_checker: ConsoleDSTChecker):
+        ku_id = (await (await self.awaitable_attrs.player).awaitable_attrs.steam_account).ku_id
+        tasks = []
+        for world in main_config["worlds"]:
+            items_row = "{"
+            for numbered_item in await self.awaitable_attrs.numbered_items:
+                items_row += '\\\"' + shlex.quote(
+                    (await numbered_item.awaitable_attrs.item).console_id
+                ) + '\\\"'
+            items_row += "}"
+            command = f"""DelItems(\\\"{ku_id}\\\", """ + items_row + """)"""
+            tasks.append(
+                asyncio.create_task(
+                    console_dst_checker.check(
+                        command,
+                        r'DelItems:\s+' + ku_id + r'\s+([\d])',
+                        world["shard_id"], world["screen_name"], "1", 5
+                    )
+                )
+            )
+        for task in asyncio.as_completed(tasks):
+            result = await task
+            if int(result) == 0:
+                return True
+            if int(result) == 2:
+                return False
+        return False
+
     async def check_days(self, *, console_dst_checker: ConsoleDSTChecker):
         ku_id = (await (await self.awaitable_attrs.player).awaitable_attrs.steam_account).ku_id
         raw_results = set()
