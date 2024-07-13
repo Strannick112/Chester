@@ -128,11 +128,9 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                 if role.id == int(self.chester_bot.replies["admin_role_id"]):
                     requested_discord_id = discord_id
                     break
-        print(requested_discord_id)
         async with self.chester_bot.async_session() as session:
             async with session.begin():
                 if claim := await self.get_claim_by_discord_id(requested_discord_id, session=session):
-                    print("meaw")
                     text = await claim.to_str()
         if text is not None:
             await ctx.reply(embed=discord.Embed(
@@ -352,7 +350,6 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
         и если все правила соблюдены - изменяет состояние заявки.
         Принимает один аргумент: ник игрока в дискорде
         """
-        print("APPROVE")
         to_approve = {'bot_ok': False, 'admin_ok': False}
         try:
             for reaction in msg.reactions:
@@ -370,7 +367,6 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                                 break
                     continue
             if to_approve['bot_ok'] and to_approve['admin_ok']:
-                print("APPROVE_2")
                 await claim.approve(session=session)
                 await msg.add_reaction(self.__replies['claim_full_approved'])
                 return True
@@ -500,7 +496,6 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                             await models.NumberedItem.get_or_create(session=session, number=number, item_id=item.id)
                             for number, item in enumerate(items)
                         ]
-                        print(numbered_items)
                         await models.Claim.get_or_create(
                             session=session,
                             message_id=message.id,
@@ -511,14 +506,10 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                             wipe_id=last_wipe.id,
                             revoke=self.revoke_reactions
                         )
-                        print("meaw3")
-                        print("meaw4")
-                print("meaw5")
                 async with self.chester_bot.async_session() as session:
                     async with session.begin():
                         await message.add_reaction(self.__replies['claim_accepted_is_ok'])
                         done_claim = await self.get_claim_by_discord_id(message.author.id, session=session)
-                        print(await done_claim.awaitable_attrs.numbered_items)
                         count_days = await done_claim.check_days(console_dst_checker=self.chester_bot.console_dst_checker)
                 await self.sync_reactions(count_days, message)
             else:
@@ -582,7 +573,6 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
         ))).scalars().first()
 
     async def get_claim_by_discord_id(self, discord_id, session):
-        print("get_claim_by_discord_id")
         return (await session.execute(select(
             models.Claim
         ).join(
