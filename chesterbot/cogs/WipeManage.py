@@ -582,6 +582,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
         ))).scalars().first()
 
     async def get_claim_by_discord_id(self, discord_id, session):
+        print("get_claim_by_discord_id")
         return (await session.execute(select(
             models.Claim
         ).join(
