@@ -128,9 +128,11 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                 if role.id == int(self.chester_bot.replies["admin_role_id"]):
                     requested_discord_id = discord_id
                     break
+        print(requested_discord_id)
         async with self.chester_bot.async_session() as session:
             async with session.begin():
                 if claim := await self.get_claim_by_discord_id(requested_discord_id, session=session):
+                    print("meaw")
                     text = await claim.to_str()
         if text is not None:
             await ctx.reply(embed=discord.Embed(
