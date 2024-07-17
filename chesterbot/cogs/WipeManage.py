@@ -200,11 +200,9 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
             await self.give_items_from_discord(message, discord_id)
             return
         else:
-            await message.reply(
-                content=self.__replies['give_items_fail_who_are_you'],
-            )
-            await message.add_reaction(self.__replies['claim_error'])
-            await send_message_to_game("Chester_bot", self.__replies['give_items_fail_who_are_you'])
+            await self._loud_message(
+                message=message, discord_id=discord_id, steam_nickname=steam_nickname,
+                text=self.__replies['give_items_fail_who_are_you'], reaction=self.__replies['claim_error'])
 
     async def take_items_from_game(self, steam_nickname):
         message = await self.command_webhook.send(
@@ -219,11 +217,9 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
             await self.take_items_from_discord(message, discord_id)
             return
         else:
-            await message.reply(
-                content=self.__replies['take_items_fail'],
-            )
-            await message.add_reaction(self.__replies['claim_error'])
-            await send_message_to_game("Chester_bot", self.__replies['take_items_fail'])
+            await self._loud_message(
+                message=message, discord_id=discord_id, steam_nickname=steam_nickname,
+                text=self.__replies['take_items_fail'], reaction=self.__replies['claim_error'])
 
     @commands.command(name=main_config['short_server_name'] + "_take_items")
     async def take_items_from_discord(self, ctx, discord_id=None):
@@ -268,15 +264,9 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
 
                 # Проверка на неодобренность заявки
                 if status_id != models.statuses.get("not_approved"):
-                    await message.reply(
-                        content="[" + main_config["server_name"] + "] <@" +
-                                discord_id + "> , " +
-                                self.__replies['take_items_fail_approved']
-                    )
-                    await message.add_reaction(self.__replies['claim_error'])
-                    await send_message_to_game("Chester_bot", steam_nickname + ", " + self.__replies[
-                        'take_items_fail_approved']
-                    )
+                    await self._loud_message(
+                        message=message, discord_id=discord_id, steam_nickname=steam_nickname,
+                        text=self.__replies['take_items_fail_approved'], reaction=self.__replies['claim_error'])
                     return False
 
                 # Проверка на наличие игрока в игре
@@ -289,44 +279,58 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                     await message.add_reaction(self.__replies['player_is_not_online'])
                     return False
 
+                # Подсчет количества вещей по ролям
+                items = {
+                    "checked_items": 0,
+                    "unchecked_items": 0
+                }
+                for role in ctx.message.server.get_member(discord_id).roles:
+                    if (role_info := self.chester_bot.replies["roles_for_items"].get(str(role.id))) is not None:
+                        items["checked_items"] += role_info["checked_items"]
+                        items["unchecked_items"] += role_info["unchecked_items"]
+
                 # Попытка забрать вещи
                 async with self.chester_bot.async_session() as session:
                     async with session.begin():
-                        if await (
-                                await self.get_claim_by_discord_id(discord_id=int(discord_id), session=session)
-                        ).take_items(
+                        _claim = await( await self.get_claim_by_discord_id(discord_id=int(discord_id), session=session) )
+                        # Проверка на количество вещей в заявке
+                        if len((await _claim.awaitable_attrs.numbered_items)) > (items["checked_items"] + items["unchecked_items"]):
+                            await self._loud_message(
+                                message=message, discord_id=discord_id, steam_nickname=steam_nickname,
+                                text=self.__replies['take_items_fail'], reaction=self.__replies['claim_error'])
+                        # Попытка забрать вещи
+                        if _claim.take_items(
+                            checked_items=items["checked_items"],
                             session=session,
                             console_dst_checker=self.chester_bot.console_dst_checker
                         ):
-                            await message.reply(
-                                content="[" + main_config["server_name"] + "] <@" +
-                                        discord_id + "> , " +
-                                        self.__replies['take_items_success']
-                            )
-                            await message.add_reaction(self.__replies['take_items_success'])
-                            await send_message_to_game("Chester_bot",
-                                                       steam_nickname + ", " + self.__replies['take_items_success'])
+                            await self._loud_message(
+                                message=message, discord_id=discord_id, steam_nickname=steam_nickname,
+                                text=self.__replies['take_items_success'], reaction=self.__replies['take_items_success'])
                             await self.mark_claim_approved(channel_id=channel_id, message_id=message_id)
                             return True
                         else:
-                            await message.reply(
-                                content="[" + main_config["server_name"] + "] <@" +
-                                        discord_id + "> , " +
-                                        self.__replies['take_items_fail']
-                            )
-                            await message.add_reaction(self.__replies['claim_error'])
-                            await send_message_to_game("Chester_bot",
-                                                       steam_nickname + ", " + self.__replies['take_items_fail'])
+                            await self._loud_message(
+                                message=message, discord_id=discord_id, steam_nickname=steam_nickname,
+                                text=self.__replies['take_items_fail'], reaction=self.__replies['claim_error'])
                             return False
         except Exception as error:
             print(error)
-        await message.reply(
-            content=self.__replies['take_items_fail']
-        )
-        await message.add_reaction(self.__replies['claim_error'])
-        await send_message_to_game("Chester_bot", self.__replies['take_items_fail'])
+        await self._loud_message(
+            message=message, discord_id=discord_id, steam_nickname=steam_nickname,
+            text=self.__replies['take_items_fail'], reaction=self.__replies['claim_error'])
         return False
 
+    @staticmethod
+    async def _loud_message(message, discord_id, steam_nickname, text, reaction):
+        await message.reply(
+            content="[" + main_config["server_name"] + "] <@" +
+                    discord_id + "> , " +
+                    text
+        )
+        await message.add_reaction(reaction)
+        await send_message_to_game("Chester_bot",
+                                   steam_nickname + ", " + text)
     @commands.command(name=main_config['short_server_name'] + "_give_items")
     async def give_items_from_discord(self, ctx, discord_id=None):
         """
@@ -362,28 +366,16 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
 
                 # Проверка на одобренность заявки
                 if status_id == models.statuses.get("not_approved"):
-
-                    await message.reply(
-                        content="[" + main_config["server_name"] + "] <@" +
-                                discord_id + "> , " +
-                                self.__replies['give_items_fail_not_approved']
-                    )
-                    await message.add_reaction(self.__replies['claim_error'])
-                    await send_message_to_game("Chester_bot", steam_nickname + ", " + self.__replies[
-                        'give_items_fail_not_approved']
-                    )
+                    await self._loud_message(
+                        message=message, discord_id=discord_id, steam_nickname=steam_nickname,
+                        text=self.__replies['give_items_fail_not_approved'], reaction=self.__replies['claim_error'])
                     return False
 
                 # Проверка на выполненность заявки
                 if status_id == models.statuses.get("executed"):
-                    await message.reply(
-                        content="[" + main_config["server_name"] + "] <@" +
-                                discord_id + "> , " +
-                                self.__replies['give_items_fail_executed']
-                    )
-                    await message.add_reaction(self.__replies['claim_error'])
-                    await send_message_to_game("Chester_bot", steam_nickname + ", " + self.__replies[
-                        'give_items_fail_executed'])
+                    await self._loud_message(
+                        message=message, discord_id=discord_id, steam_nickname=steam_nickname,
+                        text=self.__replies['give_items_fail_executed'], reaction=self.__replies['claim_error'])
                     return False
 
                 # Проверка на наличие игрока в игре
@@ -404,33 +396,21 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                             session=session,
                             console_dst_checker=self.chester_bot.console_dst_checker
                         ):
-                            await message.reply(
-                                content="[" + main_config["server_name"] + "] <@" +
-                                        discord_id + "> , " +
-                                        self.__replies['give_items_success']
-                            )
-                            await message.add_reaction(self.__replies['claim_items_executed'])
-                            await send_message_to_game("Chester_bot",
-                                                       steam_nickname + ", " + self.__replies['give_items_success'])
+                            await self._loud_message(
+                                message=message, discord_id=discord_id, steam_nickname=steam_nickname,
+                                text=self.__replies['give_items_success'], reaction=self.__replies['claim_items_executed'])
                             await self.mark_claim_executed(channel_id=channel_id, message_id=message_id)
                             return True
                         else:
-                            await message.reply(
-                                content="[" + main_config["server_name"] + "] <@" +
-                                        discord_id + "> , " +
-                                        self.__replies['give_items_fail']
-                            )
-                            await message.add_reaction(self.__replies['claim_error'])
-                            await send_message_to_game("Chester_bot",
-                                                       steam_nickname + ", " + self.__replies['give_items_fail'])
+                            await self._loud_message(
+                                message=message, discord_id=discord_id, steam_nickname=steam_nickname,
+                                text=self.__replies['give_items_fail'], reaction=self.__replies['claim_error'])
                             return False
         except Exception as error:
             print(error)
-        await message.reply(
-            content=self.__replies['give_items_fail_who_are_you']
-        )
-        await message.add_reaction(self.__replies['claim_error'])
-        await send_message_to_game("Chester_bot", self.__replies['give_items_fail_who_are_you'])
+        await self._loud_message(
+            message=message, discord_id=discord_id, steam_nickname=steam_nickname,
+            text=self.__replies['give_items_fail_who_are_you'], reaction=self.__replies['claim_error'])
         return False
 
     @commands.command(name=main_config['short_server_name'] + "_rollback_claim")

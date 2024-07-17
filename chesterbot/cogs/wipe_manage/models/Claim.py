@@ -36,21 +36,22 @@ class Claim(Base):
     executed: Mapped[int] = mapped_column(DateTime, default=func.now())
 
     numbered_items: Mapped[List["NumberedItem"]] = relationship("NumberedItem",
-        secondary='claim_item', back_populates="claim"
-    )
+                                                                secondary='claim_item', back_populates="claim"
+                                                                )
 
     def __repr__(self) -> str:
         return f"Claim(id={str(self.id)!r}, message_id={str(self.message_id)}," + \
-                f"channel_id={str(self.channel_id)}, player_id={str(self.player_id)!r}," + \
-                f" status_id={str(self.status_id)!r}, wipe_id={str(self.wipe_id)!r}," + \
-                f" started={str(self.started)!r}, approved={str(self.approved)!r}," + \
-                f" executed={str(self.executed)!r}, message_link={str(self.message_link)})"
+            f"channel_id={str(self.channel_id)}, player_id={str(self.player_id)!r}," + \
+            f" status_id={str(self.status_id)!r}, wipe_id={str(self.wipe_id)!r}," + \
+            f" started={str(self.started)!r}, approved={str(self.approved)!r}," + \
+            f" executed={str(self.executed)!r}, message_link={str(self.message_link)})"
 
     async def to_str(self):
         items = "[\n"
         for numbered_item in await self.awaitable_attrs.numbered_items:
             item = await numbered_item.awaitable_attrs.item
-            items += f'ᅠᅠ{numbered_item.number + 1}. ' + {'console_id': item.console_id, 'name': item.name}.__str__() + ',\n'
+            items += f'ᅠᅠ{numbered_item.number + 1}. ' + {'console_id': item.console_id,
+                                                          'name': item.name}.__str__() + ',\n'
         items += "]"
         approved = '?' if self.approved == self.started else str(self.approved)
         executed = '?' if self.executed == self.started else str(self.executed)
@@ -77,7 +78,8 @@ class Claim(Base):
             await session.execute(
                 update(Claim)
                 .where(Claim.player_id == player_id)
-                .where(Claim.wipe_id == (await session.execute(select(Wipe).order_by(Wipe.id.desc()))).scalars().first().id)
+                .where(Claim.wipe_id == (
+                    await session.execute(select(Wipe).order_by(Wipe.id.desc()))).scalars().first().id)
                 .values(
                     message_id=kwargs.get("message_id"),
                     channel_id=kwargs.get("channel_id"),
@@ -118,7 +120,7 @@ class Claim(Base):
                             (await numbered_item.awaitable_attrs.item).console_id
                         )
                         command = f"""LookupPlayerInstByUserID(\\\"{ku_id}\\\").components.inventory:""" \
-                            f"""GiveItem(SpawnPrefab(\\\"{item_id}\\\"))"""
+                                  f"""GiveItem(SpawnPrefab(\\\"{item_id}\\\"))"""
                         tasks.append(
                             asyncio.create_task(
                                 console_dst_checker.check(
@@ -140,7 +142,7 @@ class Claim(Base):
 
     semaphore_take_items = asyncio.Semaphore(1)
 
-    async def take_items(self, *, console_dst_checker: ConsoleDSTChecker):
+    async def take_items(self, *, checked_items, console_dst_checker: ConsoleDSTChecker):
         ku_id = (await (await self.awaitable_attrs.player).awaitable_attrs.steam_account).ku_id
         tasks = []
         for world in main_config["worlds"]:
@@ -150,7 +152,7 @@ class Claim(Base):
                     (await numbered_item.awaitable_attrs.item).console_id
                 ) + '\\\"'
             items_row += "}"
-            command = f"""DelItems(\\\"{ku_id}\\\", """ + items_row + """)"""
+            command = f"""DelItems(\\\"{ku_id}\\\", {checked_items}, """ + items_row + """)"""
             tasks.append(
                 asyncio.create_task(
                     console_dst_checker.check(
