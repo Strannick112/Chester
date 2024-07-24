@@ -289,6 +289,8 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                 member = guild.get_member(int(discord_id))
                 print(f"member id: {member.id}")
                 for role in member.roles:
+                    print(f"role_id: {role.id}")
+                    print(f"role.id: {self.chester_bot.replies['roles_for_items'].get(str(role.id))}")
                     if (role_info := self.chester_bot.replies["roles_for_items"].get(str(role.id))) is not None:
                         items["checked_items"] += role_info["checked_items"]
                         items["unchecked_items"] += role_info["unchecked_items"]
