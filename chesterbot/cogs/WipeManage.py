@@ -214,7 +214,9 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                 if claim := await self.get_claim_by_steam_nickname(steam_nickname, session):
                     discord_id = await claim.get_discord_id()
         if discord_id:
+            print("meaw10")
             await self.take_items_from_discord(message, discord_id)
+            print("meaw11")
             return
         else:
             await self._loud_message(
@@ -244,7 +246,9 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
             await ctx.reply("Параметры команды указаны не верно")
         if discord_id is None:
             discord_id = ctx.author.id
+        print("meaw12")
         message = ctx if type(ctx) is WebhookMessage else ctx.message
+        print("meaw13")
 
         try:
             status_id = None
