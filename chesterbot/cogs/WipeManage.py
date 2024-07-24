@@ -303,7 +303,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                                 message=message, discord_id=discord_id, steam_nickname=steam_nickname,
                                 text=self.__replies['take_items_fail'], reaction=self.__replies['claim_error'])
                         # Попытка забрать вещи
-                        if _claim.take_items(
+                        if await _claim.take_items(
                             checked_items=items["checked_items"],
                             console_dst_checker=self.chester_bot.console_dst_checker
                         ):
