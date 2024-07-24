@@ -681,6 +681,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
     async def mark_claim_approved(self, channel_id, message_id):
         try:
             if msg := await self.chester_bot.get_channel(channel_id).fetch_message(message_id):
+                print(f"MARK APPROVED EMOJI: {self.__replies['claim_admin_approved_is_ok']}")
                 await msg.add_reaction(self.__replies['claim_admin_approved_is_ok'])
                 return True
             return False
