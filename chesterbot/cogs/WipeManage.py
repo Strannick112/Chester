@@ -296,9 +296,9 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                 # Попытка забрать вещи
                 async with self.chester_bot.async_session() as session:
                     async with session.begin():
-                        _claim = await( await self.get_claim_by_discord_id(discord_id=int(discord_id), session=session) )
+                        _claim = await self.get_claim_by_discord_id(discord_id=int(discord_id), session=session)
                         # Проверка на количество вещей в заявке
-                        if len((await _claim.awaitable_attrs.numbered_items)) > (items["checked_items"] + items["unchecked_items"]):
+                        if len(await _claim.awaitable_attrs.numbered_items) > (items["checked_items"] + items["unchecked_items"]):
                             await self._loud_message(
                                 message=message, discord_id=discord_id, steam_nickname=steam_nickname,
                                 text=self.__replies['take_items_fail'], reaction=self.__replies['claim_error'])
