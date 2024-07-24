@@ -158,7 +158,7 @@ class Claim(Base):
                 asyncio.create_task(
                     console_dst_checker.check(
                         command,
-                        r'DelItems:\s+' + ku_id + r'\s+([\d])',
+                        r'DelItems:\s+' + ku_id + r',\s+([\d])',
                         world["shard_id"], world["screen_name"], "1", 5
                     )
                 )
