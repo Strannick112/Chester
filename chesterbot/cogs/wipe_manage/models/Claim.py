@@ -6,11 +6,9 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from chesterbot import main_config
 from chesterbot.ConsoleDSTChecker import ConsoleDSTChecker
-from . import Status, statuses, ClaimItem, Wipe
+from . import Status, statuses, Wipe
 from .Base import Base
-# from .ClaimItem import claim_item
 
-import re
 import shlex
 
 

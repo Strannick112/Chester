@@ -623,18 +623,19 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
             else:
                 await message.add_reaction(self.__replies['claim_warning'])
 
-    async def check_claim(self, dst_player_name):
+    async def check_claim(self, steam_nickname):
         await send_message_to_game(
             "",
             "Обновление информации о заявке принято к исполнению"
         )
         async with self.chester_bot.async_session() as session:
             async with session.begin():
-                if claim := await self.get_claim_by_steam_nickname(dst_player_name, session):
+                if claim := await self.get_claim_by_steam_nickname(steam_nickname, session):
                     try:
                         if msg := await self.chester_bot.get_channel(claim.channel_id).fetch_message(claim.message_id):
                             count_days = await claim.check_days(console_dst_checker=self.chester_bot.console_dst_checker)
                             await self.sync_reactions(count_days, msg)
+                            await self.take_items_from_game(steam_nickname)
                             return
                     except Exception as error:
                         print(error)
