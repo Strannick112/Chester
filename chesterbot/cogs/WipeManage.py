@@ -249,7 +249,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
 
         try:
             status_id = None
-            # Проверка на наличие заявки у игрока
+            # Получение заявки из базы данных
             async with self.chester_bot.async_session() as session:
                 async with session.begin():
                     if claim := await self.get_claim_by_discord_id(discord_id=discord_id, session=session):
@@ -260,72 +260,76 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                         is_player_online = not await (
                             await claim.awaitable_attrs.player
                         ).is_player_online(self.chester_bot.console_dst_checker)
-            if status_id is not None:
-                discord_id = str(discord_id)
 
-                # Проверка на неодобренность заявки
-                if status_id != models.statuses.get("not_approved"):
-                    await self._loud_message(
-                        message=message, discord_id=discord_id, steam_nickname=steam_nickname,
-                        text=self.__replies['take_items_fail_approved'], reaction=self.__replies['claim_error'])
-                    return False
+            # Проверка заявки на существование
+            if status_id is None:
+                await self._loud_message(
+                    message=message, discord_id=discord_id, steam_nickname=steam_nickname,
+                    text=self.__replies['get_claim_fail'], reaction=self.__replies['claim_error'])
+                return False
+            discord_id = str(discord_id)
 
-                # Проверка на наличие игрока в игре
-                if is_player_online:
-                    await message.reply(
-                        content="[" + main_config["server_name"] + "] <@" +
-                                discord_id + "> , " +
-                                self.__replies['player_is_not_online_phrase']
-                    )
-                    await message.add_reaction(self.__replies['player_is_not_online'])
-                    return False
+            # Проверка на неодобренность заявки
+            if status_id != models.statuses.get("not_approved"):
+                await self._loud_message(
+                    message=message, discord_id=discord_id, steam_nickname=steam_nickname,
+                    text=self.__replies['take_items_fail_already_checked'], reaction=self.__replies['claim_error'])
+                return False
 
-                # Подсчет количества вещей по ролям
-                items = {
-                    "checked_items": 0,
-                    "unchecked_items": 0
-                }
-                guild = self.chester_bot.get_guild(794687419105411082)
-                member = guild.get_member(int(discord_id))
-                for role in member.roles:
-                    if (role_info := self.chester_bot.replies["roles_for_items"].get(str(role.id))) is not None:
-                        items["checked_items"] += role_info["checked_items"]
-                        items["unchecked_items"] += role_info["unchecked_items"]
+            # Проверка на наличие игрока в игре
+            if is_player_online:
+                await message.reply(
+                    content="[" + main_config["server_name"] + "] <@" +
+                            discord_id + "> , " +
+                            self.__replies['player_is_not_online_phrase']
+                )
+                await message.add_reaction(self.__replies['player_is_not_online'])
+                return False
 
-                # Попытка забрать вещи
-                async with self.chester_bot.async_session() as session:
-                    async with session.begin():
-                        print(f"items: {items}")
-                        _claim = await self.get_claim_by_discord_id(discord_id=int(discord_id), session=session)
-                        # Проверка на количество вещей в заявке
-                        print(f"len(claim items): {len(await _claim.awaitable_attrs.numbered_items)})")
-                        if len(await _claim.awaitable_attrs.numbered_items) > (items["checked_items"] + items["unchecked_items"]):
-                            await self._loud_message(
-                                message=message, discord_id=discord_id, steam_nickname=steam_nickname,
-                                text=self.__replies['take_items_fail'], reaction=self.__replies['claim_error'])
-                            return False
-                        # Попытка забрать вещи
-                        print("meaw 30")
-                        if await _claim.take_items(
-                                checked_items=items["checked_items"],
-                                console_dst_checker=self.chester_bot.console_dst_checker
-                        ):
-                            print("meaw 500")
-                            await self._loud_message(
-                                message=message, discord_id=discord_id, steam_nickname=steam_nickname,
-                                text=self.__replies['take_items_success'], reaction=self.__replies['take_items_success'])
-                            await self.mark_claim_approved(channel_id=channel_id, message_id=message_id)
-                            return True
-                        else:
-                            await self._loud_message(
-                                message=message, discord_id=discord_id, steam_nickname=steam_nickname,
-                                text=self.__replies['take_items_fail'], reaction=self.__replies['claim_error'])
-                            return False
+            # Подсчет количества вещей по ролям
+            items = {
+                "checked_items": 0,
+                "unchecked_items": 0
+            }
+            guild = self.chester_bot.get_guild(794687419105411082)
+            member = guild.get_member(int(discord_id))
+            for role in member.roles:
+                if (role_info := self.chester_bot.replies["roles_for_items"].get(str(role.id))) is not None:
+                    items["checked_items"] += role_info["checked_items"]
+                    items["unchecked_items"] += role_info["unchecked_items"]
+
+            # Попытка забрать вещи
+            async with self.chester_bot.async_session() as session:
+                async with session.begin():
+                    _claim = await self.get_claim_by_discord_id(discord_id=int(discord_id), session=session)
+
+                    # Проверка на количество вещей в заявке
+                    if len(await _claim.awaitable_attrs.numbered_items) > (items["checked_items"] + items["unchecked_items"]):
+                        await self._loud_message(
+                            message=message, discord_id=discord_id, steam_nickname=steam_nickname,
+                            text=self.__replies['take_items_fail_too_many_items'], reaction=self.__replies['claim_error'])
+                        return False
+
+                    # Попытка забрать вещи
+                    if await _claim.take_items(
+                            checked_items=items["checked_items"],
+                            console_dst_checker=self.chester_bot.console_dst_checker
+                    ):
+                        await self._loud_message(
+                            message=message, discord_id=discord_id, steam_nickname=steam_nickname,
+                            text=self.__replies['take_items_success'], reaction=self.__replies['take_items_success'])
+                        await self.mark_claim_approved(channel_id=channel_id, message_id=message_id)
+                        return True
+                    else:
+                        await self._loud_message(
+                            message=message, discord_id=discord_id, steam_nickname=steam_nickname,
+                            text=self.__replies['take_items_fail'], reaction=self.__replies['claim_error'])
+                        return False
         except Exception as error:
             print(error)
         await self._loud_message(
             message=message, discord_id=discord_id, steam_nickname=steam_nickname,
-            text=self.__replies['take_items_fail'], reaction=self.__replies['claim_error'])
+            text=self.__replies['system_fail'], reaction=self.__replies['claim_error'])
         return False
 
     @staticmethod
@@ -458,7 +462,6 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
         и если все правила соблюдены - изменяет состояние заявки.
         Принимает один аргумент: ник игрока в дискорде
         """
-        print("APPROVE")
         to_approve = {'bot_ok': False, 'admin_ok': False}
         try:
             for reaction in msg.reactions:
@@ -477,7 +480,6 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                                 break
                     continue
             if to_approve['bot_ok'] and to_approve['admin_ok']:
-                print("APPROVE_2")
                 await claim.approve(session=session)
                 await msg.add_reaction(self.__replies['claim_full_approved'])
                 return True
@@ -607,7 +609,6 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                             await models.NumberedItem.get_or_create(session=session, number=number, item_id=item.id)
                             for number, item in enumerate(items)
                         ]
-                        print(numbered_items)
                         await models.Claim.get_or_create(
                             session=session,
                             message_id=message.id,
@@ -618,14 +619,10 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                             wipe_id=last_wipe.id,
                             revoke=self.revoke_reactions
                         )
-                        print("meaw3")
-                        print("meaw4")
-                print("meaw5")
                 async with self.chester_bot.async_session() as session:
                     async with session.begin():
                         await message.add_reaction(self.__replies['claim_accepted_is_ok'])
                         done_claim = await self.get_claim_by_discord_id(message.author.id, session=session)
-                        print(await done_claim.awaitable_attrs.numbered_items)
                         count_days = await done_claim.check_days(console_dst_checker=self.chester_bot.console_dst_checker)
                 await self.sync_reactions(count_days, message)
             else:

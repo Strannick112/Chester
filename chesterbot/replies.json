@@ -22,6 +22,8 @@
     "player_is_not_online_phrase": "Кажется, след потерян… но я буду все еще здесь, когда вы появитесь в игре",
     "take_items_success": "Отправка предметов в следующий вайп выполнена успешно",
     "take_items_fail_approved": "Ваши предметы уже изъяты!",
+    "take_items_fail_too_many_items": "У вас слишком много предметов в заявке!",
+    "system_fail": "Ошибка в работе честера!",
 
     "claim_warning": "⚠",
     "claim_accepted_is_ok": "<:3hmm:872133257649594499>",
