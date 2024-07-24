@@ -308,6 +308,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                         text=self.__replies['take_items_fail_count_days_not_enough_fail'], reaction=self.__replies['claim_error'])
                     return False
                 else:
+                    items["checked_items"] = 0
                     await self._loud_message(
                         message=message, discord_id=discord_id, steam_nickname=steam_nickname,
                         text=self.__replies['take_items_fail_count_days_not_enough_warn'], reaction=self.__replies['claim_warning'])
