@@ -287,9 +287,6 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                 guild = self.chester_bot.get_guild(794687419105411082)
                 member = guild.get_member(int(discord_id))
                 for role in member.roles:
-                    print(f"role_id int: {role.id}")
-                    print(f"role_id str: {str(role.id)}")
-                    print(f"role.id: {self.chester_bot.replies['roles_for_items'].get(str(role.id))}")
                     if (role_info := self.chester_bot.replies["roles_for_items"].get(str(role.id))) is not None:
                         items["checked_items"] += role_info["checked_items"]
                         items["unchecked_items"] += role_info["unchecked_items"]
@@ -297,17 +294,21 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                 # Попытка забрать вещи
                 async with self.chester_bot.async_session() as session:
                     async with session.begin():
+                        print(f"items: {items}")
                         _claim = await self.get_claim_by_discord_id(discord_id=int(discord_id), session=session)
                         # Проверка на количество вещей в заявке
+                        print(f"len(claim items): {len(await _claim.awaitable_attrs.numbered_items)})")
                         if len(await _claim.awaitable_attrs.numbered_items) > (items["checked_items"] + items["unchecked_items"]):
                             await self._loud_message(
                                 message=message, discord_id=discord_id, steam_nickname=steam_nickname,
                                 text=self.__replies['take_items_fail'], reaction=self.__replies['claim_error'])
                         # Попытка забрать вещи
+                        print("meaw 30")
                         if await _claim.take_items(
                                 checked_items=items["checked_items"],
                                 console_dst_checker=self.chester_bot.console_dst_checker
                         ):
+                            print("meaw 500")
                             await self._loud_message(
                                 message=message, discord_id=discord_id, steam_nickname=steam_nickname,
                                 text=self.__replies['take_items_success'], reaction=self.__replies['take_items_success'])
