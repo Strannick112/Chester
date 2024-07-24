@@ -220,6 +220,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
             await self._loud_message(
                 message=message, discord_id=discord_id, steam_nickname=steam_nickname,
                 text=self.__replies['take_items_fail'], reaction=self.__replies['claim_error'])
+            return
 
     @commands.command(name=main_config['short_server_name'] + "_take_items")
     async def take_items_from_discord(self, ctx, discord_id=None):
@@ -302,6 +303,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                             await self._loud_message(
                                 message=message, discord_id=discord_id, steam_nickname=steam_nickname,
                                 text=self.__replies['take_items_fail'], reaction=self.__replies['claim_error'])
+                            return False
                         # Попытка забрать вещи
                         print("meaw 30")
                         if await _claim.take_items(

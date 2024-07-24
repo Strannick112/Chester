@@ -95,14 +95,29 @@
             "unchecked_items": 2
         },
         "968553526810804234": {
-            "name": "алхимик",
+            "name": "Алхимик",
             "checked_items": 0,
             "unchecked_items": 3
+        },
+        "1163904153521770586": {
+            "name": "Друг сообщества",
+            "checked_items": 0,
+            "unchecked_items": 2
         },
         "1115673267785707621": {
             "name": "Спонсор",
             "checked_items": 0,
             "unchecked_items": 2
+        },
+        "833793814740598784": {
+            "name": "Варлок",
+            "checked_items": 0,
+            "unchecked_items": 3
+        },
+        "794688406948151308": {
+            "name": "Админ",
+            "checked_items": 0,
+            "unchecked_items": 3
         }
     },
 
