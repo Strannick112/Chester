@@ -315,10 +315,13 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                             checked_items=items["checked_items"],
                             console_dst_checker=self.chester_bot.console_dst_checker
                     ):
+                        print("meaw1")
                         await self._loud_message(
                             message=message, discord_id=discord_id, steam_nickname=steam_nickname,
                             text=self.__replies['take_items_success'], reaction=self.__replies['take_items_success'])
+                        print("meaw2")
                         await self.mark_claim_approved(channel_id=channel_id, message_id=message_id)
+                        print("meaw3")
                         return True
                     else:
                         await self._loud_message(
