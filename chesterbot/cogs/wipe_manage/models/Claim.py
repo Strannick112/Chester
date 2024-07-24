@@ -149,7 +149,8 @@ class Claim(Base):
             for numbered_item in await self.awaitable_attrs.numbered_items:
                 items_row += '\\\"' + shlex.quote(
                     (await numbered_item.awaitable_attrs.item).console_id
-                ) + '\\\"'
+                ) + '\\\", '
+            items_row = items_row[:-2]
             items_row += "}"
             command = f"""DelItems(\\\"{ku_id}\\\", {checked_items}, """ + items_row + """)"""
             print(f"command: {command}")
