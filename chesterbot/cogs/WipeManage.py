@@ -288,6 +288,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                 print(f"guild id: {guild.id}")
                 member = guild.get_member(int(discord_id))
                 print(f"member id: {member.id}")
+                print(f"role.id: {self.chester_bot.replies['roles_for_items']}")
                 for role in member.roles:
                     print(f"role_id: {role.id}")
                     print(f"role.id: {self.chester_bot.replies['roles_for_items'].get(str(role.id))}")
@@ -306,8 +307,8 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                                 text=self.__replies['take_items_fail'], reaction=self.__replies['claim_error'])
                         # Попытка забрать вещи
                         if await _claim.take_items(
-                            checked_items=items["checked_items"],
-                            console_dst_checker=self.chester_bot.console_dst_checker
+                                checked_items=items["checked_items"],
+                                console_dst_checker=self.chester_bot.console_dst_checker
                         ):
                             await self._loud_message(
                                 message=message, discord_id=discord_id, steam_nickname=steam_nickname,
