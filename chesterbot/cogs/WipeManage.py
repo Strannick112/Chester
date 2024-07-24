@@ -305,7 +305,6 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                         # Попытка забрать вещи
                         if _claim.take_items(
                             checked_items=items["checked_items"],
-                            session=session,
                             console_dst_checker=self.chester_bot.console_dst_checker
                         ):
                             await self._loud_message(
