@@ -288,7 +288,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                 print(f"guild id: {guild.id}")
                 member = guild.get_member(int(discord_id))
                 print(f"member id: {member.id}")
-                print(f"role.id: {self.chester_bot.replies['roles_for_items']}")
+                print(f"typeof role.id: {type(self.chester_bot.replies['roles_for_items'])}")
                 for role in member.roles:
                     print(f"role_id: {role.id}")
                     print(f"role.id: {self.chester_bot.replies['roles_for_items'].get(str(role.id))}")
