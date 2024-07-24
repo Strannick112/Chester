@@ -284,7 +284,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                     "checked_items": 0,
                     "unchecked_items": 0
                 }
-                for role in message.server.get_member(discord_id).roles:
+                for role in self.chester_bot.get_guild(794687419105411082).get_member(discord_id).roles:
                     if (role_info := self.chester_bot.replies["roles_for_items"].get(str(role.id))) is not None:
                         items["checked_items"] += role_info["checked_items"]
                         items["unchecked_items"] += role_info["unchecked_items"]
@@ -331,6 +331,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
         await message.add_reaction(reaction)
         await send_message_to_game("Chester_bot",
                                    steam_nickname + ", " + text)
+
     @commands.command(name=main_config['short_server_name'] + "_give_items")
     async def give_items_from_discord(self, ctx, discord_id=None):
         """
