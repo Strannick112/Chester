@@ -142,6 +142,7 @@ class Claim(Base):
 
     async def take_items(self, *, checked_items, console_dst_checker: ConsoleDSTChecker):
         ku_id = (await (await self.awaitable_attrs.player).awaitable_attrs.steam_account).ku_id
+        print(f"ku_id: {ku_id}")
         tasks = []
         for world in main_config["worlds"]:
             items_row = "{"
@@ -151,6 +152,7 @@ class Claim(Base):
                 ) + '\\\"'
             items_row += "}"
             command = f"""DelItems(\\\"{ku_id}\\\", {checked_items}, """ + items_row + """)"""
+            print(f"command: {command}")
             tasks.append(
                 asyncio.create_task(
                     console_dst_checker.check(
