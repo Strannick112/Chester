@@ -23,6 +23,8 @@
     "take_items_success": "Отправка предметов в следующий вайп выполнена успешно",
     "take_items_fail_approved": "Ваши предметы уже изъяты!",
     "take_items_fail_too_many_items": "У вас слишком много предметов в заявке!",
+    "take_items_fail_count_days_not_enough_fail": "У вас менее 100 дней на игровом сервере, заявка отклонена!",
+    "take_items_fail_count_days_not_enough_warn": "У вас менее 100 дней на игровом сервере, кол-во предметов сокращено!",
     "system_fail": "Ошибка в работе честера!",
 
     "claim_warning": "⚠",

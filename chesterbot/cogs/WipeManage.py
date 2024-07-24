@@ -291,12 +291,26 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                 "checked_items": 0,
                 "unchecked_items": 0
             }
-            guild = self.chester_bot.get_guild(794687419105411082)
-            member = guild.get_member(int(discord_id))
-            for role in member.roles:
+
+            for role in self.chester_bot.get_guild(794687419105411082).get_member(int(discord_id)).roles:
                 if (role_info := self.chester_bot.replies["roles_for_items"].get(str(role.id))) is not None:
                     items["checked_items"] += role_info["checked_items"]
                     items["unchecked_items"] += role_info["unchecked_items"]
+
+            # Проверка количества прожитых дней
+            count_days = await claim.check_days(console_dst_checker=self.chester_bot.console_dst_checker)
+            await self.sync_reactions(count_days, self.chester_bot.get_channel(channel_id).fetch_message(message_id))
+
+            if count_days <= 100:
+                if items["unchecked_items"] == 0:
+                    await self._loud_message(
+                        message=message, discord_id=discord_id, steam_nickname=steam_nickname,
+                        text=self.__replies['take_items_fail_count_days_not_enough_fail'], reaction=self.__replies['claim_error'])
+                    return False
+                else:
+                    await self._loud_message(
+                        message=message, discord_id=discord_id, steam_nickname=steam_nickname,
+                        text=self.__replies['take_items_fail_count_days_not_enough_warn'], reaction=self.__replies['claim_warning'])
 
             # Попытка забрать вещи
             async with self.chester_bot.async_session() as session:
@@ -633,17 +647,11 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
             "",
             "Обновление информации о заявке принято к исполнению"
         )
-        async with self.chester_bot.async_session() as session:
-            async with session.begin():
-                if claim := await self.get_claim_by_steam_nickname(steam_nickname, session):
-                    try:
-                        if msg := await self.chester_bot.get_channel(claim.channel_id).fetch_message(claim.message_id):
-                            count_days = await claim.check_days(console_dst_checker=self.chester_bot.console_dst_checker)
-                            await self.sync_reactions(count_days, msg)
-                            await self.take_items_from_game(steam_nickname)
-                            return
-                    except Exception as error:
-                        print(error)
+        try:
+            await self.take_items_from_game(steam_nickname)
+            return
+        except Exception as error:
+            print(error)
         await send_message_to_game(
             "",
             "Заявка не обнаружена, обратитесь к администратору"
