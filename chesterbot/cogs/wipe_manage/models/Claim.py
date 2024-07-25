@@ -72,7 +72,6 @@ class Claim(Base):
             return claim
         old_claim = await revoke(player_id, session)
         if old_claim:
-            print("How Rare!!!")
             await session.execute(
                 update(Claim)
                 .where(Claim.player_id == player_id)
@@ -207,9 +206,7 @@ class Claim(Base):
             if self.status_id == statuses.get("not_approved"):
                 self.approved = func.now()
                 self.status_id = statuses.get("approved")
-                print("APPROVE_3")
                 session.add(self)
-                print("APPROVE_4")
                 return True
             else:
                 return False
