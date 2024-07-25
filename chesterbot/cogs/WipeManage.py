@@ -574,7 +574,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                     await ctx.reply(self.__replies['stop_success'])
                     last_wipe.stopped = func.now()
                     for claim in (await session.execute(select(models.Claim).where(
-                            models.Wipe.id == (await session.execute(select(models.Wipe).order_by(models.Wipe.id.desc()))).scalars().first().id
+                            models.Claim.wipe_id == (await session.execute(select(models.Wipe).order_by(models.Wipe.id.desc()))).scalars().first().id
                     ))).scalars().all():
                         try:
                             if msg := await self.chester_bot.get_channel(claim.channel_id).fetch_message(claim.message_id):

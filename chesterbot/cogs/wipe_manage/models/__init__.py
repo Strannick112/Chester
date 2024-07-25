@@ -1,5 +1,4 @@
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
-from sqlalchemy.orm import Session
 
 from chesterbot import main_config
 
@@ -19,7 +18,6 @@ from .Player import Player
 from .Wipe import Wipe
 from .Status import Status
 from .Item import Item
-# from .ClaimItem import claim_item
 from .ClaimItem import ClaimItem
 from .NumberedItem import NumberedItem
 from .Claim import Claim

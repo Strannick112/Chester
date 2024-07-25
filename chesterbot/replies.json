@@ -87,49 +87,57 @@
             "name": "Выживший",
             "checked_items": 1,
             "default_checked_items": 0,
-            "unchecked_items": 0
+            "unchecked_items": 0,
+            "check_all_after_100_days": false
         },
         "794689200107814942": {
             "name": "Местный житель",
             "checked_items": 3,
             "default_checked_items": 0,
-            "unchecked_items": 0
+            "unchecked_items": 0,
+            "check_all_after_100_days": false
         },
         "974317362604040203": {
             "name": "Старейшина",
             "checked_items": 1,
             "default_checked_items": 0,
-            "unchecked_items": 2
+            "unchecked_items": 2,
+            "check_all_after_100_days": true
         },
         "968553526810804234": {
             "name": "Алхимик",
             "checked_items": 0,
             "default_checked_items": 0,
-            "unchecked_items": 3
+            "unchecked_items": 3,
+            "check_all_after_100_days": false
         },
         "1163904153521770586": {
             "name": "Друг сообщества",
             "checked_items": 0,
             "default_checked_items": 0,
-            "unchecked_items": 2
+            "unchecked_items": 2,
+            "check_all_after_100_days": false
         },
         "1115673267785707621": {
             "name": "Спонсор",
             "checked_items": 0,
             "default_checked_items": 0,
-            "unchecked_items": 2
+            "unchecked_items": 2,
+            "check_all_after_100_days": false
         },
         "833793814740598784": {
             "name": "Варлок",
             "checked_items": 0,
             "default_checked_items": 0,
-            "unchecked_items": 3
+            "unchecked_items": 3,
+            "check_all_after_100_days": false
         },
         "794688406948151308": {
             "name": "Админ",
             "checked_items": 0,
             "default_checked_items": 0,
-            "unchecked_items": 3
+            "unchecked_items": 3,
+            "check_all_after_100_days": false
         }
     },
 
