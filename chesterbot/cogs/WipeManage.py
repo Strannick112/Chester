@@ -293,7 +293,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                 "default_checked_items": 0
             }
 
-            for role in self.chester_bot.get_guild(794687419105411082).get_member(int(discord_id)).roles:
+            for role in self.chester_bot.get_guild(main_config["guild_id"]).get_member(int(discord_id)).roles:
                 if (role_info := self.chester_bot.replies["roles_for_items"].get(str(role.id))) is not None:
                     items["checked_items"] += role_info["checked_items"]
                     items["unchecked_items"] += role_info["unchecked_items"]

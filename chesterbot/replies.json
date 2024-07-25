@@ -98,8 +98,8 @@
         "974317362604040203": {
             "name": "Старейшина",
             "checked_items": 1,
-            "default_checked_items": 2,
-            "unchecked_items": 0
+            "default_checked_items": 0,
+            "unchecked_items": 2
         },
         "968553526810804234": {
             "name": "Алхимик",
