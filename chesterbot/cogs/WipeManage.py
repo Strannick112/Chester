@@ -299,7 +299,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
 
             # Проверка количества прожитых дней
             count_days = await claim.check_days(console_dst_checker=self.chester_bot.console_dst_checker)
-            await self.sync_reactions(count_days, self.chester_bot.get_channel(channel_id).fetch_message(message_id))
+            await self.sync_reactions(count_days, await self.chester_bot.get_channel(channel_id).fetch_message(message_id))
 
             if count_days <= 100:
                 if items["unchecked_items"] == 0:
