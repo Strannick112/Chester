@@ -289,20 +289,22 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
             # Подсчет количества вещей по ролям
             items = {
                 "checked_items": 0,
-                "unchecked_items": 0
+                "unchecked_items": 0,
+                "default_checked_items": 0
             }
 
             for role in self.chester_bot.get_guild(794687419105411082).get_member(int(discord_id)).roles:
                 if (role_info := self.chester_bot.replies["roles_for_items"].get(str(role.id))) is not None:
                     items["checked_items"] += role_info["checked_items"]
                     items["unchecked_items"] += role_info["unchecked_items"]
+                    items["default_checked_items"] += role_info["default_checked_items"]
 
             # Проверка количества прожитых дней
             count_days = await claim.check_days(console_dst_checker=self.chester_bot.console_dst_checker)
             await self.sync_reactions(count_days, await self.chester_bot.get_channel(channel_id).fetch_message(message_id))
 
             if count_days <= 100:
-                if items["unchecked_items"] == 0:
+                if items["unchecked_items"] == 0 and items["default_checked_items"] == 0:
                     await self._loud_message(
                         message=message, discord_id=discord_id, steam_nickname=steam_nickname,
                         text=self.__replies['take_items_fail_count_days_not_enough_fail'], reaction=self.__replies['claim_error'])
@@ -319,7 +321,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                     _claim = await self.get_claim_by_discord_id(discord_id=int(discord_id), session=session)
 
                     # Проверка на количество вещей в заявке
-                    if len(await _claim.awaitable_attrs.numbered_items) > (items["checked_items"] + items["unchecked_items"]):
+                    if len(await _claim.awaitable_attrs.numbered_items) > (items["checked_items"] + items["unchecked_items"] + items["default_checked_items"]):
                         await self._loud_message(
                             message=message, discord_id=discord_id, steam_nickname=steam_nickname,
                             text=self.__replies['take_items_fail_too_many_items'], reaction=self.__replies['claim_error'])
@@ -327,7 +329,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
 
                     # Попытка забрать вещи
                     if await _claim.take_items(
-                            checked_items=items["checked_items"],
+                            checked_items=items["checked_items"] + items["default_checked_items"],
                             console_dst_checker=self.chester_bot.console_dst_checker
                     ):
                         await self._loud_message(
