@@ -187,14 +187,14 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
         await ctx.reply(embed=embed)
         return True
 
-    async def give_items_from_game(self, steam_nickname):
+    async def give_items_from_game(self, steam_nickname, ku_id):
         message = await self.command_webhook.send(
             content="Игрок с ником " + steam_nickname + " просит выдать вещи", wait=True,
             avatar_url=self.__replies["info_picture"]
         )
         async with self.chester_bot.async_session() as session:
             async with session.begin():
-                if claim := await self.get_claim_by_steam_nickname(steam_nickname, session):
+                if claim := await self.get_claim_by_ku_id(ku_id, session):
                     discord_id = await claim.get_discord_id()
         if discord_id:
             await self.give_items_from_discord(message, discord_id)
@@ -204,14 +204,14 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                 message=message, discord_id=discord_id, steam_nickname=steam_nickname,
                 text=self.__replies['give_items_fail_who_are_you'], reaction=self.__replies['claim_error'])
 
-    async def take_items_from_game(self, steam_nickname):
+    async def take_items_from_game(self, steam_nickname, ku_id):
         message = await self.command_webhook.send(
             content="Игрок с ником " + steam_nickname + " просит забрать вещи", wait=True,
             avatar_url=self.__replies["info_picture"]
         )
         async with self.chester_bot.async_session() as session:
             async with session.begin():
-                if claim := await self.get_claim_by_steam_nickname(steam_nickname, session):
+                if claim := await self.get_claim_by_ku_id(ku_id, session):
                     discord_id = await claim.get_discord_id()
         if discord_id:
             await self.take_items_from_discord(message, discord_id)
@@ -645,13 +645,13 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
             else:
                 await message.add_reaction(self.__replies['claim_warning'])
 
-    async def check_claim(self, steam_nickname):
+    async def check_claim(self, steam_nickname, ku_id):
         await send_message_to_game(
             "",
             "Обновление информации о заявке принято к исполнению"
         )
         try:
-            await self.take_items_from_game(steam_nickname)
+            await self.take_items_from_game(steam_nickname, ku_id)
             return
         except Exception as error:
             print(error)
@@ -695,7 +695,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
         except Exception as error:
             print(error)
 
-    async def get_claim_by_steam_nickname(self, steam_nickname, session):
+    async def get_claim_by_ku_id(self, ku_id, session):
         return (await session.execute(select(
             models.Claim
         ).join(models.Claim.player
@@ -703,7 +703,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
         ).where(
             models.Claim.wipe_id == (await session.execute(select(models.Wipe).order_by(models.Wipe.id.desc()))).scalars().first().id
         ).where(
-            models.SteamAccount.nickname == steam_nickname
+            models.SteamAccount.ku_id == ku_id
         ))).scalars().first()
 
     async def get_claim_by_discord_id(self, discord_id, session):
