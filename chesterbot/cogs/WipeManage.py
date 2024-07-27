@@ -192,6 +192,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
             content="Игрок с ником " + steam_nickname + " просит выдать вещи", wait=True,
             avatar_url=self.__replies["info_picture"]
         )
+        discord_id = None
         async with self.chester_bot.async_session() as session:
             async with session.begin():
                 if claim := await self.get_claim_by_ku_id(ku_id, session):
