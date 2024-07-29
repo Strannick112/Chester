@@ -89,9 +89,8 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
         if discord_id is None:
             requested_discord_id = ctx.author.id
         else:
-            for role in ctx.author.roles:
-                if role.id == int(self.chester_bot.replies["admin_role_id"]):
-                    requested_discord_id = discord_id
+            if ctx.author.get_role(main_config["master_role"]) is not None:
+                requested_discord_id = discord_id
         async with self.chester_bot.async_session() as session:
             async with session.begin():
                 if claim := await self.get_claim_by_discord_id(requested_discord_id, session=session):
@@ -123,10 +122,8 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
         if discord_id is None:
             requested_discord_id = ctx.author.id
         else:
-            for role in ctx.author.roles:
-                if role.id == int(self.chester_bot.replies["admin_role_id"]):
-                    requested_discord_id = discord_id
-                    break
+            if ctx.author.get_role(main_config["master_role"]) is not None:
+                requested_discord_id = discord_id
         async with self.chester_bot.async_session() as session:
             async with session.begin():
                 if claim := await self.get_claim_by_discord_id(requested_discord_id, session=session):
@@ -494,10 +491,8 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                         to_approve['admin_ok'] = True
                         break
                     async for user in reaction.users():
-                        for role in user.roles:
-                            if int(self.chester_bot.replies["admin_role_id"]) == role.id:
-                                to_approve['admin_ok'] = True
-                                break
+                        if user.get_role(main_config["master_role"]) is not None:
+                            to_approve['admin_ok'] = True
                     continue
             if to_approve['bot_ok'] and to_approve['admin_ok']:
                 await claim.approve(session=session)
