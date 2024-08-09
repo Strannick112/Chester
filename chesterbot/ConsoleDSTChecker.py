@@ -22,7 +22,7 @@ class ConsoleDSTChecker:
             self.__checker.start(self.__all_commands[world["shard_id"]], world)
             self.__log_file_check.start(world)
 
-    async def check(
+    async def check_selected_world(
             self, command: str, reg_answer: str, shard_id: int, screen_name: str, default_answer: str, timeout: int
     ):
         try:
@@ -45,6 +45,22 @@ class ConsoleDSTChecker:
         except Exception as error:
             print(error)
             return default_answer
+
+    async def check_all_worlds(
+            self, command: str, reg_answer: str, default_answer: str, timeout: int
+    ):
+        local_tasks = set()
+        for world in self.worlds:
+            local_tasks.add(
+                asyncio.create_task(
+                    self.check_selected_world(
+                        command,
+                        reg_answer,
+                        world["shard_id"], world["screen_name"], default_answer, timeout
+                    )
+                )
+            )
+        return local_tasks
 
     @tasks.loop(seconds=15)
     async def __log_file_check(self, world):

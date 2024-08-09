@@ -162,7 +162,7 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                     await self.log_channel.send(content=("```" + text + "```"))
                     if message[0] != "$":
                         avatar_url = self.chester_bot.replies.get(
-                            await self.chester_bot.console_dst_checker.check(
+                            await self.chester_bot.console_dst_checker.check_selected_world(
                                 """for _, player in pairs(GetPlayerClientTable()) do """
                                 f"""if player.userid == \\\"{ku_id}\\\" """ 
                                 """then print(\\\"PlayerPrefab\\\", player.userid, player.prefab) end end""",

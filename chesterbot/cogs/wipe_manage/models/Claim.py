@@ -110,25 +110,23 @@ class Claim(Base):
                 self.status_id = statuses.get("executed")
                 session.add(self)
                 ku_id = (await (await self.awaitable_attrs.player).awaitable_attrs.steam_account).ku_id
-                tasks = []
-                for world in main_config["worlds"]:
-                    for numbered_item in await self.awaitable_attrs.numbered_items:
-                        item_id = shlex.quote(
-                            (await numbered_item.awaitable_attrs.item).console_id
+                tasks = set()
+                for numbered_item in await self.awaitable_attrs.numbered_items:
+                    item_id = shlex.quote(
+                        (await numbered_item.awaitable_attrs.item).console_id
+                    )
+                    command = f"""LookupPlayerInstByUserID(\\\"{ku_id}\\\").components.inventory:""" \
+                              f"""GiveItem(SpawnPrefab(\\\"{item_id}\\\"))"""
+
+                    tasks.union(
+                        await console_dst_checker.check_all_worlds(
+                            command,
+                            r'\[string "LookupPlayerInstByUserID\("(' +
+                            ku_id +
+                            r')"\)[\w\W]*?\.\.\."\]\:1\: attempt to index a nil value',
+                            "is_normal", 5
                         )
-                        command = f"""LookupPlayerInstByUserID(\\\"{ku_id}\\\").components.inventory:""" \
-                                  f"""GiveItem(SpawnPrefab(\\\"{item_id}\\\"))"""
-                        tasks.append(
-                            asyncio.create_task(
-                                console_dst_checker.check(
-                                    command,
-                                    r'\[string "LookupPlayerInstByUserID\("(' +
-                                    ku_id +
-                                    r')"\)[\w\W]*?\.\.\."\]\:1\: attempt to index a nil value',
-                                    world["shard_id"], world["screen_name"], "is_normal", 5
-                                )
-                            )
-                        )
+                    )
                 for task in asyncio.as_completed(tasks):
                     result = await task
                     if result == ku_id:
@@ -141,25 +139,18 @@ class Claim(Base):
 
     async def take_items(self, *, checked_items, console_dst_checker: ConsoleDSTChecker):
         ku_id = (await (await self.awaitable_attrs.player).awaitable_attrs.steam_account).ku_id
-        tasks = []
-        for world in main_config["worlds"]:
-            items_row = "{"
-            for numbered_item in await self.awaitable_attrs.numbered_items:
-                items_row += '\\\"' + shlex.quote(
-                    (await numbered_item.awaitable_attrs.item).console_id
-                ) + '\\\", '
-            items_row = items_row[:-2]
-            items_row += "}"
-            command = f"""DelItems(\\\"{ku_id}\\\", {checked_items}, """ + items_row + """)"""
-            tasks.append(
-                asyncio.create_task(
-                    console_dst_checker.check(
-                        command,
-                        r'DelItems:\s+' + ku_id + r',\s+([\d])',
-                        world["shard_id"], world["screen_name"], "1", 5
-                    )
-                )
-            )
+        items_row = "{"
+        for numbered_item in await self.awaitable_attrs.numbered_items:
+            items_row += '\\\"' + shlex.quote(
+                (await numbered_item.awaitable_attrs.item).console_id
+            ) + '\\\", '
+        items_row = items_row[:-2]
+        items_row += "}"
+        command = f"""DelItems(\\\"{ku_id}\\\", {checked_items}, """ + items_row + """)"""
+        tasks = await console_dst_checker.check_all_worlds(
+            command, r'DelItems:\s+' + ku_id + r',\s+([\d])', "1", 5
+        )
+
         for task in asyncio.as_completed(tasks):
             result = await task
             if int(result) == 0:
@@ -170,17 +161,14 @@ class Claim(Base):
 
     async def check_days(self, *, console_dst_checker: ConsoleDSTChecker):
         ku_id = (await (await self.awaitable_attrs.player).awaitable_attrs.steam_account).ku_id
-        raw_results = set()
-        for world in main_config["worlds"]:
-            command = f"""print('CheckDaysForPlayer: ', \\\"{ku_id}\\\", TheNet:GetClientTableForUser(\\\"{ku_id}\\\").playerage)"""
-            raw_results.add(
-                await console_dst_checker.check(
-                    command,
-                    r'CheckDaysForPlayer:\s+' + ku_id + r'\s+([\d]+)',
-                    world["shard_id"], world["screen_name"], "0", 5
-                )
-            )
-        for result in raw_results:
+
+        command = f"""print('CheckDaysForPlayer: ', \\\"{ku_id}\\\", TheNet:GetClientTableForUser(\\\"{ku_id}\\\").playerage)"""
+        tasks = await console_dst_checker.check_all_worlds(
+            command, r'CheckDaysForPlayer:\s+' + ku_id + r'\s+([\d]+)', "0", 5
+        )
+
+        for task in asyncio.as_completed(tasks):
+            result = await task
             if int(result) > 0:
                 return int(result)
         return 0
