@@ -25,8 +25,10 @@ class ConsoleDSTChecker:
     async def simple_check(
             self, command: str, reg_answer: str, default_answer: str, timeout: int
     ):
-        return self.check_selected_world(
-            command, reg_answer, self.worlds[0]["shard_id"], self.worlds[0]["screen_name"], default_answer, timeout
+        return asyncio.create_task(
+            self.check_selected_world(
+                command, reg_answer, self.worlds[0]["shard_id"], self.worlds[0]["screen_name"], default_answer, timeout
+            )
         )
 
     async def check_selected_world(
