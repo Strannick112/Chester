@@ -478,7 +478,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                     else:
                         await ctx.reply(self.__replies['rollback_claim_fall'])
 
-    @commands.command(name=main_config['short_server_name'] + "set_status_claim")
+    @commands.command(name=main_config['short_server_name'] + "_set_status_claim")
     @commands.has_role(main_config['master_role'])
     async def set_status_claim(self, ctx, discord_id: str, status: str):
         """
