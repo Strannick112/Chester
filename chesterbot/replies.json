@@ -26,6 +26,8 @@
     "take_items_fail_count_days_not_enough_fail": "у вас менее 100 дней на игровом сервере, заявка отклонена!",
     "take_items_fail_count_days_not_enough_warn": "у вас менее 100 дней на игровом сервере, кол-во предметов сокращено!",
     "system_fail": "Ошибка в работе честера!",
+    "claim_set_status_success": "Смена статуса заявки успешно завершена",
+    "claim_set_status_fail": "Смена статуса заявки не удалась",
 
     "claim_warning": "⚠",
     "claim_accepted_is_ok": "<:3hmm:872133257649594499>",

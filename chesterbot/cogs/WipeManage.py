@@ -478,6 +478,33 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                     else:
                         await ctx.reply(self.__replies['rollback_claim_fall'])
 
+    @commands.command(name=main_config['short_server_name'] + "set_status_claim")
+    @commands.has_role(main_config['master_role'])
+    async def set_status_claim(self, ctx, discord_id: str, status: str):
+        """
+        Изменяет у определённого игрока статус заявки на указанный
+        Принимает два аргумента: ник игрока в дискорде, id статуса
+        """
+        try:
+            if discord_id is not None:
+                discord_id = int(discord_id)
+            if status is not None:
+                status = int(status)
+        except:
+            await ctx.reply("Параметры команды указаны не верно")
+        async with self.chester_bot.async_session() as session:
+            async with session.begin():
+                if claim := await self.get_claim_by_discord_id(discord_id=discord_id, session=session):
+                    if await claim.set_status(session=session, status=status):
+                        try:
+                            await self.mark_claim_executed(channel_id=claim.channel_id, message_id=claim.message_id)
+                            await ctx.reply(self.__replies['claim_set_status_success'])
+                            return True
+                        except Exception as error:
+                            print(error)
+                    else:
+                        await ctx.reply(self.__replies['claim_set_status_fail'])
+
     async def approve(self, msg, claim, session):
         """
         Проверяет возможно ли изменить состояние заявки с "Не одобрена" на "Одобрена" у определённого игрока,

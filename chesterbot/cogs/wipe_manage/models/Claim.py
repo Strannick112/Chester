@@ -204,3 +204,28 @@ class Claim(Base):
 
     async def get_steam_nickname(self):
         return (await (await self.awaitable_attrs.player).awaitable_attrs.steam_account).nickname
+
+    set_status_semaphore = asyncio.Semaphore(1)
+
+    async def set_status(self, session, status: int):
+        async with self.set_status_semaphore:
+            await session.refresh(self)
+            if status == statuses.get("not_approved"):
+                self.status_id = statuses.get("not_approved")
+                session.add(self)
+                return True
+            if status == statuses.get("approved"):
+                self.status_id = statuses.get("approved")
+                self.approved = func.now()
+                session.add(self)
+                return True
+            if status == statuses.get("executed"):
+                self.status_id = statuses.get("executed")
+                self.executed = func.now()
+                session.add(self)
+                return True
+            if status == statuses.get("executing"):
+                self.status_id = statuses.get("executing")
+                session.add(self)
+                return True
+            return False
