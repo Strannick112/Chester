@@ -44,7 +44,8 @@ class ResourceDashBoard:
             "Енотокоты": {"catcoon": 0},
             "Дикие улья": {"beehive": 0},
             "Улья пчёл-убийц": {"wasphive": 0},
-            "Смертоносные светлоцветы": {"lunarthrall_plant": 0}
+            "Смертоносные светлоцветы": {"lunarthrall_plant": 0},
+            "Логова выдр": {"otterden": 0}
         },
         "Ресурсы": {
             "Кусты камыша": {"reeds": 0},
