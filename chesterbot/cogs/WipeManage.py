@@ -220,7 +220,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                 text=self.__replies['take_items_fail'], reaction=self.__replies['claim_error'])
             return
 
-    @commands.command(name=main_config['short_server_name'] + "_take_items")
+    @commands.command(name=main_config['short_server_name'] + "_check_me")
     async def take_items_from_discord(self, ctx, discord_id=None):
         """
         Забирает у игрока предметы на сервере по оставленной заявке
