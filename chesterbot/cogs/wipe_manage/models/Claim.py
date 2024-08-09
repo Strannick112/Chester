@@ -118,14 +118,16 @@ class Claim(Base):
                     command = f"""LookupPlayerInstByUserID(\\\"{ku_id}\\\").components.inventory:""" \
                               f"""GiveItem(SpawnPrefab(\\\"{item_id}\\\"))"""
                     print("tasks in give_items :", len(tasks))
+                    tmp_tasks = console_dst_checker.check_all_worlds(
+                        command,
+                        r'\[string "LookupPlayerInstByUserID\("(' +
+                        ku_id +
+                        r')"\)[\w\W]*?\.\.\."\]\:1\: attempt to index a nil value',
+                        "is_normal", 5
+                    )
+                    print("tmp_tasks in give_items :", len(tmp_tasks))
                     tasks.union(
-                        console_dst_checker.check_all_worlds(
-                            command,
-                            r'\[string "LookupPlayerInstByUserID\("(' +
-                            ku_id +
-                            r')"\)[\w\W]*?\.\.\."\]\:1\: attempt to index a nil value',
-                            "is_normal", 5
-                        )
+                        tmp_tasks
                     )
                 print("tasks in give_items :", len(tasks))
                 for task in asyncio.as_completed(tasks):
