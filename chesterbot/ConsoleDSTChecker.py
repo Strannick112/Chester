@@ -22,6 +22,13 @@ class ConsoleDSTChecker:
             self.__checker.start(self.__all_commands[world["shard_id"]], world)
             self.__log_file_check.start(world)
 
+    async def simple_check(
+            self, command: str, reg_answer: str, default_answer: str, timeout: int
+    ):
+        return self.check_selected_world(
+            command, reg_answer, self.worlds[0]["shard_id"], self.worlds[0]["screen_name"], default_answer, timeout
+        )
+
     async def check_selected_world(
             self, command: str, reg_answer: str, shard_id: int, screen_name: str, default_answer: str, timeout: int
     ):
