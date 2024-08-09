@@ -119,7 +119,7 @@ class Claim(Base):
                               f"""GiveItem(SpawnPrefab(\\\"{item_id}\\\"))"""
 
                     tasks.union(
-                        await console_dst_checker.check_all_worlds(
+                        console_dst_checker.check_all_worlds(
                             command,
                             r'\[string "LookupPlayerInstByUserID\("(' +
                             ku_id +
@@ -127,6 +127,7 @@ class Claim(Base):
                             "is_normal", 5
                         )
                     )
+                print("tasks in give_items :", len(tasks))
                 for task in asyncio.as_completed(tasks):
                     result = await task
                     if result == "is_normal":
@@ -147,7 +148,7 @@ class Claim(Base):
         items_row = items_row[:-2]
         items_row += "}"
         command = f"""DelItems(\\\"{ku_id}\\\", {checked_items}, """ + items_row + """)"""
-        tasks = await console_dst_checker.check_all_worlds(
+        tasks = console_dst_checker.check_all_worlds(
             command, r'DelItems:\s+' + ku_id + r',\s+([\d])', "1", 5
         )
 
@@ -163,7 +164,7 @@ class Claim(Base):
         ku_id = (await (await self.awaitable_attrs.player).awaitable_attrs.steam_account).ku_id
 
         command = f"""print('CheckDaysForPlayer: ', \\\"{ku_id}\\\", TheNet:GetClientTableForUser(\\\"{ku_id}\\\").playerage)"""
-        tasks = await console_dst_checker.check_all_worlds(
+        tasks = console_dst_checker.check_all_worlds(
             command, r'CheckDaysForPlayer:\s+' + ku_id + r'\s+([\d]+)', "0", 5
         )
 

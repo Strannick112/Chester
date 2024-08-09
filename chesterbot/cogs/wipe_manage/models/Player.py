@@ -42,7 +42,7 @@ class Player(Base):
 
     async def is_player_online(self, console_dst_checker: ConsoleDSTChecker):
         ku_id = (await self.awaitable_attrs.steam_account).ku_id
-        tasks = await console_dst_checker.check_all_worlds(
+        tasks = console_dst_checker.check_all_worlds(
             f"""print(\\\"PlayerID: \\\", LookupPlayerInstByUserID(\\\"{ku_id}\\\").userid)""",
             r"PlayerID:\s*(" + ku_id + r")\s*",
             "",
