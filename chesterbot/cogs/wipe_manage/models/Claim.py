@@ -129,7 +129,7 @@ class Claim(Base):
                     )
                 for task in asyncio.as_completed(tasks):
                     result = await task
-                    if result == ku_id:
+                    if result == "is_normal":
                         await session.commit()
                         return True
                 await session.rollback()
