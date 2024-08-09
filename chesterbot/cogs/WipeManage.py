@@ -229,13 +229,10 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
         discord_id: уникальный целочисленный ид пользователя в дискорде
         """
 
-        # ДОБАВИТЬ ПРОВЕРКУ ДНЕЙ
-        # ДОБАВИТЬ ПРОВЕРКУ РОЛЕЙ И КОЛИЧЕСТВО ПРЕДМЕТОВ
         # ДОБАВИТЬ ВОЗВРАЩЕНИЕ ПРЕДМЕТОВ ОБРАТНО ДО ВАЙПА
         # РЕАЛИЗОВАТЬ СПИСОК ЗАПРЕЩЕННЫХ ДЛЯ ПЕРЕНОСА ПРЕДМЕТОВ
-        # Проверить функцию @check_me
-        # Добавить общую функцию @check_me и @take_me
         # Подумать на счет удаления сообщения с заявкой
+
         try:
             if discord_id is not None:
                 discord_id = int(discord_id)
@@ -272,16 +269,6 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                 await self._loud_message(
                     message=message, discord_id=discord_id, steam_nickname=steam_nickname,
                     text=self.__replies['take_items_fail_already_checked'], reaction=self.__replies['claim_error'])
-                return False
-
-            # Проверка на наличие игрока в игре
-            if is_player_online:
-                await message.reply(
-                    content="[" + main_config["server_name"] + "] <@" +
-                            discord_id + "> , " +
-                            self.__replies['player_is_not_online_phrase']
-                )
-                await message.add_reaction(self.__replies['player_is_not_online'])
                 return False
 
             # Проверка количества прожитых дней
@@ -325,6 +312,24 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                         await self._loud_message(
                             message=message, discord_id=discord_id, steam_nickname=steam_nickname,
                             text=self.__replies['take_items_fail_too_many_items'], reaction=self.__replies['claim_error'])
+                        return False
+
+                    # Проверка на перенос вещей без нахождения в игре
+                    if len(await _claim.awaitable_attrs.numbered_items) <= (items["unchecked_items"]):
+                        await self._loud_message(
+                            message=message, discord_id=discord_id, steam_nickname=steam_nickname,
+                            text=self.__replies['take_items_success'], reaction=self.__replies['claim_items_executed'])
+                        await self.mark_claim_approved(channel_id=channel_id, message_id=message_id)
+                        return True
+
+                    # Проверка на наличие игрока в игре
+                    if is_player_online:
+                        await message.reply(
+                            content="[" + main_config["server_name"] + "] <@" +
+                                    discord_id + "> , " +
+                                    self.__replies['player_is_not_online_phrase']
+                        )
+                        await message.add_reaction(self.__replies['player_is_not_online'])
                         return False
 
                     # Попытка забрать вещи
