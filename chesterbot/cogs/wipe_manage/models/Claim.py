@@ -126,7 +126,6 @@ class Claim(Base):
                             "is_normal", 5
                         )
                     )
-                print("tasks in give_items :", len(tasks))
                 for task in asyncio.as_completed(tasks):
                     result = await task
                     if result == "is_normal":
