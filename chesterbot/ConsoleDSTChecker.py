@@ -69,6 +69,7 @@ class ConsoleDSTChecker:
                     )
                 )
             )
+        print("local_tasks count: ", len(local_tasks))
         return local_tasks
 
     @tasks.loop(seconds=15)

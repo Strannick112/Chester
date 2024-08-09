@@ -356,6 +356,8 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
 
     @staticmethod
     async def _loud_message(message, discord_id, steam_nickname, text, reaction):
+        if discord_id is None:
+            discord_id = "Неизвестный"
         await message.reply(
             content="[" + main_config["server_name"] + "] <@" +
                     discord_id + "> , " +

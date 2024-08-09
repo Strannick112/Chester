@@ -117,7 +117,7 @@ class Claim(Base):
                     )
                     command = f"""LookupPlayerInstByUserID(\\\"{ku_id}\\\").components.inventory:""" \
                               f"""GiveItem(SpawnPrefab(\\\"{item_id}\\\"))"""
-
+                    print("tasks in give_items :", len(tasks))
                     tasks.union(
                         console_dst_checker.check_all_worlds(
                             command,
