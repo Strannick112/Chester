@@ -44,7 +44,8 @@ class ResourceDashBoard:
             "Енотокоты": {"catcoon": 0},
             "Дикие улья": {"beehive": 0},
             "Улья пчёл-убийц": {"wasphive": 0},
-            "Смертоносные светлоцветы": {"lunarthrall_plant": 0}
+            "Смертоносные светлоцветы": {"lunarthrall_plant": 0},
+            "Логова выдр": {"otterden": 0}
         },
         "Ресурсы": {
             "Кусты камыша": {"reeds": 0},
@@ -159,7 +160,7 @@ class ResourceDashBoard:
                               "count = count + 1 end end print(\\\"CountPrefab\\\", prefab, count)"
                     self.data[group_name][prefab_name][prefab_code] = int(
                         await asyncio.create_task(
-                            self.chester_bot.console_dst_checker.check(
+                            self.chester_bot.console_dst_checker.check_selected_world(
                                 command, r"CountPrefab\s*" + prefab_code + r"\s*([\d]+)\s*",
                                 self.shard_id, self.screen_name, prefab_count, 30
                             )

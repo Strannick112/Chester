@@ -1,3 +1,4 @@
+import asyncio
 from typing import List, Optional
 
 from sqlalchemy import ForeignKey, select
@@ -41,13 +42,16 @@ class Player(Base):
 
     async def is_player_online(self, console_dst_checker: ConsoleDSTChecker):
         ku_id = (await self.awaitable_attrs.steam_account).ku_id
-        screen_name = main_config['short_server_name'] + main_config["worlds"][0]["shard_id"]
-        result = await console_dst_checker.check(
+        tasks = console_dst_checker.check_all_worlds(
             f"""print(\\\"PlayerID: \\\", LookupPlayerInstByUserID(\\\"{ku_id}\\\").userid)""",
             r"PlayerID:\s*(" + ku_id + r")\s*",
-            main_config["worlds"][0]["shard_id"],
-            screen_name,
             "",
             5
         )
-        return result == (await self.awaitable_attrs.steam_account).ku_id
+
+        for task in asyncio.as_completed(tasks):
+            result = await task
+            if result == ku_id:
+                return True
+        return False
+

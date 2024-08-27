@@ -77,7 +77,10 @@ class ChesterBot(commands.Bot):
                     if message.channel.id == main_config["game_log_sync_channel"]:
                         await send_message_to_game("Admin " + message.author.display_name, message.content)
                     if message.channel.id == main_config["game_chat_sync_channel"]:
-                        await send_message_to_game(message.author.display_name, message.content)
+                        if message.author.get_role(main_config["master_role"]):
+                            await send_message_to_game("Admin " + message.author.display_name, message.content)
+                        else:
+                            await send_message_to_game(message.author.display_name, message.content)
                     else:
                         await self.wipe_manage.make_claim(message)
 

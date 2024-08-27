@@ -2,6 +2,7 @@ import discord
 from discord import ButtonStyle, Interaction
 from discord.ui import View
 
+from chesterbot import main_config
 from chesterbot.cogs.server_manage.commands import restart, stop, soft_stop, soft_restart, soft_world_regenerate
 
 
@@ -42,8 +43,7 @@ class ServerManageView(View):
         await interaction.response.send_message("Пересоздание игрового мира принято к исполнению")
 
     async def interaction_check(self, interaction: Interaction, /) -> bool:
-        for role in interaction.user.roles:
-            if role.id == int(self.chester_bot.replies["admin_role_id"]):
-                return True
+        if interaction.user.get_role(main_config["master_role"]) is not None:
+            return True
         else:
             return False

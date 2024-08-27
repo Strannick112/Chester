@@ -11,6 +11,7 @@ main_config = {
     'default_role_id': 'Default_Role_id',
 
     "game_chat_sync_channel": 0,
+    "guild_id": 0,
     "game_log_sync_channel": 0,
     "command_channel": 0,
     "dashboard_channel": 0,
