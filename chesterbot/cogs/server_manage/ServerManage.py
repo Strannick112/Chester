@@ -162,13 +162,11 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                     await self.log_channel.send(content=("```" + text + "```"))
                     if message[0] != "$":
                         avatar_url = self.chester_bot.replies.get(
-                            await self.chester_bot.console_dst_checker.check(
+                            await self.chester_bot.console_dst_checker.simple_check(
                                 """for _, player in pairs(GetPlayerClientTable()) do """
                                 f"""if player.userid == \\\"{ku_id}\\\" """ 
                                 """then print(\\\"PlayerPrefab\\\", player.userid, player.prefab) end end""",
                                 r"PlayerPrefab\s*"+ku_id+r"\s*(\w+)\s*",
-                                main_config["worlds"][0]["shard_id"],
-                                self.screen_name,
                                 "unknown",
                                 5
                             )
@@ -211,10 +209,10 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                             )
                             return
                         elif "@give_items" in message:
-                            asyncio.create_task(self.chester_bot.wipe_manage.give_items_from_game(player_name))
+                            asyncio.create_task(self.chester_bot.wipe_manage.give_items_from_game(player_name, ku_id))
                             return
                         elif "@check_me" in message:
-                            asyncio.create_task(self.chester_bot.wipe_manage.check_claim(player_name))
+                            asyncio.create_task(self.chester_bot.wipe_manage.check_claim(player_name, ku_id))
                             return
                         else:
                             await self.chat_webhook.send(

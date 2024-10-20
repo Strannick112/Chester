@@ -3,7 +3,7 @@
     "start_fail": "Я уже открыл прием заявок, неужели ты не видишь?",
     "stop_success": "Кажется, прием заявок закончен. С этого момента я больше не принимаю пожелания на перенос вещей в следующий вайп. Но ведь ты со мной еще поиграешь?",
     "stop_fail": "Я остановил прием заявок, пора начинать новый вайп!",
-    "give_items_success": "Выдача предметов успешно завершена",
+    "give_items_success": "Выдача предметов завершена",
     "give_items_fail": "Ррр… твоя заявка заставляет меня нервничать. Обратись к администратору сервера.",
     "give_items_fail_who_are_you": "Я тебя не знаю",
     "give_items_fail_not_approved": "Заявка еще не подтверждена",
@@ -20,6 +20,14 @@
     "rollback_claim_success": "Откат заявки успешно выполенен",
     "rollback_claim_fall": "Откат заявки не выполнен",
     "player_is_not_online_phrase": "Кажется, след потерян… но я буду все еще здесь, когда вы появитесь в игре",
+    "take_items_success": "отправка предметов в следующий вайп выполнена успешно",
+    "take_items_fail_approved": "ваши предметы уже изъяты!",
+    "take_items_fail_too_many_items": "у вас слишком много предметов в заявке!",
+    "take_items_fail_count_days_not_enough_fail": "у вас менее 100 дней на игровом сервере, заявка отклонена!",
+    "take_items_fail_count_days_not_enough_warn": "у вас менее 100 дней на игровом сервере, кол-во предметов сокращено!",
+    "system_fail": "Ошибка в работе честера!",
+    "claim_set_status_success": "Смена статуса заявки успешно завершена",
+    "claim_set_status_fail": "Смена статуса заявки не удалась",
 
     "claim_warning": "⚠",
     "claim_accepted_is_ok": "<:3hmm:872133257649594499>",
@@ -31,8 +39,8 @@
     "claim_deleted": "<:3prison:870276755460608040>",
     "claim_channel_id": "[880077986072780830, 1023193192209846383, 1025743931947896844]",
     "commands_channel_id": "[1025151299391586304, 1025743931947896844, 1021843197942579320, 1163507216154894397]",
-    "admin_role_id": "1022121631814000650",
     "admin_role_id_for_mention": "794688406948151308",
+    "take_items_fail": "изъятие предметов не выполнено",
 
     "unknown": "https://media.discordapp.net/attachments/871824345780080690/1112422709352206336/unknown.png",
     "walter": "https://media.discordapp.net/attachments/871824345780080690/1112422709616443502/Walter.png",
@@ -75,6 +83,97 @@
         "100": "<:100:1175156801226944512>",
         "250": "<:250:1175156891396100126>"
     },
+    "roles_for_items": {
+        "795280876317048863": {
+            "name": "Выживший",
+            "after_100": {
+                "checked_items": 1,
+                "unchecked_items": 0
+            },
+            "before_100": {
+                "checked_items": 0,
+                "unchecked_items": 0
+            }
+        },
+        "794689200107814942": {
+            "name": "Местный житель",
+            "after_100": {
+                "checked_items": 3,
+                "unchecked_items": 0
+            },
+            "before_100": {
+                "checked_items": 0,
+                "unchecked_items": 0
+            }
+        },
+        "974317362604040203": {
+            "name": "Старейшина",
+            "after_100": {
+                "checked_items": 3,
+                "unchecked_items": 0
+            },
+            "before_100": {
+                "checked_items": 0,
+                "unchecked_items": 2
+            }
+        },
+        "968553526810804234": {
+            "name": "Алхимик",
+            "after_100": {
+                "checked_items": 0,
+                "unchecked_items": 3
+            },
+            "before_100": {
+                "checked_items": 0,
+                "unchecked_items": 3
+            }
+        },
+        "1163904153521770586": {
+            "name": "Друг сообщества",
+            "after_100": {
+                "checked_items": 0,
+                "unchecked_items": 2
+            },
+            "before_100": {
+                "checked_items": 0,
+                "unchecked_items": 2
+            }
+        },
+        "1115673267785707621": {
+            "name": "Спонсор",
+            "after_100": {
+                "checked_items": 0,
+                "unchecked_items": 2
+            },
+            "before_100": {
+                "checked_items": 0,
+                "unchecked_items": 2
+            }
+        },
+        "833793814740598784": {
+            "name": "Варлок",
+            "after_100": {
+                "checked_items": 0,
+                "unchecked_items": 3
+            },
+            "before_100": {
+                "checked_items": 0,
+                "unchecked_items": 3
+            }
+        },
+        "794688406948151308": {
+            "name": "Админ",
+            "after_100": {
+                "checked_items": 0,
+                "unchecked_items": 3
+            },
+            "before_100": {
+                "checked_items": 0,
+                "unchecked_items": 3
+            }
+        }
+    },
+
     "predictions_channel_id": 1163507216154894397,
     "predictions": [
         {"text": "Мне кажется, за тобой кто-то пристально следит, стоит подумать о своем поведении в этом году!", "weight":  1},

@@ -6,11 +6,9 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from chesterbot import main_config
 from chesterbot.ConsoleDSTChecker import ConsoleDSTChecker
-from . import Status, statuses, ClaimItem, Wipe
+from . import Status, statuses, Wipe
 from .Base import Base
-# from .ClaimItem import claim_item
 
-import re
 import shlex
 
 
@@ -36,21 +34,22 @@ class Claim(Base):
     executed: Mapped[int] = mapped_column(DateTime, default=func.now())
 
     numbered_items: Mapped[List["NumberedItem"]] = relationship("NumberedItem",
-        secondary='claim_item', back_populates="claim"
-    )
+                                                                secondary='claim_item', back_populates="claim"
+                                                                )
 
     def __repr__(self) -> str:
         return f"Claim(id={str(self.id)!r}, message_id={str(self.message_id)}," + \
-                f"channel_id={str(self.channel_id)}, player_id={str(self.player_id)!r}," + \
-                f" status_id={str(self.status_id)!r}, wipe_id={str(self.wipe_id)!r}," + \
-                f" started={str(self.started)!r}, approved={str(self.approved)!r}," + \
-                f" executed={str(self.executed)!r}, message_link={str(self.message_link)})"
+            f"channel_id={str(self.channel_id)}, player_id={str(self.player_id)!r}," + \
+            f" status_id={str(self.status_id)!r}, wipe_id={str(self.wipe_id)!r}," + \
+            f" started={str(self.started)!r}, approved={str(self.approved)!r}," + \
+            f" executed={str(self.executed)!r}, message_link={str(self.message_link)})"
 
     async def to_str(self):
         items = "[\n"
         for numbered_item in await self.awaitable_attrs.numbered_items:
             item = await numbered_item.awaitable_attrs.item
-            items += f'ᅠᅠ{numbered_item.number + 1}. ' + {'console_id': item.console_id, 'name': item.name}.__str__() + ',\n'
+            items += f'ᅠᅠ{numbered_item.number + 1}. ' + {'console_id': item.console_id,
+                                                          'name': item.name}.__str__() + ',\n'
         items += "]"
         approved = '?' if self.approved == self.started else str(self.approved)
         executed = '?' if self.executed == self.started else str(self.executed)
@@ -76,7 +75,8 @@ class Claim(Base):
             await session.execute(
                 update(Claim)
                 .where(Claim.player_id == player_id)
-                .where(Claim.wipe_id == (await session.execute(select(Wipe).order_by(Wipe.id.desc()))).scalars().first().id)
+                .where(Claim.wipe_id == (
+                    await session.execute(select(Wipe).order_by(Wipe.id.desc()))).scalars().first().id)
                 .values(
                     message_id=kwargs.get("message_id"),
                     channel_id=kwargs.get("channel_id"),
@@ -110,46 +110,64 @@ class Claim(Base):
                 self.status_id = statuses.get("executed")
                 session.add(self)
                 ku_id = (await (await self.awaitable_attrs.player).awaitable_attrs.steam_account).ku_id
-                tasks = []
-                for world in main_config["worlds"]:
-                    for numbered_item in await self.awaitable_attrs.numbered_items:
-                        item_id = shlex.quote(
-                            (await numbered_item.awaitable_attrs.item).console_id
+                tasks = set()
+                for numbered_item in await self.awaitable_attrs.numbered_items:
+                    item_id = shlex.quote(
+                        (await numbered_item.awaitable_attrs.item).console_id
+                    )
+                    command = f"""LookupPlayerInstByUserID(\\\"{ku_id}\\\").components.inventory:""" \
+                              f"""GiveItem(SpawnPrefab(\\\"{item_id}\\\"))"""
+                    tasks = tasks.union(
+                        console_dst_checker.check_all_worlds(
+                            command,
+                            r'\[string "LookupPlayerInstByUserID\("(' +
+                            ku_id +
+                            r')"\)[\w\W]*?\.\.\."\]\:1\: attempt to index a nil value',
+                            "is_normal", 5
                         )
-                        command = f"""LookupPlayerInstByUserID(\\\"{ku_id}\\\").components.inventory:""" \
-                            f"""GiveItem(SpawnPrefab(\\\"{item_id}\\\"))"""
-                        tasks.append(
-                            asyncio.create_task(
-                                console_dst_checker.check(
-                                    command,
-                                    r'\[string "LookupPlayerInstByUserID\("(' +
-                                    ku_id +
-                                    r')"\)[\w\W]*?\.\.\."\]\:1\: attempt to index a nil value',
-                                    world["shard_id"], world["screen_name"], "is_normal", 5
-                                )
-                            )
-                        )
+                    )
                 for task in asyncio.as_completed(tasks):
                     result = await task
-                    if result == ku_id:
+                    if result == "is_normal":
                         await session.commit()
                         return True
                 await session.rollback()
                 return False
 
+    semaphore_take_items = asyncio.Semaphore(1)
+
+    async def take_items(self, *, checked_items, console_dst_checker: ConsoleDSTChecker):
+        ku_id = (await (await self.awaitable_attrs.player).awaitable_attrs.steam_account).ku_id
+        items_row = "{"
+        for numbered_item in await self.awaitable_attrs.numbered_items:
+            items_row += '\\\"' + shlex.quote(
+                (await numbered_item.awaitable_attrs.item).console_id
+            ) + '\\\", '
+        items_row = items_row[:-2]
+        items_row += "}"
+        command = f"""DelItems(\\\"{ku_id}\\\", {checked_items}, """ + items_row + """)"""
+        tasks = console_dst_checker.check_all_worlds(
+            command, r'DelItems:\s+' + ku_id + r',\s+([\d])', "1", 5
+        )
+
+        for task in asyncio.as_completed(tasks):
+            result = await task
+            if int(result) == 0:
+                return True
+            if int(result) == 2:
+                return False
+        return False
+
     async def check_days(self, *, console_dst_checker: ConsoleDSTChecker):
         ku_id = (await (await self.awaitable_attrs.player).awaitable_attrs.steam_account).ku_id
-        raw_results = set()
-        for world in main_config["worlds"]:
-            command = f"""print('CheckDaysForPlayer: ', \\\"{ku_id}\\\", TheNet:GetClientTableForUser(\\\"{ku_id}\\\").playerage)"""
-            raw_results.add(
-                await console_dst_checker.check(
-                    command,
-                    r'CheckDaysForPlayer:\s+' + ku_id + r'\s+([\d]+)',
-                    world["shard_id"], world["screen_name"], "0", 5
-                )
-            )
-        for result in raw_results:
+
+        command = f"""print('CheckDaysForPlayer: ', \\\"{ku_id}\\\", TheNet:GetClientTableForUser(\\\"{ku_id}\\\").playerage)"""
+        tasks = console_dst_checker.check_all_worlds(
+            command, r'CheckDaysForPlayer:\s+' + ku_id + r'\s+([\d]+)', "0", 5
+        )
+
+        for task in asyncio.as_completed(tasks):
+            result = await task
             if int(result) > 0:
                 return int(result)
         return 0
@@ -185,3 +203,28 @@ class Claim(Base):
 
     async def get_steam_nickname(self):
         return (await (await self.awaitable_attrs.player).awaitable_attrs.steam_account).nickname
+
+    set_status_semaphore = asyncio.Semaphore(1)
+
+    async def set_status(self, session, status: int):
+        async with self.set_status_semaphore:
+            await session.refresh(self)
+            if status == statuses.get("not_approved"):
+                self.status_id = statuses.get("not_approved")
+                session.add(self)
+                return True
+            if status == statuses.get("approved"):
+                self.status_id = statuses.get("approved")
+                self.approved = func.now()
+                session.add(self)
+                return True
+            if status == statuses.get("executed"):
+                self.status_id = statuses.get("executed")
+                self.executed = func.now()
+                session.add(self)
+                return True
+            if status == statuses.get("executing"):
+                self.status_id = statuses.get("executing")
+                session.add(self)
+                return True
+            return False
