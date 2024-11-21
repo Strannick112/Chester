@@ -36,8 +36,8 @@ class ChesterBot(commands.Bot):
         super().__init__(
             command_prefix=main_config['prefix'],
             intents=intents,
-            proxy=main_config["proxy"]["address"],
-            proxy_auth=BasicAuth(main_config["proxy"]["login"], main_config["proxy"]["password"])
+            proxy=main_config["proxy"]["address"]
+            # proxy_auth=BasicAuth(main_config["proxy"]["login"], main_config["proxy"]["password"])
         )
         self.async_session = None
 
