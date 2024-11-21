@@ -33,12 +33,26 @@ class ChesterBot(commands.Bot):
         self.dashboards = DashBoardEmbed(self)
         self.halloween = Halloween(self)
         self.event(self.on_ready)
-        super().__init__(
-            command_prefix=main_config['prefix'],
-            intents=intents,
-            proxy=main_config["proxy"]["address"]
-            # proxy_auth=BasicAuth(main_config["proxy"]["login"], main_config["proxy"]["password"])
-        )
+        if main_config["proxy"]["address"] == "":
+            super().__init__(
+                command_prefix=main_config['prefix'],
+                intents=intents
+            )
+        else:
+            if main_config["proxy"]["login"] == "":
+                super().__init__(
+                    command_prefix=main_config['prefix'],
+                    intents=intents,
+                    proxy=main_config["proxy"]["address"]
+                )
+            else:
+                super().__init__(
+                    command_prefix=main_config['prefix'],
+                    intents=intents,
+                    proxy=main_config["proxy"]["address"],
+                    proxy_auth=BasicAuth(main_config["proxy"]["login"], main_config["proxy"]["password"])
+                )
+
         self.async_session = None
 
     async def on_ready(self):
