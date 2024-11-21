@@ -2,6 +2,7 @@ import codecs
 import json
 
 import discord
+from aiohttp import BasicAuth
 from discord.ext import commands
 
 from chesterbot import main_config
@@ -32,7 +33,12 @@ class ChesterBot(commands.Bot):
         self.dashboards = DashBoardEmbed(self)
         self.halloween = Halloween(self)
         self.event(self.on_ready)
-        super().__init__(command_prefix=main_config['prefix'], intents=intents)
+        super().__init__(
+            command_prefix=main_config['prefix'],
+            intents=intents,
+            proxy=main_config["proxy"]["address"],
+            proxy_auth=BasicAuth(main_config["proxy"]["login"], main_config["proxy"]["password"])
+        )
         self.async_session = None
 
     async def on_ready(self):

@@ -20,6 +20,11 @@ main_config = {
     "main_embed_picture": "url_to_image",
 
     "is_event": False,
+    "proxy": {
+        "address": "http://127.0.0.1:8000",
+        "login": "USER_LOGIN",
+        "password": "PASSWORD"
+    },
 
     "buttons": [
         {"description": "description by default", "url": "https://discord.gg/NFGxUDDbz7"}
