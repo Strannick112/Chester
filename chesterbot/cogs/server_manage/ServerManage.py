@@ -23,6 +23,9 @@ class ServerManage(commands.Cog, name="Управление сервером"):
         self.log_channel = None
         self.log_webhook = None
 
+        # Противовходная система
+        self.counter_login = 0
+
     async def on_ready(self):
         chat_channel = self.chester_bot.get_channel(main_config["game_chat_sync_channel"])
         self.chat_webhook = discord.utils.get(await chat_channel.webhooks(), name='Chat')
