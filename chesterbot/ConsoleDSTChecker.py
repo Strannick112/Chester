@@ -18,6 +18,8 @@ class ConsoleDSTChecker:
         for world in worlds:
             self.__all_commands[world["shard_id"]] = {}
 
+        self.potential_ban_ku_id = None
+
     async def on_ready(self, loop):
         self.__loop = loop
         for world in self.worlds:
@@ -89,6 +91,23 @@ class ConsoleDSTChecker:
             if text := world["file_log_iter"].readline()[12:]:
                 if "Client authenticated" in text:
                     await main_config['log_channel'].send(content=("```" + text + "```"))
+
+                # Против ддос атаки, возникающей, когда клиент пытается отсоединиться от сервера, но не присылает данных
+                if "disconnected from [SHDMASTER](1)" in text:
+                    if potential_ban_ku_id := re.findall("(\(KU_.+?\))", text)[0]:
+                        self.potential_ban_ku_id = potential_ban_ku_id
+                        return
+                if "[ID_DST_CLIENT_READY] no client object present, closing client connection" in text:
+                    if self.potential_ban_ku_id:
+                        text = re.sub(r'\"', r"\"", re.sub(r'\'', r"\'", f"TheNet:Ban(\"{self.potential_ban_ku_id}\")"))
+                        await main_config['log_channel'].send(content="Выполнение команды «" + text + "» принято к исполнению")
+
+                        subprocess.check_output(
+                            f"""screen -S {main_config['short_server_name'] + main_config["worlds"][0]["shard_id"]} -X stuff""" +
+                            f""" "{text}\n\"""",
+                            shell=True
+                        )
+                        self.potential_ban_ku_id = None
                 for keys, command in commands.items():
                     try:
                         if not command.done():
