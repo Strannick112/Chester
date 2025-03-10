@@ -65,3 +65,4 @@ main_config["file_chat_iter"] = codecs.open(
 )
 main_config["file_chat_iter"].seek(0, 2)
 
+main_config['log_channel'] = None

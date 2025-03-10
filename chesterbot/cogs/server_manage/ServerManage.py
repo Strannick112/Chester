@@ -18,17 +18,18 @@ class ServerManage(commands.Cog, name="Управление сервером"):
         self.chester_bot = chester_bot
         self.avatars = {}
         self.screen_name = main_config['short_server_name'] + main_config["worlds"][0]["shard_id"]
-        self.chat_channel = None
+        # self.chat_channel = None
         self.chat_webhook = None
         self.log_channel = None
         self.log_webhook = None
 
     async def on_ready(self):
-        self.chat_channel = self.chester_bot.get_channel(main_config["game_chat_sync_channel"])
-        self.chat_webhook = discord.utils.get(await self.chat_channel.webhooks(), name='Chat')
+        chat_channel = self.chester_bot.get_channel(main_config["game_chat_sync_channel"])
+        self.chat_webhook = discord.utils.get(await chat_channel.webhooks(), name='Chat')
         if self.chat_webhook is None:
-            self.chat_webhook = await self.chat_channel.create_webhook(name='Chat')
+            self.chat_webhook = await chat_channel.create_webhook(name='Chat')
         self.log_channel = self.chester_bot.get_channel(main_config["game_log_sync_channel"])
+        main_config['log_channel'] = self.log_channel
         self.log_webhook = discord.utils.get(await self.log_channel.webhooks(), name='Log')
         if self.log_webhook is None:
             self.log_webhook = await self.log_channel.create_webhook(name='Log')

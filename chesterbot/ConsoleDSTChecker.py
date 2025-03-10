@@ -6,6 +6,8 @@ import subprocess
 
 from discord.ext import tasks
 
+from chesterbot import main_config
+
 
 class ConsoleDSTChecker:
 
@@ -85,6 +87,8 @@ class ConsoleDSTChecker:
         """Следить за логами на игровом сервере"""
         try:
             if text := world["file_log_iter"].readline()[12:]:
+                if "Client authenticated" in text:
+                    main_config['log_channel'].send(content=("```" + text + "```"))
                 for keys, command in commands.items():
                     try:
                         if not command.done():
