@@ -178,6 +178,8 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                     return
                 if "[Say]" in text:
                     ku_id, player_name, message = re.findall(r"\[Say]\s\(([\w\W]+?)\)\s([\w\W]+):\s*([\w\W]+)", text)[0]
+
+                    # Автобан против ддос из пустых сообщений
                     if len(message) == 0:
                         text = re.sub(r'\"', r"\"", re.sub(r'\'', r"\'", f"TheNet:Ban(\"{ku_id}\")"))
                         await main_config['log_channel'].send("Выполнение команды «" + text + "» принято к исполнению")
