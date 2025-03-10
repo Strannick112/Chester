@@ -93,6 +93,22 @@ class ServerManage(commands.Cog, name="Управление сервером"):
             shell=True
         )
 
+    @commands.command(name=main_config['short_server_name'] + "_ban")
+    @commands.has_role(main_config['master_role'])
+    async def ban(self, ctx, *, ku_id):
+        """
+        Банит игрока на игровом сервере. Имеет один параметр:
+        ku_id - уникальный klei_id игрока, на которого снизойдет гнев императора.
+        """
+        text = re.sub(r'\"', r"\"", re.sub(r'\'', r"\'", f"TheNet:Ban(\"{ku_id}\")"))
+        await ctx.send("Выполнение команды «" + text + "» принято к исполнению")
+
+        subprocess.check_output(
+            f"""screen -S {self.screen_name} -X stuff""" +
+            f""" "{text}\n\"""",
+            shell=True
+        )
+
     @tasks.loop(seconds=15)
     async def __chat_file_check(self):
         size_of_chat_file = os.path.getsize(main_config['full_path_to_server_chat_log_file'])
