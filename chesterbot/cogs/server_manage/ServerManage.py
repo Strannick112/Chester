@@ -178,6 +178,15 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                     return
                 if "[Say]" in text:
                     ku_id, player_name, message = re.findall(r"\[Say]\s\(([\w\W]+?)\)\s([\w\W]+):\s*([\w\W]+)", text)[0]
+                    if len(message) == 0:
+                        text = re.sub(r'\"', r"\"", re.sub(r'\'', r"\'", f"TheNet:Ban(\"{ku_id}\")"))
+                        await main_config['log_channel'].send("Выполнение команды «" + text + "» принято к исполнению")
+
+                        subprocess.check_output(
+                            f"""screen -S {self.screen_name} -X stuff""" +
+                            f""" "{text}\n\"""",
+                            shell=True
+                        )
 
                     await self.log_channel.send(content=("```" + text + "```"))
                     if message[0] != "$":
