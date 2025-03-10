@@ -237,7 +237,8 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                             )
                             return
                     return
-                await self.log_channel.send(content=("```" + text + "```"))
+                if len(text) > 0:
+                    await self.log_channel.send(content=("```" + text + "```"))
         except Exception as error:
             print(error)
             return
