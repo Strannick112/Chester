@@ -22,7 +22,7 @@ class WipeInfoEmbed:
 
     async def update_dashboard(self):
         try:
-            await self.saved_embed_message.message.edit(embeds=self.embed)
+            await self.saved_embed_message.message.edit(embeds=[self.embed])
         except:
             pass
 

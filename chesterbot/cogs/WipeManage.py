@@ -29,11 +29,11 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
         self.last_wipe_info_embed = WipeInfoEmbed(
             name="last_wipe", channel=self.chester_bot.get_channel(main_config["admin_dashboard_channel"]),
             bot=self.chester_bot,
-            embed_default={"embeds": discord.Embed(
+            embed_default={"embeds": [discord.Embed(
                 title=main_config["server_name"],
                 description="Доска создана, начат сбор информации...",
                 colour=discord.Colour.dark_teal()
-            )},
+            )]},
             update_callback=self.reload_data
         )
         await self.last_wipe_info_embed.on_ready()
