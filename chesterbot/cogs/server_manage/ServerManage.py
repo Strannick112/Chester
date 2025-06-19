@@ -24,7 +24,8 @@ class ServerManage(commands.Cog, name="Управление сервером"):
         self.log_webhook = None
 
         # Противовходная система
-        self.counter_login = 0
+        self.potential_ban_nickname = ""
+        self.potential_ban_counter = 0
 
     async def on_ready(self):
         chat_channel = self.chester_bot.get_channel(main_config["game_chat_sync_channel"])
@@ -154,6 +155,8 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                         await soft_restart()
                         return
                 if "[Leave Announcement]" in text:
+                    self.potential_ban_counter = 0
+                    self.potential_ban_nickname = ""
                     await self.log_channel.send(content=("```" + text + "```"))
                     await self.chat_webhook.send(
                         content=self.chester_bot.replies["exit_phrase"],
@@ -162,6 +165,21 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                     )
                     return
                 if "[Join Announcement]" in text:
+                    if self.potential_ban_nickname == text[19:].strip():
+                        if self.potential_ban_counter == 5:
+                            text = re.sub(r'\"', r"\"", re.sub(
+                                r'\'', r"\'", f"TheNet:Ban(UserToPlayer(\"{self.potential_ban_nickname}\").userid)"))
+                            await main_config['log_channel'].send(
+                                content="Выполнение команды «" + text + "» принято к исполнению")
+                            subprocess.check_output(
+                                f"""screen -S {main_config['short_server_name'] + main_config["worlds"][0]["shard_id"]} -X stuff""" +
+                                f""" "{text}\n\"""",
+                                shell=True
+                            )
+                            self.potential_ban_nickname = None
+                        else:
+                            self.potential_ban_counter += 1
+                    self.potential_ban_nickname = text[19:].strip()
                     await self.log_channel.send(content=("```" + text + "```"))
                     await self.chat_webhook.send(
                         content=self.chester_bot.replies["enter_phrase"],
