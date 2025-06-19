@@ -43,7 +43,6 @@ class DashBoardEmbed(commands.Cog, name="Доска подсчёта"):
         return embed_list_default
 
     async def on_ready(self):
-        embed_list_default = await self.__get_embed_list_default()
         try:
             embed_picture = discord.File(main_config["main_embed_picture"])
         except OSError:
@@ -56,7 +55,7 @@ class DashBoardEmbed(commands.Cog, name="Доска подсчёта"):
             channel=self.chester_bot.get_channel(main_config["dashboard_channel"]),
             bot=self.chester_bot,
             head_picture=embed_picture,
-            embed_list_default=embed_list_default,
+            embed_list_default=await self.__get_embed_list_default(),
             view=view,
             update_callback=self.reload_data
         )
