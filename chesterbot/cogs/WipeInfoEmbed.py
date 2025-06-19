@@ -17,11 +17,11 @@ class WipeInfoEmbed:
 
     async def update_dashboard(self):
         try:
-            await self.saved_embed_message.message.edit(embeds=[self.embed])
+            await self.saved_embed_message.message.edit(embeds=self.embed)
         except:
             pass
 
     @tasks.loop(minutes=1)
     async def reload_data(self):
-        self.embed = await self.update_callback()
+        self.embed = [await self.update_callback()]
         await self.update_dashboard()
