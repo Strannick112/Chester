@@ -2,8 +2,6 @@ import codecs
 import json
 import os
 
-from discord.types.message import Message
-
 
 class SavedMessage:
     def __init__(self, name, channel, bot, default_message: None):
