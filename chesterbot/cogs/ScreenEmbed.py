@@ -1,46 +1,26 @@
-import codecs
-import json
-import os
-
 from discord.ext import tasks
+
+from chesterbot.cogs.SavedMessage import SavedMessage
 
 
 class ScreenEmbed:
     def __init__(self, name, channel, bot, embed_list_default, view, update_callback):
         self.chester_bot = bot
-        self.name = name
-        self.channel = channel
-        self.message = None
-        self.message_id = None
+        self.saved_embed_message = SavedMessage(name, channel, self.chester_bot)
+        self.saved_picture_message = SavedMessage(name + "_picture", channel, self.chester_bot)
         self.embed_list = None
         self.embed_list_default = embed_list_default
         self.view = view
         self.update_callback = update_callback
 
-    async def get_message_id(self):
-        if not os.path.exists(f"./chesterbot/cogs/{self.name}"):
-            os.mkdir(f"./chesterbot/cogs/{self.name}")
-        if not os.path.exists(f"./chesterbot/cogs/{self.name}/message.json"):
-            with codecs.open(f"./chesterbot/cogs/{self.name}/message.json", "w", encoding="utf-8") as file:
-                json.dump(0, file)
-
-        with codecs.open(f"./chesterbot/cogs/{self.name}/message.json", "rb", encoding="utf-8") as file:
-            return json.load(file)
-
     async def on_ready(self):
-        self.message_id = await self.get_message_id()
-        try:
-            self.message = await self.channel.fetch_message(self.message_id)
-        except:
-            self.message = await self.channel.send(embeds=self.embed_list_default)
-            self.message_id = self.message.id
-            with codecs.open(f"./chesterbot/cogs/{self.name}/message.json", "w", encoding="utf-8") as file:
-                json.dump(self.message_id, file)
+        await self.saved_embed_message.on_ready()
+        await self.saved_picture_message.on_ready()
         self.reload_data.start()
 
     async def update_dashboard(self):
         try:
-            await self.message.edit(embeds=self.embed_list, view=self.view)
+            await self.saved_embed_message.message.edit(embeds=self.embed_list, view=self.view, content="")
         except:
             pass
 
