@@ -36,6 +36,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
             ),
             update_callback=self.reload_data
         )
+        await self.last_wipe_info_embed.on_ready()
 
     async def reload_data(self):
         async with self.chester_bot.async_session() as session:
