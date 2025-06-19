@@ -1,10 +1,5 @@
-import discord
 from discord.ext import tasks
-from sqlalchemy import select
-
-from chesterbot import main_config
 from chesterbot.cogs.SavedMessage import SavedMessage
-from chesterbot.cogs.wipe_manage import models
 
 
 class WipeInfoEmbed:
