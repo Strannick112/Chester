@@ -4,7 +4,7 @@ import os
 
 
 class SavedMessage:
-    def __init__(self, name, channel, bot, default_message: None):
+    def __init__(self, name, channel, bot, default_message = None):
         self.chester_bot = bot
         self.name = name
         self.channel = channel
