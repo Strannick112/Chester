@@ -6,6 +6,7 @@ from discord.ext import commands
 from sqlalchemy import func, select
 
 from chesterbot import main_config
+from chesterbot.cogs.WipeInfoEmbed import WipeInfoEmbed
 from chesterbot.cogs.server_manage.commands import send_message_to_game
 from chesterbot.cogs.wipe_manage.models import DiscordAccount, SteamAccount, ClaimItem
 import chesterbot.cogs.wipe_manage.models as models
@@ -17,12 +18,36 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
         self.__replies = chester_bot.replies
         self.command_channel = None
         self.command_webhook = None
+        self.last_wipe_info_embed = None
 
     async def on_ready(self):
         self.command_channel = self.chester_bot.get_channel(main_config["command_channel"])
         self.command_webhook = discord.utils.get(await self.command_channel.webhooks(), name='Command')
         if self.command_webhook is None:
             self.command_webhook = await self.command_channel.create_webhook(name='Command')
+
+        self.last_wipe_info_embed = WipeInfoEmbed(
+            name="last_wipe", channel=self.chester_bot.get_channel(main_config["admin_dashboard_channel"]),
+            bot=self.chester_bot,
+            embed_default=discord.Embed(
+                title=main_config["server_name"],
+                description="Доска создана, начат сбор информации...",
+                colour=discord.Colour.dark_teal()
+            ),
+            update_callback=self.reload_data
+        )
+
+    async def reload_data(self):
+        async with self.chester_bot.async_session() as session:
+            async with session.begin():
+                if last_wipe := (
+                await session.execute(select(models.Wipe).order_by(models.Wipe.id.desc()))).scalars().first():
+                    text = await last_wipe.to_str()
+        return discord.Embed(
+            title="Информация о вайпе" + main_config["server_name"],
+            description=text,
+            colour=discord.Colour.dark_teal()
+        )
 
     @commands.command(name=main_config['short_server_name'] + "_checkout_marks_on_executed_claims")
     @commands.has_role(main_config['master_role'])
