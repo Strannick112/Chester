@@ -60,7 +60,7 @@ class DashBoardEmbed(commands.Cog, name="Доска подсчёта"):
             update_callback=self.reload_data
         )
         await self.screenEmbed.on_ready()
-        await self.screenEmbed.saved_picture_message.message.edit(file=embed_picture)
+        await self.screenEmbed.saved_picture_message.message.edit(attachments=[embed_picture])
 
     async def reload_data(self):
         await asyncio.wait([asyncio.create_task(world.reload_data()) for world in self.world_dashboards])
