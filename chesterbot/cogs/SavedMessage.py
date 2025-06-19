@@ -12,7 +12,7 @@ class SavedMessage:
         self.channel = channel
         self.message = None
         self._message_id = None
-        self.default_message = default_message if default_message is None else Message(content=f"```Данные {self.name} в обработке...```")
+        self.default_message = default_message if default_message is not None else {"content": f"```Данные {self.name} в обработке...```"}
 
     async def get_message_id(self):
         if not os.path.exists(f"./chesterbot/cogs/{self.name}"):
@@ -29,7 +29,7 @@ class SavedMessage:
         try:
             self.message = await self.channel.fetch_message(self._message_id)
         except:
-            self.message = await self.channel.send(self.default_message)
+            self.message = await self.channel.send(**self.default_message)
             self._message_id = self.message.id
             with codecs.open(f"./chesterbot/cogs/{self.name}/message.json", "w", encoding="utf-8") as file:
                 json.dump(self._message_id, file)

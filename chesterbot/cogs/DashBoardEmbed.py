@@ -55,12 +55,12 @@ class DashBoardEmbed(commands.Cog, name="Доска подсчёта"):
             name="dashboard",
             channel=self.chester_bot.get_channel(main_config["dashboard_channel"]),
             bot=self.chester_bot,
+            head_picture=embed_picture,
             embed_list_default=embed_list_default,
             view=view,
             update_callback=self.reload_data
         )
         await self.screenEmbed.on_ready()
-        await self.screenEmbed.saved_picture_message.message.edit(attachments=[embed_picture], content="")
 
     async def reload_data(self):
         await asyncio.wait([asyncio.create_task(world.reload_data()) for world in self.world_dashboards])

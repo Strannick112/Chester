@@ -4,12 +4,11 @@ from chesterbot.cogs.SavedMessage import SavedMessage
 
 
 class ScreenEmbed:
-    def __init__(self, name, channel, bot, embed_list_default, view, update_callback):
+    def __init__(self, name, channel, bot, head_picture, embed_list_default, view, update_callback):
         self.chester_bot = bot
-        self.saved_embed_message = SavedMessage(name, channel, self.chester_bot)
-        self.saved_picture_message = SavedMessage(name + "_picture", channel, self.chester_bot)
+        self.saved_embed_message = SavedMessage(name, channel, self.chester_bot, embed_list_default)
+        self.saved_picture_message = SavedMessage(name + "_picture", channel, self.chester_bot, head_picture)
         self.embed_list = None
-        self.embed_list_default = embed_list_default
         self.view = view
         self.update_callback = update_callback
 
@@ -20,7 +19,7 @@ class ScreenEmbed:
 
     async def update_dashboard(self):
         try:
-            await self.saved_embed_message.message.edit(embeds=self.embed_list, view=self.view, content="")
+            await self.saved_embed_message.message.edit(embeds=self.embed_list, view=self.view)
         except:
             pass
 
