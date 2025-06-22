@@ -1,4 +1,6 @@
 from discord.ext import tasks
+from discord.types.embed import Embed
+
 from chesterbot.cogs.SavedMessage import SavedMessage
 
 
