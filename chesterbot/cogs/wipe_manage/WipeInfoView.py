@@ -1,4 +1,4 @@
-from chesterbot.cogs.message_utils.StreamMessage import StreamMessage
+from chesterbot.message_utils.StreamMessage import StreamMessage
 
 
 class WipeInfoView:

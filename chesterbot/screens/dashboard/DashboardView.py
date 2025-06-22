@@ -1,5 +1,5 @@
-from chesterbot.cogs.message_utils.SavedMessage import SavedMessage
-from chesterbot.cogs.message_utils.StreamMessage import StreamMessage
+from chesterbot.message_utils.SavedMessage import SavedMessage
+from chesterbot.message_utils.StreamMessage import StreamMessage
 
 
 class DashboardView:
