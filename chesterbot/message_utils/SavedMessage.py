@@ -14,13 +14,11 @@ class SavedMessage:
             else {"content": f"```Данные {self.name} в обработке...```"}
 
     async def get_message_id(self):
-        if not os.path.exists(f"./chesterbot/message_utils"):
-            os.mkdir(f"./chesterbot/message_utils")
-        if not os.path.exists(f"./chesterbot/message_utils/{self.name}.json"):
-            with codecs.open(f"./chesterbot/message_utils/{self.name}.json", "w", encoding="utf-8") as file:
+        if not os.path.exists(f"./chesterbot/message_utils/saved_messages/{self.name}.json"):
+            with codecs.open(f"./chesterbot/message_utils/saved_messages/{self.name}.json", "w", encoding="utf-8") as file:
                 json.dump(0, file)
 
-        with codecs.open(f"./chesterbot/message_utils/{self.name}.json", "rb", encoding="utf-8") as file:
+        with codecs.open(f"./chesterbot/message_utils/saved_messages/{self.name}.json", "rb", encoding="utf-8") as file:
             return json.load(file)
 
     async def on_ready(self):
