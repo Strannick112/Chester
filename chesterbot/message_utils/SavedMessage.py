@@ -14,13 +14,13 @@ class SavedMessage:
             else {"content": f"```Данные {self.name} в обработке...```"}
 
     async def get_message_id(self):
-        if not os.path.exists(f"./chesterbot/cogs/{self.name}"):
-            os.mkdir(f"./chesterbot/cogs/{self.name}")
-        if not os.path.exists(f"./chesterbot/cogs/{self.name}/message.json"):
-            with codecs.open(f"./chesterbot/cogs/{self.name}/message.json", "w", encoding="utf-8") as file:
+        if not os.path.exists(f"./chesterbot/message_utils"):
+            os.mkdir(f"./chesterbot/message_utils")
+        if not os.path.exists(f"./chesterbot/message_utils/{self.name}.json"):
+            with codecs.open(f"./chesterbot/message_utils/{self.name}.json", "w", encoding="utf-8") as file:
                 json.dump(0, file)
 
-        with codecs.open(f"./chesterbot/cogs/{self.name}/message.json", "rb", encoding="utf-8") as file:
+        with codecs.open(f"./chesterbot/message_utils/{self.name}.json", "rb", encoding="utf-8") as file:
             return json.load(file)
 
     async def on_ready(self):
@@ -30,5 +30,5 @@ class SavedMessage:
         except:
             self.message = await self.channel.send(**self.default_message)
             self._message_id = self.message.id
-            with codecs.open(f"./chesterbot/cogs/{self.name}/message.json", "w", encoding="utf-8") as file:
+            with codecs.open(f"./chesterbot/message_utils/{self.name}.json", "w", encoding="utf-8") as file:
                 json.dump(self._message_id, file)
