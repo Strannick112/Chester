@@ -28,5 +28,5 @@ class SavedMessage:
         except:
             self.message = await self.channel.send(**self.default_message)
             self._message_id = self.message.id
-            with codecs.open(f"./chesterbot/message_utils/{self.name}.json", "w", encoding="utf-8") as file:
+            with codecs.open(f"./chesterbot/message_utils/saved_messages/{self.name}.json", "w", encoding="utf-8") as file:
                 json.dump(self._message_id, file)
