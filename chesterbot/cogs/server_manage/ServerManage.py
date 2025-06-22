@@ -149,8 +149,8 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                             r"to be able to join the server\.", text)):
                         await self.log_channel.send(content=("```" + text + "```"))
                         await self.chat_webhook.send(
-                        content=text, username="Announcement",
-                        avatar_url=self.chester_bot.replies["announcement_picture"]
+                            content=text, username="Announcement",
+                            avatar_url=self.chester_bot.replies["announcement_picture"]
                         )
                         await soft_restart()
                         return

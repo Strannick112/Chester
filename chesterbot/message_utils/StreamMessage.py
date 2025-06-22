@@ -19,5 +19,5 @@ class StreamMessage:
     async def reload_data(self):
         try:
             await self.saved_embed_message.message.edit(**await self.update_callback())
-        except:
+        finally:
             pass

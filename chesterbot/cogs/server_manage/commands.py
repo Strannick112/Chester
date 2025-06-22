@@ -96,18 +96,8 @@ async def send_message_to_game(author: str, text: str):
             stdin=subprocess.PIPE
         ).stdout.decode('ascii')
         if main_config['server_main_screen_name'] in screen_list:
-            nickname = re.sub(r'\'', r"\\\\\'", author)
-            nickname = re.sub(r'\"', r"\\\\\"", nickname)
-            nickname = re.sub(r'\$', r"\\\\\$", nickname)
-            nickname = re.sub(r'>', r"\\\\\>", nickname)
-            nickname = re.sub(r'<', r"\\\\\<", nickname)
-            nickname = re.sub(r'/', r"\\\\\/", nickname)
-            text = re.sub(r'\'', r"\\\\\'", text)
-            text = re.sub(r'\"', r"\\\\\"", text)
-            text = re.sub(r'\$', r"\\\\\$", text)
-            text = re.sub(r'>', r"\\\\\>", text)
-            text = re.sub(r'<', r"\\\\\<", text)
-            text = re.sub(r'/', r"\\\\\/", text)
+            nickname = normalize_text(author)
+            text = normalize_text(text)
             subprocess.check_output(
                 f"""screen -S {main_config['server_main_screen_name']} -X stuff""" +
                 f""" "c_announce(\\\"{nickname}: {text}\\\")\n\"""",
@@ -116,6 +106,16 @@ async def send_message_to_game(author: str, text: str):
         return True
     finally:
         return False
+
+
+def normalize_text(text):
+    text = re.sub(r'\'', r"\\\\\'", text)
+    text = re.sub(r'\"', r"\\\\\"", text)
+    text = re.sub(r'\$', r"\\\\\$", text)
+    text = re.sub(r'>', r"\\\\\>", text)
+    text = re.sub(r'<', r"\\\\\<", text)
+    text = re.sub(r'/', r"\\\\\/", text)
+    return text
 
 
 # async def send_announce_to_game(text: str, color: tuple = (255, 0, 0, 1)):

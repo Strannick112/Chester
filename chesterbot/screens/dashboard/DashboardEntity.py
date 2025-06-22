@@ -16,7 +16,8 @@ class DashboardEntity(commands.Cog, name="Доска подсчёта"):
         self.screenEmbed = None
         self.view = None
 
-    async def __get_view(self):
+    @staticmethod
+    async def __get_view():
         view = discord.ui.View()
         style = discord.ButtonStyle.gray
         for button_description in main_config["buttons"]:
@@ -28,7 +29,8 @@ class DashboardEntity(commands.Cog, name="Доска подсчёта"):
             )
         return view
 
-    async def __get_embed_list_default(self):
+    @staticmethod
+    async def __get_embed_list_default():
         embed_list_default = []
         for world in main_config["worlds"]:
             embed_list_default.append(

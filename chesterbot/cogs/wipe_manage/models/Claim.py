@@ -4,7 +4,6 @@ from typing import List, Optional
 from sqlalchemy import DateTime, ForeignKey, func, BigInteger, String, select, update
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from chesterbot import main_config
 from chesterbot.ConsoleDSTChecker import ConsoleDSTChecker
 from . import Status, statuses, Wipe
 from .Base import Base
@@ -95,7 +94,7 @@ class Claim(Base):
             return old_claim
         try:
             session.expunge(old_claim)
-        except:
+        finally:
             pass
         new_claim = Claim(player_id=player_id, numbered_items=numbered_items, **kwargs)
         session.add(new_claim)

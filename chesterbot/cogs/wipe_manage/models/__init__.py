@@ -22,12 +22,12 @@ from .ClaimItem import ClaimItem
 from .NumberedItem import NumberedItem
 from .Claim import Claim
 
-
 from sqlalchemy import func, select
 
 
 async def models_init():
-    globals()["engine"] = create_async_engine(main_config["sql_connection_row"], echo=False, connect_args=main_config["connect_args"])
+    globals()["engine"] = create_async_engine(main_config["sql_connection_row"], echo=False,
+                                              connect_args=main_config["connect_args"])
     globals()["async_session"] = async_sessionmaker(globals()["engine"], class_=AsyncSession, expire_on_commit=False)
 
     async with globals()["engine"].begin() as conn:
@@ -46,4 +46,3 @@ async def models_init():
                 await session.flush()
 
     return globals()["async_session"]
-

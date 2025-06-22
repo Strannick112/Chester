@@ -50,13 +50,13 @@ except ModuleNotFoundError as err:
 
 
 for world in main_config["worlds"]:
-    world["full_path_to_server_log_file"] = main_config['path_to_save'] + "/" + world["folder_name"] + "/server_log.txt"
-    world["file_log_size"] = os.path.getsize(world["full_path_to_server_log_file"])
+    world["full_path_to_server_log_file"] = main_config['path_to_save'] + "/" + world.get("folder_name") + "/server_log.txt"
+    world["file_log_size"] = os.path.getsize(world.get("full_path_to_server_log_file"))
     world["file_log_iter"] = codecs.open(
-        world["full_path_to_server_log_file"], "r", encoding="utf-8", errors='ignore'
+        world.get("full_path_to_server_log_file"), "r", encoding="utf-8", errors='ignore'
     )
-    world["file_log_iter"].seek(0, 2)
-    world["screen_name"] = main_config['short_server_name'] + world["shard_id"]
+    world.get("file_log_iter").seek(0, 2)
+    world["screen_name"] = main_config['short_server_name'] + world.get("shard_id")
 
 main_config["full_path_to_server_chat_log_file"] = \
     main_config['path_to_save'] + "/" + main_config["worlds"][0]["folder_name"] + "/server_chat_log.txt"

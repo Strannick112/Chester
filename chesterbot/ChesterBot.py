@@ -54,7 +54,6 @@ class ChesterBot(commands.Bot):
         await self.wipe_manage.on_ready()
         await self.dashboards.on_ready()
 
-
     async def init(self):
         # pass
         await self.add_cog(self.server_manage)

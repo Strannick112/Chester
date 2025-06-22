@@ -43,7 +43,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
         async with self.chester_bot.async_session() as session:
             async with session.begin():
                 if last_wipe := (
-                await session.execute(select(models.Wipe).order_by(models.Wipe.id.desc()))).scalars().first():
+                        await session.execute(select(models.Wipe).order_by(models.Wipe.id.desc()))).scalars().first():
                     text = await last_wipe.to_str()
         return {
             "embeds": [discord.Embed(
@@ -60,9 +60,11 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
         async with self.chester_bot.async_session() as session:
             async with session.begin():
                 for claim in (await session.execute(select(
-                    models.Claim
+                        models.Claim
                 ).where(
-                    models.Claim.wipe_id == (await session.execute(select(models.Wipe).order_by(models.Wipe.id.desc()))).scalars().first().id
+                    models.Claim.wipe_id == (
+                            await session.execute(
+                                select(models.Wipe).order_by(models.Wipe.id.desc()))).scalars().first().id
                 ))).all():
                     try:
                         if msg := await self.chester_bot.get_channel(claim.channel_id).fetch_message(claim.message_id):
@@ -84,15 +86,18 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                                 await msg.add_reaction(self.__replies['claim_accepted_is_ok'])
 
                             if has_reactions['claim_full_approved']:
-                                if claim.status_id not in (models.statuses.get("approved"), models.statuses.get("executed")):
+                                if claim.status_id not in (
+                                        models.statuses.get("approved"), models.statuses.get("executed")):
                                     msg.remove_reaction(self.__replies['claim_full_approved'], self.chester_bot.user)
                             else:
-                                if claim.status_id in (models.statuses.get("approved"), models.statuses.get("executed")):
+                                if claim.status_id in (
+                                        models.statuses.get("approved"), models.statuses.get("executed")):
                                     await msg.add_reaction(self.__replies['claim_full_approved'])
 
                             if has_reactions['claim_items_executed']:
                                 if claim.status_id != models.statuses.get("executed"):
-                                    await msg.remove_reaction(self.__replies['claim_items_executed'], self.chester_bot.user)
+                                    await msg.remove_reaction(self.__replies['claim_items_executed'],
+                                                              self.chester_bot.user)
                             else:
                                 if claim.status_id == models.statuses.get("executed"):
                                     await msg.add_reaction(self.__replies['claim_items_executed'])
@@ -180,11 +185,14 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
             async with self.chester_bot.async_session() as session:
                 async with session.begin():
                     if wipe_id is None:
-                        if last_wipe := (await session.execute(select(models.Wipe).order_by(models.Wipe.id.desc()))).scalars().first():
+                        if last_wipe := (
+                                await session.execute(
+                                    select(models.Wipe).order_by(models.Wipe.id.desc()))).scalars().first():
                             text = await last_wipe.to_str()
                     else:
                         wipe_id = int(wipe_id)
-                        if last_wipe := (await session.execute(select(models.Wipe).filter_by(id=wipe_id))).scalars().first():
+                        if last_wipe := (
+                                await session.execute(select(models.Wipe).filter_by(id=wipe_id))).scalars().first():
                             text = await last_wipe.to_str()
             await ctx.reply(embed=discord.Embed(
                 title="Информация о вайпе",
@@ -206,7 +214,8 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                     title="Информация о вайпах",
                     colour=discord.Colour.dark_teal()
                 )
-                for index, wipe in enumerate((await session.execute(select(models.Wipe).order_by(models.Wipe.id.desc()))).scalars().all()):
+                for index, wipe in enumerate(
+                        (await session.execute(select(models.Wipe).order_by(models.Wipe.id.desc()))).scalars().all()):
                     stopped = '?' if wipe.stopped == wipe.started else str(wipe.stopped)
                     embed.add_field(name="", value=f"{index + 1}. Начало={wipe.started}, Конец={stopped}", inline=False)
 
@@ -272,18 +281,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
         message = ctx if type(ctx) is WebhookMessage else ctx.message
 
         try:
-            status_id = None
-            # Получение заявки из базы данных
-            async with self.chester_bot.async_session() as session:
-                async with session.begin():
-                    if claim := await get_claim_by_discord_id(discord_id=discord_id, session=session):
-                        status_id = claim.status_id
-                        steam_nickname = await claim.get_steam_nickname()
-                        channel_id = claim.channel_id
-                        message_id = claim.message_id
-                        is_player_online = not await (
-                            await claim.awaitable_attrs.player
-                        ).is_player_online(self.chester_bot.console_dst_checker)
+            status_id, steam_nickname, channel_id, message_id, is_player_online = await self.get_claim_info(discord_id)
 
             # Проверка заявки на существование
             if status_id is None:
@@ -302,7 +300,8 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
 
             # Проверка количества прожитых дней
             count_days = await claim.check_days(console_dst_checker=self.chester_bot.console_dst_checker)
-            await self.sync_reactions(count_days, await self.chester_bot.get_channel(channel_id).fetch_message(message_id))
+            await self.sync_reactions(count_days,
+                                      await self.chester_bot.get_channel(channel_id).fetch_message(message_id))
 
             # Подсчет количества вещей по ролям
             items = {
@@ -319,12 +318,14 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                 if items["checked_items"] == 0 and items["unchecked_items"] == 0:
                     await self._loud_message(
                         message=message, discord_id=discord_id, steam_nickname=steam_nickname,
-                        text=self.__replies['take_items_fail_count_days_not_enough_fail'], reaction=self.__replies['claim_error'])
+                        text=self.__replies['take_items_fail_count_days_not_enough_fail'],
+                        reaction=self.__replies['claim_error'])
                     return False
                 else:
                     await self._loud_message(
                         message=message, discord_id=discord_id, steam_nickname=steam_nickname,
-                        text=self.__replies['take_items_fail_count_days_not_enough_warn'], reaction=self.__replies['claim_warning'])
+                        text=self.__replies['take_items_fail_count_days_not_enough_warn'],
+                        reaction=self.__replies['claim_warning'])
             else:
                 for role in self.chester_bot.get_guild(main_config["guild_id"]).get_member(int(discord_id)).roles:
                     if (role_info := self.chester_bot.replies["roles_for_items"].get(str(role.id))) is not None:
@@ -337,10 +338,12 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                     _claim = await get_claim_by_discord_id(discord_id=int(discord_id), session=session)
 
                     # Проверка на количество вещей в заявке
-                    if len(await _claim.awaitable_attrs.numbered_items) > (items["checked_items"] + items["unchecked_items"]):
+                    if len(await _claim.awaitable_attrs.numbered_items) > (
+                            items["checked_items"] + items["unchecked_items"]):
                         await self._loud_message(
                             message=message, discord_id=discord_id, steam_nickname=steam_nickname,
-                            text=self.__replies['take_items_fail_too_many_items'], reaction=self.__replies['claim_error'])
+                            text=self.__replies['take_items_fail_too_many_items'],
+                            reaction=self.__replies['claim_error'])
                         return False
 
                     # Проверка на перенос вещей без нахождения в игре
@@ -414,18 +417,8 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
         message = ctx if type(ctx) is WebhookMessage else ctx.message
 
         try:
-            status_id = None
-            # Проверка на наличие заявки у игрока
-            async with self.chester_bot.async_session() as session:
-                async with session.begin():
-                    if claim := await get_claim_by_discord_id(discord_id=discord_id, session=session):
-                        status_id = claim.status_id
-                        steam_nickname = await claim.get_steam_nickname()
-                        channel_id = claim.channel_id
-                        message_id = claim.message_id
-                        is_player_online = not await (
-                            await claim.awaitable_attrs.player
-                        ).is_player_online(self.chester_bot.console_dst_checker)
+            status_id, steam_nickname, channel_id, message_id, is_player_online = await self.get_claim_info(discord_id)
+
             if status_id is not None:
                 discord_id = str(discord_id)
 
@@ -456,14 +449,15 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                 async with self.chester_bot.async_session() as session:
                     async with session.begin():
                         if await (
-                            await get_claim_by_discord_id(discord_id=int(discord_id), session=session)
+                                await get_claim_by_discord_id(discord_id=int(discord_id), session=session)
                         ).give_items(
                             session=session,
                             console_dst_checker=self.chester_bot.console_dst_checker
                         ):
                             await self._loud_message(
                                 message=message, discord_id=discord_id, steam_nickname=steam_nickname,
-                                text=self.__replies['give_items_success'], reaction=self.__replies['claim_items_executed'])
+                                text=self.__replies['give_items_success'],
+                                reaction=self.__replies['claim_items_executed'])
                             await self.mark_claim_executed(channel_id=channel_id, message_id=message_id)
                             return True
                         else:
@@ -495,7 +489,8 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                 if claim := await get_claim_by_discord_id(discord_id=discord_id, session=session):
                     if await claim.rollback_claim(session=session):
                         try:
-                            if msg := await self.chester_bot.get_channel(claim.channel_id).fetch_message(claim.message_id):
+                            if msg := await self.chester_bot.get_channel(claim.channel_id).fetch_message(
+                                    claim.message_id):
                                 for reaction in msg.reactions:
                                     if reaction.__str__() == self.__replies['claim_items_executed']:
                                         if reaction.me:
@@ -571,11 +566,14 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
         async with self.chester_bot.async_session() as session:
             async with session.begin():
                 for claim in (await session.execute(select(models.Claim).where(
-                    models.Wipe.id == (await session.execute(select(models.Wipe).order_by(models.Wipe.id.desc()))).scalars().first().id
+                        models.Wipe.id == (
+                                await session.execute(
+                                    select(models.Wipe).order_by(models.Wipe.id.desc()))).scalars().first().id
                 ))).scalars().all():
                     if await claim.rollback_claim(session=session):
                         try:
-                            if msg := await self.chester_bot.get_channel(claim.channel_id).fetch_message(claim.message_id):
+                            if msg := await self.chester_bot.get_channel(claim.channel_id).fetch_message(
+                                    claim.message_id):
                                 for reaction in msg.reactions:
                                     if reaction.__str__() == self.__replies['claim_items_executed']:
                                         if reaction.me:
@@ -592,17 +590,21 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
         """Открывает приём заявок от игроков"""
         async with self.chester_bot.async_session() as session:
             async with session.begin():
-                last_wipe = (await session.execute(select(models.Wipe).order_by(models.Wipe.id.desc()))).scalars().first()
+                last_wipe = (
+                    await session.execute(select(models.Wipe).order_by(models.Wipe.id.desc()))).scalars().first()
                 if last_wipe.started != last_wipe.stopped:
                     last_wipe = models.Wipe()
                     session.add(last_wipe)
                     for claim in (await session.execute(select(
-                        models.Claim
+                            models.Claim
                     ).where(
-                        models.Claim.wipe_id == (await session.execute(select(models.Wipe).order_by(models.Wipe.id.desc()))).scalars().first().id
+                        models.Claim.wipe_id == (
+                                await session.execute(
+                                    select(models.Wipe).order_by(models.Wipe.id.desc()))).scalars().first().id
                     ))).scalars().all():
                         try:
-                            if msg := await self.chester_bot.get_channel(claim.channel_id).fetch_message(claim.message_id):
+                            if msg := await self.chester_bot.get_channel(claim.channel_id).fetch_message(
+                                    claim.message_id):
                                 to_approve = {'approved_twice': False, 'executed': False}
                                 for reaction in msg.reactions:
                                     if reaction.__str__() == self.__replies['claim_full_approved']:
@@ -629,16 +631,19 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
         """Закрывает набор заявок от игроков"""
         async with self.chester_bot.async_session() as session:
             async with session.begin():
-                last_wipe = (await session.execute(select(models.Wipe).order_by(models.Wipe.id.desc()))).scalars().first()
+                last_wipe = (
+                    await session.execute(select(models.Wipe).order_by(models.Wipe.id.desc()))).scalars().first()
                 is_started = last_wipe.stopped == last_wipe.started
                 if is_started:
                     await ctx.reply(self.__replies['stop_success'])
                     last_wipe.stopped = func.now()
                     for claim in (await session.execute(select(models.Claim).where(
-                            models.Claim.wipe_id == (await session.execute(select(models.Wipe).order_by(models.Wipe.id.desc()))).scalars().first().id
+                            models.Claim.wipe_id == (await session.execute(
+                                select(models.Wipe).order_by(models.Wipe.id.desc()))).scalars().first().id
                     ))).scalars().all():
                         try:
-                            if msg := await self.chester_bot.get_channel(claim.channel_id).fetch_message(claim.message_id):
+                            if msg := await self.chester_bot.get_channel(claim.channel_id).fetch_message(
+                                    claim.message_id):
                                 await self.approve(msg, claim, session)
                         except Exception as error:
                             print(error)
@@ -652,12 +657,13 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
         if message.channel.id in self.__replies['claim_channel_id']:
             async with self.chester_bot.async_session() as session:
                 async with session.begin():
-                    last_wipe = (await session.execute(select(models.Wipe).order_by(models.Wipe.id.desc()))).scalars().first()
+                    last_wipe = (
+                        await session.execute(select(models.Wipe).order_by(models.Wipe.id.desc()))).scalars().first()
                     if last_wipe.stopped != last_wipe.started:
                         return
             if raw_claim := re.findall(
-                r'''Сервер: ''' + main_config['server_name']
-                + r'''[\s]*?Игровой ник: ([\w\W]+?)\sИдентификатор:\s(.+?)\sПрошу:[\s]*?([\w\W]+)''',
+                    r'''Сервер: ''' + main_config['server_name']
+                    + r'''[\s]*?Игровой ник: ([\w\W]+?)\sИдентификатор:\s(.+?)\sПрошу:[\s]*?([\w\W]+)''',
                     message.content
             ):
                 loot = re.findall(r'''([\w\s]+?)\s*\(\"([\w]+?)\"\)''', raw_claim[0][2])
@@ -701,7 +707,8 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                     async with session.begin():
                         await message.add_reaction(self.__replies['claim_accepted_is_ok'])
                         done_claim = await get_claim_by_discord_id(message.author.id, session=session)
-                        count_days = await done_claim.check_days(console_dst_checker=self.chester_bot.console_dst_checker)
+                        count_days = await done_claim.check_days(
+                            console_dst_checker=self.chester_bot.console_dst_checker)
                 await self.sync_reactions(count_days, message)
             else:
                 await message.add_reaction(self.__replies['claim_warning'])
@@ -758,12 +765,12 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
 
     async def revoke_reactions(self, player_id, session):
         if claim := await get_claim_by_discord_id(
-            (
-                await (
-                    await session.execute(select(models.Player).filter_by(id=player_id))
-                ).scalars().first().awaitable_attrs.discord_account
-            ).discord_id,
-            session=session
+                (
+                        await (
+                                await session.execute(select(models.Player).filter_by(id=player_id))
+                        ).scalars().first().awaitable_attrs.discord_account
+                ).discord_id,
+                session=session
         ):
             try:
                 if msg := await self.chester_bot.get_channel(claim.channel_id).fetch_message(claim.message_id):
@@ -775,3 +782,17 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
             except Exception as error:
                 print(error)
         return claim
+
+    async def get_claim_info(self, discord_id):
+        # Проверка на наличие заявки у игрока
+        async with self.chester_bot.async_session() as session:
+            async with session.begin():
+                if claim := await get_claim_by_discord_id(discord_id=discord_id, session=session):
+                    status_id = claim.status_id
+                    steam_nickname = await claim.get_steam_nickname()
+                    channel_id = claim.channel_id
+                    message_id = claim.message_id
+                    is_player_online = not await (
+                        await claim.awaitable_attrs.player
+                    ).is_player_online(self.chester_bot.console_dst_checker)
+        return status_id, steam_nickname, channel_id, message_id, is_player_online

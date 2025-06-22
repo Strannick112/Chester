@@ -16,8 +16,8 @@ class NumberedItem(Base):
     item_id: Mapped[int] = mapped_column(ForeignKey("item.id"))
     item: Mapped[Optional["Item"]] = relationship("Item", back_populates="numbered_item")
 
-    claim: Mapped[List["Claim"]] = relationship("Claim",
-        secondary='claim_item', back_populates="numbered_items"
+    claim: Mapped[List["Claim"]] = relationship(
+        "Claim", secondary='claim_item', back_populates="numbered_items"
     )
 
     def __repr__(self) -> str:
