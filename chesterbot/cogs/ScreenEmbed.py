@@ -1,7 +1,5 @@
-from discord.ext import tasks
-
-from chesterbot.cogs.SavedMessage import SavedMessage
-from chesterbot.cogs.StreamMessage import StreamMessage
+from chesterbot.cogs.MessageUtils.SavedMessage import SavedMessage
+from chesterbot.cogs.MessageUtils.StreamMessage import StreamMessage
 
 
 class ScreenEmbed:

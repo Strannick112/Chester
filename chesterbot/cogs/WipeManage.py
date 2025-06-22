@@ -35,21 +35,23 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                 description="Доска создана, начат сбор информации...",
                 colour=discord.Colour.dark_teal()
             )],
-            update_callback=self.reload_data
+            update_callback=self.update_stream_message
         )
         await self.last_wipe_info_embed.on_ready()
 
-    async def reload_data(self):
+    async def update_stream_message(self):
         async with self.chester_bot.async_session() as session:
             async with session.begin():
                 if last_wipe := (
                 await session.execute(select(models.Wipe).order_by(models.Wipe.id.desc()))).scalars().first():
                     text = await last_wipe.to_str()
-        return discord.Embed(
-            title="Информация о вайпе " + main_config["server_name"],
-            description=text,
-            colour=discord.Colour.dark_teal()
-        )
+        return {
+            "embeds": [discord.Embed(
+                title="Информация о вайпе " + main_config["server_name"],
+                description=text,
+                colour=discord.Colour.dark_teal()
+            )]
+        }
 
     @commands.command(name=main_config['short_server_name'] + "_checkout_marks_on_executed_claims")
     @commands.has_role(main_config['master_role'])

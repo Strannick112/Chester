@@ -58,11 +58,11 @@ class DashBoardEmbed(commands.Cog, name="Доска подсчёта"):
             head_picture=embed_picture,
             embed_list_default=await self.__get_embed_list_default(),
             view=self.view,
-            update_callback=self.reload_data
+            update_callback=self.update_stream_message
         )
         await self.screenEmbed.on_ready()
 
-    async def reload_data(self):
+    async def update_stream_message(self):
         await asyncio.wait([asyncio.create_task(world.reload_data()) for world in self.world_dashboards])
         return {
             "embeds": [await world.make_dashboard() for world in self.world_dashboards],
