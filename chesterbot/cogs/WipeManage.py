@@ -45,7 +45,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                 await session.execute(select(models.Wipe).order_by(models.Wipe.id.desc()))).scalars().first():
                     text = await last_wipe.to_str()
         return discord.Embed(
-            title="Информация о вайпе" + main_config["server_name"],
+            title="Информация о вайпе " + main_config["server_name"],
             description=text,
             colour=discord.Colour.dark_teal()
         )
