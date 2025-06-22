@@ -17,6 +17,7 @@ class DashBoardEmbed(commands.Cog, name="Доска подсчёта"):
         self.chester_bot = bot
         self.world_dashboards = None
         self.screenEmbed = None
+        self.view = None
 
     async def __get_view(self):
         view = discord.ui.View()
@@ -49,20 +50,21 @@ class DashBoardEmbed(commands.Cog, name="Доска подсчёта"):
             return
         self.world_dashboards = [ServerDashBoard(self.chester_bot, main_config["worlds"][0])]
         self.world_dashboards += [ResourceDashBoard(self.chester_bot, world) for world in main_config["worlds"]]
-        view = await self.__get_view()
+        self.view = await self.__get_view()
         self.screenEmbed = ScreenEmbed(
             name="dashboard",
             channel=self.chester_bot.get_channel(main_config["dashboard_channel"]),
             bot=self.chester_bot,
             head_picture=embed_picture,
             embed_list_default=await self.__get_embed_list_default(),
-            view=view,
+            view=self.view,
             update_callback=self.reload_data
         )
         await self.screenEmbed.on_ready()
 
     async def reload_data(self):
         await asyncio.wait([asyncio.create_task(world.reload_data()) for world in self.world_dashboards])
-        return [await world.make_dashboard() for world in self.world_dashboards]
-
-
+        return {
+            "embeds": [await world.make_dashboard() for world in self.world_dashboards],
+            "view": self.view
+        }

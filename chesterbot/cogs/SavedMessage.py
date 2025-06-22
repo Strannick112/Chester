@@ -4,13 +4,14 @@ import os
 
 
 class SavedMessage:
-    def __init__(self, name, channel, bot, default_message = None):
+    def __init__(self, name, channel, bot, default_message=None):
         self.chester_bot = bot
         self.name = name
         self.channel = channel
         self.message = None
         self._message_id = None
-        self.default_message = default_message if default_message is not None else {"content": f"```Данные {self.name} в обработке...```"}
+        self.default_message = default_message if default_message is not None \
+            else {"content": f"```Данные {self.name} в обработке...```"}
 
     async def get_message_id(self):
         if not os.path.exists(f"./chesterbot/cogs/{self.name}"):

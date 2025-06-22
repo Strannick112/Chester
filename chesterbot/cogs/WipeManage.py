@@ -193,7 +193,6 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
         except:
             await ctx.reply("Параметры команды указаны не верно")
 
-
     @commands.command(name=main_config['short_server_name'] + "_wipe_list")
     async def wipe_list(self, ctx):
         """
