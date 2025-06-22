@@ -11,6 +11,8 @@ from .Base import Base
 
 import shlex
 
+from .. import models
+
 
 class Claim(Base):
     __tablename__ = "claim"
@@ -228,3 +230,31 @@ class Claim(Base):
                 session.add(self)
                 return True
             return False
+
+
+async def get_claim_by_ku_id(ku_id, session):
+    return (await session.execute(select(
+        models.Claim
+    ).join(models.Claim.player
+           ).join(models.Player.steam_account
+                  ).where(
+        models.Claim.wipe_id == (
+            await session.execute(select(models.Wipe).order_by(models.Wipe.id.desc()))).scalars().first().id
+    ).where(
+        models.SteamAccount.ku_id == ku_id
+    ))).scalars().first()
+
+
+async def get_claim_by_discord_id(discord_id, session):
+    return (await session.execute(select(
+        models.Claim
+    ).join(
+        models.Claim.player
+    ).join(
+        models.Player.discord_account
+    ).where(
+        models.Claim.wipe_id == (
+            await session.execute(select(models.Wipe).order_by(models.Wipe.id.desc()))).scalars().first().id
+    ).where(
+        models.DiscordAccount.discord_id == discord_id
+    ))).scalars().first()

@@ -8,8 +8,9 @@ from sqlalchemy import func, select
 from chesterbot import main_config
 from chesterbot.cogs.WipeInfoEmbed import WipeInfoEmbed
 from chesterbot.cogs.server_manage.commands import send_message_to_game
-from chesterbot.cogs.wipe_manage.models import DiscordAccount, SteamAccount, ClaimItem
+from chesterbot.cogs.wipe_manage.models import DiscordAccount, SteamAccount
 import chesterbot.cogs.wipe_manage.models as models
+from chesterbot.cogs.wipe_manage.models.Claim import get_claim_by_ku_id, get_claim_by_discord_id
 
 
 class WipeManage(commands.Cog, name="Управление вайпами"):
@@ -119,7 +120,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                 requested_discord_id = discord_id
         async with self.chester_bot.async_session() as session:
             async with session.begin():
-                if claim := await self.get_claim_by_discord_id(requested_discord_id, session=session):
+                if claim := await get_claim_by_discord_id(requested_discord_id, session=session):
                     try:
                         if msg := await self.chester_bot.get_channel(claim.channel_id).fetch_message(claim.message_id):
                             await msg.add_reaction(self.__replies['claim_deleted'])
@@ -153,7 +154,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                 requested_discord_id = discord_id
         async with self.chester_bot.async_session() as session:
             async with session.begin():
-                if claim := await self.get_claim_by_discord_id(requested_discord_id, session=session):
+                if claim := await get_claim_by_discord_id(requested_discord_id, session=session):
                     text = await claim.to_str()
         if text is not None:
             await ctx.reply(embed=discord.Embed(
@@ -219,7 +220,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
         discord_id = None
         async with self.chester_bot.async_session() as session:
             async with session.begin():
-                if claim := await self.get_claim_by_ku_id(ku_id, session):
+                if claim := await get_claim_by_ku_id(ku_id, session):
                     discord_id = await claim.get_discord_id()
         if discord_id:
             await self.give_items_from_discord(message, discord_id)
@@ -236,7 +237,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
         )
         async with self.chester_bot.async_session() as session:
             async with session.begin():
-                if claim := await self.get_claim_by_ku_id(ku_id, session):
+                if claim := await get_claim_by_ku_id(ku_id, session):
                     discord_id = await claim.get_discord_id()
         if discord_id:
             await self.take_items_from_discord(message, discord_id)
@@ -274,7 +275,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
             # Получение заявки из базы данных
             async with self.chester_bot.async_session() as session:
                 async with session.begin():
-                    if claim := await self.get_claim_by_discord_id(discord_id=discord_id, session=session):
+                    if claim := await get_claim_by_discord_id(discord_id=discord_id, session=session):
                         status_id = claim.status_id
                         steam_nickname = await claim.get_steam_nickname()
                         channel_id = claim.channel_id
@@ -332,7 +333,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
             # Попытка забрать вещи
             async with self.chester_bot.async_session() as session:
                 async with session.begin():
-                    _claim = await self.get_claim_by_discord_id(discord_id=int(discord_id), session=session)
+                    _claim = await get_claim_by_discord_id(discord_id=int(discord_id), session=session)
 
                     # Проверка на количество вещей в заявке
                     if len(await _claim.awaitable_attrs.numbered_items) > (items["checked_items"] + items["unchecked_items"]):
@@ -416,7 +417,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
             # Проверка на наличие заявки у игрока
             async with self.chester_bot.async_session() as session:
                 async with session.begin():
-                    if claim := await self.get_claim_by_discord_id(discord_id=discord_id, session=session):
+                    if claim := await get_claim_by_discord_id(discord_id=discord_id, session=session):
                         status_id = claim.status_id
                         steam_nickname = await claim.get_steam_nickname()
                         channel_id = claim.channel_id
@@ -454,7 +455,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                 async with self.chester_bot.async_session() as session:
                     async with session.begin():
                         if await (
-                            await self.get_claim_by_discord_id(discord_id=int(discord_id), session=session)
+                            await get_claim_by_discord_id(discord_id=int(discord_id), session=session)
                         ).give_items(
                             session=session,
                             console_dst_checker=self.chester_bot.console_dst_checker
@@ -490,7 +491,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
             await ctx.reply("Параметры команды указаны не верно")
         async with self.chester_bot.async_session() as session:
             async with session.begin():
-                if claim := await self.get_claim_by_discord_id(discord_id=discord_id, session=session):
+                if claim := await get_claim_by_discord_id(discord_id=discord_id, session=session):
                     if await claim.rollback_claim(session=session):
                         try:
                             if msg := await self.chester_bot.get_channel(claim.channel_id).fetch_message(claim.message_id):
@@ -523,7 +524,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
             await ctx.reply("Параметры команды указаны не верно")
         async with self.chester_bot.async_session() as session:
             async with session.begin():
-                if claim := await self.get_claim_by_discord_id(discord_id=discord_id, session=session):
+                if claim := await get_claim_by_discord_id(discord_id=discord_id, session=session):
                     if await claim.set_status(session=session, status=status):
                         try:
                             await self.mark_claim_executed(channel_id=claim.channel_id, message_id=claim.message_id)
@@ -698,7 +699,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                 async with self.chester_bot.async_session() as session:
                     async with session.begin():
                         await message.add_reaction(self.__replies['claim_accepted_is_ok'])
-                        done_claim = await self.get_claim_by_discord_id(message.author.id, session=session)
+                        done_claim = await get_claim_by_discord_id(message.author.id, session=session)
                         count_days = await done_claim.check_days(console_dst_checker=self.chester_bot.console_dst_checker)
                 await self.sync_reactions(count_days, message)
             else:
@@ -754,32 +755,8 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
         except Exception as error:
             print(error)
 
-    async def get_claim_by_ku_id(self, ku_id, session):
-        return (await session.execute(select(
-            models.Claim
-        ).join(models.Claim.player
-        ).join(models.Player.steam_account
-        ).where(
-            models.Claim.wipe_id == (await session.execute(select(models.Wipe).order_by(models.Wipe.id.desc()))).scalars().first().id
-        ).where(
-            models.SteamAccount.ku_id == ku_id
-        ))).scalars().first()
-
-    async def get_claim_by_discord_id(self, discord_id, session):
-        return (await session.execute(select(
-            models.Claim
-        ).join(
-            models.Claim.player
-        ).join(
-            models.Player.discord_account
-        ).where(
-            models.Claim.wipe_id == (await session.execute(select(models.Wipe).order_by(models.Wipe.id.desc()))).scalars().first().id
-        ).where(
-            models.DiscordAccount.discord_id == discord_id
-        ))).scalars().first()
-
     async def revoke_reactions(self, player_id, session):
-        if claim := await self.get_claim_by_discord_id(
+        if claim := await get_claim_by_discord_id(
             (
                 await (
                     await session.execute(select(models.Player).filter_by(id=player_id))
