@@ -1,6 +1,6 @@
 from discord.ext import tasks
 
-from chesterbot.cogs.MessageUtils.SavedMessage import SavedMessage
+from chesterbot.cogs.message_utils.SavedMessage import SavedMessage
 
 
 class StreamMessage:

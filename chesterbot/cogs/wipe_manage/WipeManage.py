@@ -6,7 +6,7 @@ from discord.ext import commands
 from sqlalchemy import func, select
 
 from chesterbot import main_config
-from chesterbot.cogs.WipeInfoEmbed import WipeInfoEmbed
+from chesterbot.cogs.wipe_manage.WipeInfoView import WipeInfoView
 from chesterbot.cogs.server_manage.commands import send_message_to_game
 from chesterbot.cogs.wipe_manage.models import DiscordAccount, SteamAccount
 import chesterbot.cogs.wipe_manage.models as models
@@ -27,7 +27,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
         if self.command_webhook is None:
             self.command_webhook = await self.command_channel.create_webhook(name='Command')
 
-        self.last_wipe_info_embed = WipeInfoEmbed(
+        self.last_wipe_info_embed = WipeInfoView(
             name="last_wipe", channel=self.chester_bot.get_channel(main_config["admin_dashboard_channel"]),
             bot=self.chester_bot,
             embed_default=[discord.Embed(

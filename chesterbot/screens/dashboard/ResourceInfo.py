@@ -4,13 +4,13 @@ import copy
 import discord
 
 
-class ResourceDashBoard:
+class ResourceInfo:
     def __init__(self, bot, world):
         self.chester_bot = bot
         self.shard_id = world["shard_id"]
         self.public_name = world["public_name"]
         self.screen_name = world["screen_name"]
-        self.data = copy.deepcopy(ResourceDashBoard.__data[world["world_type"]])
+        self.data = copy.deepcopy(ResourceInfo.__data[world["world_type"]])
 
     __overworld = {
         "Боссы": {

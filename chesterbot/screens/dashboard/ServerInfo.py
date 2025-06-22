@@ -3,13 +3,13 @@ import discord
 from chesterbot import main_config
 
 
-class ServerDashBoard:
+class ServerDashboard:
     def __init__(self, bot, world):
         self.chester_bot = bot
         self.shard_id = world["shard_id"]
         self.public_name = world["public_name"]
         self.screen_name = world["screen_name"]
-        self.data = ServerDashBoard.__data[world["world_type"]].copy()
+        self.data = ServerDashboard.__data[world["world_type"]].copy()
 
     __data = {
         "overworld": {

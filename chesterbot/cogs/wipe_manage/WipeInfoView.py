@@ -1,7 +1,7 @@
-from chesterbot.cogs.MessageUtils.StreamMessage import StreamMessage
+from chesterbot.cogs.message_utils.StreamMessage import StreamMessage
 
 
-class WipeInfoEmbed:
+class WipeInfoView:
     def __init__(self, name, channel, bot, embed_default, update_callback):
         self.chester_bot = bot
         self.stream_embed_message = StreamMessage(

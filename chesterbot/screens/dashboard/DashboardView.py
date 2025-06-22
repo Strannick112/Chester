@@ -1,8 +1,8 @@
-from chesterbot.cogs.MessageUtils.SavedMessage import SavedMessage
-from chesterbot.cogs.MessageUtils.StreamMessage import StreamMessage
+from chesterbot.cogs.message_utils.SavedMessage import SavedMessage
+from chesterbot.cogs.message_utils.StreamMessage import StreamMessage
 
 
-class ScreenEmbed:
+class DashboardView:
     def __init__(self, name, channel, bot, head_picture, embed_list_default, view, update_callback):
         self.chester_bot = bot
         self.saved_picture_message = SavedMessage(

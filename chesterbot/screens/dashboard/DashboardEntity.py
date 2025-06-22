@@ -1,18 +1,15 @@
 import asyncio
-import codecs
-import json
-import os
 
 import discord
-from discord.ext import tasks, commands
+from discord.ext import commands
 
 from chesterbot import main_config
-from chesterbot.cogs.ResourceDashBoard import ResourceDashBoard
-from chesterbot.cogs.ScreenEmbed import ScreenEmbed
-from chesterbot.cogs.ServerDashBoard import ServerDashBoard
+from chesterbot.screens.dashboard.ResourceInfo import ResourceInfo
+from chesterbot.screens.dashboard.DashboardView import DashboardView
+from chesterbot.screens.dashboard.ServerInfo import ServerDashboard
 
 
-class DashBoardEmbed(commands.Cog, name="Доска подсчёта"):
+class DashboardEntity(commands.Cog, name="Доска подсчёта"):
     def __init__(self, bot):
         self.chester_bot = bot
         self.world_dashboards = None
@@ -48,10 +45,10 @@ class DashBoardEmbed(commands.Cog, name="Доска подсчёта"):
             embed_picture = discord.File(main_config["main_embed_picture"])
         except OSError:
             return
-        self.world_dashboards = [ServerDashBoard(self.chester_bot, main_config["worlds"][0])]
-        self.world_dashboards += [ResourceDashBoard(self.chester_bot, world) for world in main_config["worlds"]]
+        self.world_dashboards = [ServerDashboard(self.chester_bot, main_config["worlds"][0])]
+        self.world_dashboards += [ResourceInfo(self.chester_bot, world) for world in main_config["worlds"]]
         self.view = await self.__get_view()
-        self.screenEmbed = ScreenEmbed(
+        self.screenEmbed = DashboardView(
             name="dashboard",
             channel=self.chester_bot.get_channel(main_config["dashboard_channel"]),
             bot=self.chester_bot,

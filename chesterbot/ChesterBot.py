@@ -2,14 +2,13 @@ import codecs
 import json
 
 import discord
-from aiohttp import BasicAuth
 from discord.ext import commands
 
 from chesterbot import main_config
 from chesterbot.ConsoleDSTChecker import ConsoleDSTChecker
 from chesterbot.cogs import BotManage, WipeManage
 from chesterbot.cogs.Halloween import Halloween
-from chesterbot.cogs.DashBoardEmbed import DashBoardEmbed
+from chesterbot.screens.dashboard.DashboardEntity import DashboardEntity
 from chesterbot.cogs.server_manage import ServerManage
 from chesterbot.cogs.server_manage.commands import send_message_to_game
 from chesterbot.cogs.wipe_manage.models import models_init
@@ -30,7 +29,7 @@ class ChesterBot(commands.Bot):
         self.server_manage = ServerManage(self)
         self.bot_manage = BotManage(self)
         self.wipe_manage = WipeManage(self)
-        self.dashboards = DashBoardEmbed(self)
+        self.dashboards = DashboardEntity(self)
         self.halloween = Halloween(self)
         self.event(self.on_ready)
         if main_config["proxy"]["address"] == "":
