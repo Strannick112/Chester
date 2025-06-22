@@ -281,7 +281,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
         message = ctx if type(ctx) is WebhookMessage else ctx.message
 
         try:
-            status_id, steam_nickname, channel_id, message_id, is_player_online = await self.get_claim_info(discord_id)
+            claim, status_id, steam_nickname, channel_id, message_id, is_player_online = await self.get_claim_info(discord_id)
 
             # Проверка заявки на существование
             if status_id is None:
@@ -795,4 +795,4 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                     is_player_online = not await (
                         await claim.awaitable_attrs.player
                     ).is_player_online(self.chester_bot.console_dst_checker)
-        return status_id, steam_nickname, channel_id, message_id, is_player_online
+        return claim, status_id, steam_nickname, channel_id, message_id, is_player_online
