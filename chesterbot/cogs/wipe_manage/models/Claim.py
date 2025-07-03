@@ -92,10 +92,10 @@ class Claim(Base):
             session.add(old_claim)  # Добавляем только если нужно сохранять изменения
             await session.flush()
             return old_claim
-        try:
-            session.expunge(old_claim)
-        finally:
-            pass
+        # try:
+        #     session.expunge(old_claim)
+        # finally:
+        #     pass
         new_claim = Claim(player_id=player_id, numbered_items=numbered_items, **kwargs)
         session.add(new_claim)
         await session.flush()

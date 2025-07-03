@@ -693,7 +693,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                             await models.NumberedItem.get_or_create(session=session, number=number, item_id=item.id)
                             for number, item in enumerate(items)
                         ]
-                        await models.Claim.get_or_create(
+                        claim = await models.Claim.get_or_create(
                             session=session,
                             message_id=message.id,
                             message_link=message.jump_url,
@@ -703,11 +703,11 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                             wipe_id=last_wipe.id,
                             revoke=self.revoke_reactions
                         )
-                async with self.chester_bot.async_session() as session:
-                    async with session.begin():
+                # async with self.chester_bot.async_session() as session:
+                #     async with session.begin():
                         await message.add_reaction(self.__replies['claim_accepted_is_ok'])
-                        done_claim = await get_claim_by_discord_id(message.author.id, session=session)
-                        count_days = await done_claim.check_days(
+                        # done_claim = await get_claim_by_discord_id(message.author.id, session=session)
+                        count_days = await claim.check_days(
                             console_dst_checker=self.chester_bot.console_dst_checker)
                 await self.sync_reactions(count_days, message)
             else:
