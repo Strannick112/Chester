@@ -417,7 +417,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
         message = ctx if type(ctx) is WebhookMessage else ctx.message
 
         try:
-            status_id, steam_nickname, channel_id, message_id, is_player_online = await self.get_claim_info(discord_id)
+            claim, status_id, steam_nickname, channel_id, message_id, is_player_online = await self.get_claim_info(discord_id)
 
             if status_id is not None:
                 discord_id = str(discord_id)
@@ -465,11 +465,12 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                                 message=message, discord_id=discord_id, steam_nickname=steam_nickname,
                                 text=self.__replies['give_items_fail'], reaction=self.__replies['claim_error'])
                             return False
+            await self._loud_message(
+                message=message, discord_id=discord_id, steam_nickname=steam_nickname,
+                text=self.__replies['give_items_fail_who_are_you'], reaction=self.__replies['claim_error'])
         except Exception as error:
             print(error)
-        await self._loud_message(
-            message=message, discord_id=discord_id, steam_nickname=steam_nickname,
-            text=self.__replies['give_items_fail_who_are_you'], reaction=self.__replies['claim_error'])
+
         return False
 
     @commands.command(name=main_config['short_server_name'] + "_rollback_claim")
