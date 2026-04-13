@@ -5,16 +5,15 @@ from discord import WebhookMessage, Message
 from discord.ext import commands
 from sqlalchemy import func, select
 
-from chesterbot import main_config
+from chesterbot import main_config, ChesterBot
 from chesterbot.cogs.wipe_manage.WipeInfoView import WipeInfoView
-from chesterbot.cogs.server_manage.commands import send_message_to_game
 from chesterbot.cogs.wipe_manage.models import DiscordAccount, SteamAccount
 import chesterbot.cogs.wipe_manage.models as models
 from chesterbot.cogs.wipe_manage.models.Claim import get_claim_by_ku_id, get_claim_by_discord_id
 
 
 class WipeManage(commands.Cog, name="Управление вайпами"):
-    def __init__(self, chester_bot):
+    def __init__(self, chester_bot: ChesterBot):
         self.chester_bot = chester_bot
         self.__replies = chester_bot.replies
         self.command_channel = None
@@ -386,8 +385,8 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
             text=self.__replies['system_fail'], reaction=self.__replies['claim_error'])
         return False
 
-    @staticmethod
-    async def _loud_message(message, discord_id, steam_nickname, text, reaction):
+
+    async def _loud_message(self, message, discord_id, steam_nickname, text, reaction):
         if discord_id is None:
             discord_id = "Неизвестный"
         await message.reply(
@@ -396,7 +395,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                     text
         )
         await message.add_reaction(reaction)
-        await send_message_to_game("Chester_bot",
+        await self.chester_bot.game_server_connector.send_message_to_game("Chester_bot",
                                    steam_nickname + ", " + text)
 
     @commands.command(name=main_config['short_server_name'] + "_give_items")
@@ -715,7 +714,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                 await message.add_reaction(self.__replies['claim_warning'])
 
     async def check_claim(self, steam_nickname, ku_id):
-        await send_message_to_game(
+        await self.chester_bot.game_server_connector.send_message_to_game(
             "",
             "Обновление информации о заявке принято к исполнению"
         )
@@ -724,7 +723,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
             return
         except Exception as error:
             print(error)
-        await send_message_to_game(
+        await self.chester_bot.game_server_connector.send_message_to_game(
             "",
             "Заявка не обнаружена, обратитесь к администратору"
         )

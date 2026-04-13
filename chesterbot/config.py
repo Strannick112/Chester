@@ -21,6 +21,14 @@ main_config = {
     "main_embed_picture": "url_to_image",
 
     "is_event": False,
+
+    "bot_mode": "local",
+    # "bot_mode": "remote",
+    "remote": {
+        "url": "localhost",
+        "token": "token",
+    },
+
     "proxy": {
         "address": "http://127.0.0.1:8000",
         "login": "USER_LOGIN",

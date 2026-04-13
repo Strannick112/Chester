@@ -9,7 +9,6 @@ from discord.ext import commands, tasks
 
 from chesterbot import main_config, ChesterBot
 from chesterbot.cogs.server_manage.ServerManageView import ServerManageView
-from chesterbot.cogs.server_manage.commands import restart, soft_restart, soft_stop, start, stop, send_message_to_game
 from chesterbot.cogs.server_manage.helps import helps
 
 
@@ -51,35 +50,35 @@ class ServerManage(commands.Cog, name="Управление сервером"):
     async def restart_server(self, ctx):
         """Перезапускает сервер сразу"""
         await ctx.send("Перезагрузка сервера принята к исполнению")
-        return await restart()
+        return await self.chester_bot.game_server_connector.restart()
 
     @commands.command(name=main_config['short_server_name'] + "_soft_restart_server")
     @commands.has_role(main_config['master_role'])
     async def soft_restart_server(self, ctx):
         """Перезапускает сервер через 1 минуту"""
         await ctx.send("Перезагрузка сервера через 1 минуту принята к исполнению")
-        return await soft_restart()
+        return await self.chester_bot.game_server_connector.soft_restart()
 
     @commands.command(name=main_config['short_server_name'] + "_soft_stop_server")
     @commands.has_role(main_config['master_role'])
     async def soft_stop_server(self, ctx):
         """Останавливает сервер через 1 минуту"""
         await ctx.send("Остановка сервера через одну минуту принята к исполнению")
-        return await soft_stop()
+        return await self.chester_bot.game_server_connector.soft_stop()
 
     @commands.command(name=main_config['short_server_name'] + "_start_server")
     @commands.has_role(main_config['master_role'])
     async def start_server(self, ctx):
         """Запускает сервер"""
         await ctx.send("Запуск сервера принят к исполнению")
-        return await start()
+        return await self.chester_bot.game_server_connector.start()
 
     @commands.command(name=main_config['short_server_name'] + "_stop_server")
     @commands.has_role(main_config['master_role'])
     async def stop_server(self, ctx):
         """Останавливает сервер сразу"""
         await ctx.send("Остановка сервера принята к исполнению")
-        return await stop()
+        return await self.chester_bot.game_server_connector.stop()
 
     @commands.command(name=main_config['short_server_name'] + "_command")
     @commands.has_role(main_config['master_role'])
@@ -89,14 +88,9 @@ class ServerManage(commands.Cog, name="Управление сервером"):
         shard_id - уникальный ид игрового мира, на котором будет выполнена команда. 1 - поверхность, 2 - пещеры, и т д;
         command - собственно команда, которая будет передана на указанный игровой мир.
         """
-        text = re.sub(r'\"', r"\"", re.sub(r'\'', r"\'", command))
+        text = await self.chester_bot.game_server_connector.command(shard_id=shard_id, command=command)
         await ctx.send("Выполнение команды «" + text + "» принято к исполнению")
 
-        subprocess.check_output(
-            f"""screen -S {main_config['short_server_name']}{shard_id} -X stuff""" +
-            f""" "{text}\n\"""",
-            shell=True
-        )
 
     @commands.command(name=main_config['short_server_name'] + "_ban")
     @commands.has_role(main_config['master_role'])
@@ -105,14 +99,8 @@ class ServerManage(commands.Cog, name="Управление сервером"):
         Банит игрока на игровом сервере. Имеет один параметр:
         ku_id - уникальный klei_id игрока, на которого снизойдет гнев императора.
         """
-        text = re.sub(r'\"', r"\"", re.sub(r'\'', r"\'", f"TheNet:Ban(\"{ku_id}\")"))
+        text = await self.chester_bot.game_server_connector.ban(ku_id)
         await ctx.send("Выполнение команды «" + text + "» принято к исполнению")
-
-        subprocess.check_output(
-            f"""screen -S {self.screen_name} -X stuff""" +
-            f""" "{text}\n\"""",
-            shell=True
-        )
 
     @tasks.loop(seconds=15)
     async def __chat_file_check(self):
@@ -152,7 +140,7 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                             content=text, username="Announcement",
                             avatar_url=self.chester_bot.replies["announcement_picture"]
                         )
-                        await soft_restart()
+                        await self.chester_bot.game_server_connector.soft_restart()
                         return
                 if "[Leave Announcement]" in text:
                     self.potential_ban_counter = 0
@@ -186,7 +174,7 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                         username=text[19:].strip() + " рады видеть!",
                         avatar_url=self.chester_bot.replies["enter_picture"]
                     )
-                    await send_message_to_game(
+                    await self.chester_bot.game_server_connector.send_message_to_game(
                         "Chester_bot",
                         "Данный игровой сервер оснащён ботом. Используйте @help, чтобы получить больше информации"
                     )
@@ -225,24 +213,24 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                             for parts in helps.values():
                                 for command, info in parts.items():
                                     if command in ask:
-                                        await send_message_to_game(
+                                        await self.chester_bot.game_server_connector.send_message_to_game(
                                             "",
                                             info["extended_info"]
                                         )
                                         return
                             else:
-                                await send_message_to_game(
+                                await self.chester_bot.game_server_connector.send_message_to_game(
                                     "",
                                     "Чтобы получить конкретную информацию используйте '@help название раздела', "
                                     "например: '@help где база?' или '@help @admin'"
                                 )
                                 for name, parts in helps.items():
-                                    await send_message_to_game(
+                                    await self.chester_bot.game_server_connector.send_message_to_game(
                                         "",
                                         " --- " + name + " --- "
                                     )
                                     for command, info in parts.items():
-                                        await send_message_to_game(
+                                        await self.chester_bot.game_server_connector.send_message_to_game(
                                             "",
                                             command + ": " + info["short_info"]
                                         )

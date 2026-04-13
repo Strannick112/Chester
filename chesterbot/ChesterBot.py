@@ -8,9 +8,9 @@ from chesterbot import main_config
 from chesterbot.ConsoleDSTChecker import ConsoleDSTChecker
 from chesterbot.cogs import BotManage, WipeManage
 from chesterbot.cogs.Halloween import Halloween
+from chesterbot.cogs.server_manage.GameServerConnector import GameServerConnector
 from chesterbot.screens.dashboard.DashboardEntity import DashboardEntity
 from chesterbot.cogs.server_manage import ServerManage
-from chesterbot.cogs.server_manage.commands import send_message_to_game
 from chesterbot.cogs.wipe_manage.models import models_init
 
 
@@ -31,6 +31,7 @@ class ChesterBot(commands.Bot):
         self.wipe_manage = WipeManage(self)
         self.dashboards = DashboardEntity(self)
         self.halloween = Halloween(self)
+        self.game_server_connector = GameServerConnector()
         self.event(self.on_ready)
         if main_config["proxy"]["address"] == "":
             super().__init__(
@@ -85,12 +86,12 @@ class ChesterBot(commands.Bot):
                 # When a message
                 else:
                     if message.channel.id == main_config["game_log_sync_channel"]:
-                        await send_message_to_game("Admin " + message.author.display_name, message.content)
+                        await self.game_server_connector.send_message_to_game("Admin " + message.author.display_name, message.content)
                     if message.channel.id == main_config["game_chat_sync_channel"]:
                         if message.author.get_role(main_config["master_role"]):
-                            await send_message_to_game("Admin " + message.author.display_name, message.content)
+                            await self.game_server_connector.send_message_to_game("Admin " + message.author.display_name, message.content)
                         else:
-                            await send_message_to_game(message.author.display_name, message.content)
+                            await self.game_server_connector.send_message_to_game(message.author.display_name, message.content)
                     else:
                         await self.wipe_manage.make_claim(message)
 
