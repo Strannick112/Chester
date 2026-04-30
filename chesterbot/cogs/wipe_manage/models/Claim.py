@@ -4,9 +4,8 @@ from typing import List, Optional
 from sqlalchemy import DateTime, ForeignKey, func, BigInteger, String, select, update
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from chesterbot import main_config
 from chesterbot.ConsoleDSTChecker import ConsoleDSTChecker
-from . import Status, statuses, Wipe
+from . import statuses, Wipe
 from .Base import Base
 
 import shlex

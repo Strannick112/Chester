@@ -7,7 +7,7 @@ from sqlalchemy import func, select
 
 from chesterbot import main_config
 from chesterbot.cogs.server_manage.commands import send_message_to_game
-from chesterbot.cogs.wipe_manage.models import DiscordAccount, SteamAccount, ClaimItem
+from chesterbot.cogs.wipe_manage.models import DiscordAccount, SteamAccount
 import chesterbot.cogs.wipe_manage.models as models
 
 

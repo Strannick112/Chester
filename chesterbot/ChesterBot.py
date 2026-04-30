@@ -2,7 +2,6 @@ import codecs
 import json
 
 import discord
-from aiohttp import BasicAuth
 from discord.ext import commands
 
 from chesterbot import main_config

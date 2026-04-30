@@ -1,4 +1,4 @@
-from sqlalchemy import ForeignKey, select, Table, Column
+from sqlalchemy import ForeignKey, select
 from sqlalchemy.orm import Mapped, mapped_column
 
 from .Base import Base
