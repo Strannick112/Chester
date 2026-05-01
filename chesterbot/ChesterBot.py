@@ -7,6 +7,7 @@ from discord.ext import commands
 from chesterbot import main_config
 from chesterbot.ConsoleDSTChecker import ConsoleDSTChecker
 from chesterbot.cogs import BotManage, WipeManage
+from chesterbot.cogs.AchievementsDashBoard.AchievementsController import AchievementsController
 from chesterbot.cogs.Halloween import Halloween
 from chesterbot.cogs.DashBoardEmbed import DashBoardEmbed
 from chesterbot.cogs.server_manage import ServerManage
@@ -31,6 +32,7 @@ class ChesterBot(commands.Bot):
         self.wipe_manage = WipeManage(self)
         self.dashboards = DashBoardEmbed(self)
         self.halloween = Halloween(self)
+        self.achievements = AchievementsController(self)
         self.event(self.on_ready)
         if main_config["proxy"]["address"] == "":
             super().__init__(
@@ -53,6 +55,7 @@ class ChesterBot(commands.Bot):
         await self.console_dst_checker.on_ready(self.loop)
         await self.wipe_manage.on_ready()
         await self.dashboards.on_ready()
+        await self.achievements.on_ready()
 
 
     async def init(self):
@@ -62,6 +65,7 @@ class ChesterBot(commands.Bot):
         await self.add_cog(self.wipe_manage)
         await self.add_cog(self.dashboards)
         await self.add_cog(self.halloween)
+        await self.add_cog(self.achievements)
 
     async def start(self, token: str = main_config['token'], *, reconnect: bool = True):
         await self.init()
