@@ -1,0 +1,34 @@
+import discord
+
+from chesterbot import main_config
+
+
+class AchievementsView(discord.ui.View):
+    def __init__(self, model):
+        super().__init__()
+        self.model = model
+
+    async def _make_dashboard(self):
+        embed = discord.Embed(color=0x2F3136, title="Прогресс игроков")
+        description = ""
+        for player in self.model.data:
+            description += player.get("Никнейм")
+            description += "\t"
+            description += player.get("Очки")
+        embed.add_field(name="", value=description, inline=False)
+        return embed
+
+    async def update(self):
+        embeds = [self._make_dashboard()]
+
+        view = discord.ui.View()
+        style = discord.ButtonStyle.gray
+        for button_description in main_config["buttons"]:
+            view.add_item(
+                item=discord.ui.Button(
+                    style=style, label=button_description["description"],
+                    url=button_description["url"]
+                )
+            )
+
+        return { "embeds": embeds, "view": view }
