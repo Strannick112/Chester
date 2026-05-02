@@ -29,6 +29,7 @@ class AchievementsReader():
         player_saves = []
         for player_folder in player_folders:
             player_saves.append(self.get_latest_file(player_folder))
+        print("player_saves:", player_saves)
         return player_saves
 
     def get_latest_file(self, parent_dir):
