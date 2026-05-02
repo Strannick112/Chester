@@ -9,7 +9,7 @@ class AchievementsReader():
 
     def __init__(self):
         self.session_folder = self.get_session_folder()
-        self.player_saves = []
+        self.player_saves = self.get_player_saves()
 
     def get_session_folder(self):
         parent_dir = main_config.get("path_to_save") + "/" + main_config.get("worlds")[0].get("folder_name") \
@@ -31,3 +31,4 @@ class AchievementsReader():
         ]
         for folder in folders:
             print(folder)
+        return folders
