@@ -13,8 +13,10 @@ class AchievementsView(discord.ui.View):
         description = ""
         data = await self.model.get_data()
         for player in data:
+            print(f"Nick: {player.get('Никнейм')}")
             description += player.get("Никнейм")
             description += "\t"
+            print(f"Points: {player.get('Очки')}")
             description += player.get("Очки")
         embed.add_field(name="", value=description, inline=False)
         return embed
