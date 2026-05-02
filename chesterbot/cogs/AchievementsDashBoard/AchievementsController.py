@@ -46,9 +46,8 @@ class AchievementsController(commands.Cog, name="Доска статистики
 
     @tasks.loop(minutes=1)
     async def reload_data(self):
-        await self.model.update_data()
         try:
             print("update...")
-            await self.message.edit(**(await self.model.update_data()))
+            await self.message.edit(**(await self.view.update()))
         except:
             pass
