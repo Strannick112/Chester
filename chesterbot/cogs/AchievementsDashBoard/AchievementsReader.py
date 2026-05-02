@@ -21,3 +21,4 @@ class AchievementsReader():
             full_path = os.path.join(parent_dir, folder_name)
             print(f"Folder path: {full_path}")
             return full_path
+        return None
