@@ -19,7 +19,7 @@ class AchievementsView(discord.ui.View):
         return embed
 
     async def update(self):
-        embeds = [self._make_dashboard()]
+        embeds = [await self._make_dashboard()]
 
         # view = discord.ui.View()
         # style = discord.ButtonStyle.gray
