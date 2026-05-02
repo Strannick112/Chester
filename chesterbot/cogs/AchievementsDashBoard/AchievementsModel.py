@@ -22,3 +22,4 @@ class AchievementsModel:
     async def get_data(self):
         await self.update_data()
         return self._data
+
