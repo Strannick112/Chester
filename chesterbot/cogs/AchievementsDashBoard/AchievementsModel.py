@@ -1,6 +1,3 @@
-import discord
-from discord.ext import tasks
-
 from chesterbot import main_config
 
 
