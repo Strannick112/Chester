@@ -41,3 +41,4 @@ class AchievementsReader():
             return None
         latest_file = max(files, key=lambda e: e.stat().st_mtime)
         return latest_file.path
+
