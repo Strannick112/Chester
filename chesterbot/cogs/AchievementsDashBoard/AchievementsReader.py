@@ -26,8 +26,8 @@ class AchievementsReader():
 
     def get_player_saves(self):
         folders = [
-            full_path := os.path.join(self.session_folder, f)
-            for f in os.listdir(self.session_folder) if os.path.isdir(full_path)
+            full_path for f in os.listdir(self.session_folder)
+            if os.path.isdir(full_path := os.path.join(self.session_folder, f))
         ]
         for folder in folders:
             print(folder)
