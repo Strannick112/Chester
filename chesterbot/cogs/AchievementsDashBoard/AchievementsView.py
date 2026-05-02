@@ -21,14 +21,15 @@ class AchievementsView(discord.ui.View):
     async def update(self):
         embeds = [self._make_dashboard()]
 
-        view = discord.ui.View()
-        style = discord.ButtonStyle.gray
-        for button_description in main_config["buttons"]:
-            view.add_item(
-                item=discord.ui.Button(
-                    style=style, label=button_description["description"],
-                    url=button_description["url"]
-                )
-            )
+        # view = discord.ui.View()
+        # style = discord.ButtonStyle.gray
+        # for button_description in main_config["buttons"]:
+        #     view.add_item(
+        #         item=discord.ui.Button(
+        #             style=style, label=button_description["description"],
+        #             url=button_description["url"]
+        #         )
+        #     )
 
-        return { "embeds": embeds, "view": view }
+        # return { "embeds": embeds, "view": view }
+        return { "embeds": embeds }

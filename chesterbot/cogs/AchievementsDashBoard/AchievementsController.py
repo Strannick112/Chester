@@ -48,6 +48,7 @@ class AchievementsController(commands.Cog, name="Доска статистики
     async def reload_data(self):
         await self.model.update_data()
         try:
+            print("update...")
             await self.message.edit(**(await self.model.update_data()))
         except:
             pass
