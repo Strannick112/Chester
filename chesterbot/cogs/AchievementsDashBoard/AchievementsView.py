@@ -11,7 +11,8 @@ class AchievementsView(discord.ui.View):
     async def _make_dashboard(self):
         embed = discord.Embed(color=0x2F3136, title="Прогресс игроков")
         description = ""
-        for player in self.model.get_data():
+        data = await self.model.get_data()
+        for player in data:
             description += player.get("Никнейм")
             description += "\t"
             description += player.get("Очки")
