@@ -17,7 +17,8 @@ class AchievementsView(discord.ui.View):
             description += player.get("Никнейм")
             description += "\t"
             print(f"Points: {player.get('Очки')}")
-            description += player.get("Очки")
+            description += str(player.get("Очки"))
+            description += "\n"
         embed.add_field(name="", value=description, inline=False)
         return embed
 
