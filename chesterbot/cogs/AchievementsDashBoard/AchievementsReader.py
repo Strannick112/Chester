@@ -29,6 +29,8 @@ class AchievementsReader():
             full_path for f in os.listdir(self.session_folder)
             if os.path.isdir(full_path := os.path.join(self.session_folder, f))
         ]
+        print("listdir:", os.listdir(self.session_folder))
+        print("folders:", len(folders))
         for folder in folders:
             print(folder)
         return folders
