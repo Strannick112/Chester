@@ -11,8 +11,8 @@ class AchievementsReader():
         self.session_folder = self.get_session_folder()
 
     def get_session_folder(self):
-        parent_dir = main_config.get("path_to_save") + "\\" + main_config.get("worlds")[0].get("folder_name") \
-             + "\save\session"  # Путь, где лежит ваша папка
+        parent_dir = main_config.get("path_to_save") + "/" + main_config.get("worlds")[0].get("folder_name") \
+             + "/save/session"  # Путь, где лежит ваша папка
         # Список всех папок в этой директории
         folders = [f for f in os.listdir(parent_dir) if os.path.isdir(os.path.join(parent_dir, f))]
 
