@@ -14,7 +14,9 @@ class AchievementsView(discord.ui.View):
         # header = "Сезон: 1\nОбновлен: 26.04.2024\nДо конца сезона: 26\n"
 
         embed.add_field(name="", value="Сезон: 1\n", inline=True)
+        embed.add_field(name="", value="\n", inline=True)
         embed.add_field(name="", value="Обновлен: 26.04.2024\n", inline=True)
+        embed.add_field(name="", value="\n", inline=True)
         embed.add_field(name="", value="До конца сезона: 26\n", inline=True)
         embed.add_field(name="", value="\n", inline=False)
         data = await self.model.get_data()
