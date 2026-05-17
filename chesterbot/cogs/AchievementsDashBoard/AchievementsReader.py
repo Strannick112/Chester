@@ -30,12 +30,12 @@ class AchievementsReader():
             full_path for f in os.listdir(self.session_folder)
             if os.path.isdir(full_path := os.path.join(self.session_folder, f))
         ]
-        print("listdir:", os.listdir(self.session_folder))
-        print("folders:", len(player_folders))
+        # print("listdir:", os.listdir(self.session_folder))
+        # print("folders:", len(player_folders))
         player_saves = []
         for player_folder in player_folders:
             player_saves.append(self.get_latest_file(player_folder))
-        print("player_saves:", player_saves)
+        # print("player_saves:", player_saves)
         return player_saves
 
     def get_latest_file(self, parent_dir):
@@ -60,7 +60,7 @@ class AchievementsReader():
                 clean_json = text[start:end]
                 end = clean_json.rfind('}')
                 clean_json = clean_json[:end + 1]
-                print("clean_json:", clean_json)
+                # print("clean_json:", clean_json)
                 fixed_lua = re.sub(r'([0-9]+\.?[0-9]*)e(-?[0-9]+)', r'0', clean_json)
                 data = luadata.unserialize(fixed_lua)["data"]["kaachievementmanager"]
                 #data = json.loads(json_content.decode('utf-8'))["data"]["kaachievementmanager"]
