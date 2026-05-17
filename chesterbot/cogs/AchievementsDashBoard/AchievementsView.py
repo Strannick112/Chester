@@ -14,13 +14,16 @@ class AchievementsView(discord.ui.View):
         header = "Сезон: 1\tОбновлен: 26.04.2024\tДо конца сезона: 26\n"
         embed.add_field(name="", value=header, inline=True)
         data = await self.model.get_data()
-        player_nickname_column = []
-        player_points_column = []
-        rangs_column = []
+        player_nickname_column = ""
+        player_points_column = ""
+        rangs_column = ""
         for player in data:
-            player_nickname_column.append(player.get("Никнейм"))
-            player_points_column.append(f"Очки: {str(player.get('Очки'))}")
-            rangs_column.append("Ранг: Чемпион")
+            player_nickname_column += player.get("Никнейм")
+            player_nickname_column += "\n"
+            player_points_column += f"Очки: {str(player.get('Очки'))}"
+            player_points_column += "\n"
+            rangs_column += "Ранг: Чемпион"
+            rangs_column += "\n"
         embed.add_field(name="Никнейм", value=player_nickname_column, inline=True)
         embed.add_field(name="Очки", value=player_points_column, inline=True)
         embed.add_field(name="Ранги", value=rangs_column, inline=True)
