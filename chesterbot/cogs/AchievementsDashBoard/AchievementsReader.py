@@ -61,7 +61,7 @@ class AchievementsReader():
                 end = clean_json.rfind('}')
                 clean_json = clean_json[:end + 1]
                 print("clean_json:", clean_json)
-                fixed_lua = re.sub(r'e(-?)0+([0-9]+)', r'e\1\2', clean_json)
+                fixed_lua = re.sub(r'([0-9]+\.?[0-9]*)e(-?[0-9]+)', r'\1e\2', clean_json)
                 data = luadata.unserialize(fixed_lua)["data"]["kaachievementmanager"]
                 #data = json.loads(json_content.decode('utf-8'))["data"]["kaachievementmanager"]
                 # data = json.load(file)["data"]["kaachievementmanager"]
