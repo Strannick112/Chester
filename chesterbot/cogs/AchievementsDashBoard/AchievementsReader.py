@@ -2,7 +2,7 @@ import os
 import json
 
 from chesterbot import main_config
-from AchievementsList import achievements_list
+from chesterbot.cogs.AchievementsDashBoard.AchievementsList import achievements_list
 
 class AchievementsReader():
 
