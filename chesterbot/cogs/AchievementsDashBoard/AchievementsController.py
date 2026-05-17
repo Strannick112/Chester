@@ -33,6 +33,11 @@ class AchievementsController(commands.Cog, name="Доска статистики
         try:
             self.message = await self.channel.fetch_message(self.message_id)
         except:
+            try:
+                embed_picture = discord.File(main_config["achievement_embed_picture"])
+            except OSError:
+                return
+            await self.channel.send(file=embed_picture)
             embed = discord.Embed(
                 title="Статистика",
                 description="Доска создана, начат сбор информации...",
