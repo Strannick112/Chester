@@ -19,10 +19,10 @@ class AchievementsView(discord.ui.View):
             description += player.get("Никнейм")
             description += "\t"
             print(f"Points: {player.get('Очки')}")
+            description += "Очки: "
             description += str(player.get("Очки"))
             description += "\t"
-            description += "Ранг: Чемпион\n"
-            description += "Прошлый сезон: Титан"
+            description += "Ранг: Чемпион"
             description += "\n"
         embed.add_field(name="", value=description, inline=False)
         return embed
