@@ -49,7 +49,7 @@ class AchievementsReader():
         player_points = []
         data = None
         for file_name in self.player_saves:
-            with open(file_name, 'r', encoding='utf-8') as file:
+            with open(file_name, 'rb') as file:
                 json_content = file.read()[10:]
                 data = json.loads(json_content.decode('utf-8'))["data"]["kaachievementmanager"]
                 # data = json.load(file)["data"]["kaachievementmanager"]
