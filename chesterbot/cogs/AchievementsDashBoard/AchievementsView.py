@@ -11,20 +11,12 @@ class AchievementsView(discord.ui.View):
     async def _make_dashboard(self):
         print("meaw3")
         embed = discord.Embed(color=0x2F3136, title="РЕЙТИНГОВАЯ ТАБЛИЦА")
-        description = ""
-        description += "Сезон: 1\tОбновлен: 26.04.2024\tДо конца сезона: 26\n"
+        header = "Сезон: 1\tОбновлен: 26.04.2024\tДо конца сезона: 26\n"
+        embed.add_field(name="", value=header, inline=True)
         data = await self.model.get_data()
         for player in data:
-            print(f"Nick: {player.get('Никнейм')}")
-            description += player.get("Никнейм")
-            description += "\t"
-            print(f"Points: {player.get('Очки')}")
-            description += "Очки: "
-            description += str(player.get("Очки"))
-            description += "\t"
-            description += "Ранг: Чемпион"
-            description += "\n"
-        embed.add_field(name="", value=description, inline=False)
+            text = f"Очки: {str(player.get('Очки'))}\nРанг: Чемпион"
+            embed.add_field(name=player.get("Никнейм"), value=text, inline=True)
         return embed
 
     async def update(self):
