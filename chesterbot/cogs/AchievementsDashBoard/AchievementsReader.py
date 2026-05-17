@@ -67,7 +67,7 @@ class AchievementsReader():
                 # data = json.load(file)["data"]["kaachievementmanager"]
             print("data: ", data)
             cur_points = 0
-            for field_name, field_value in data:
+            for field_name, field_value in data.items():
                 if (points := achievements_list.get(field_name)) is not None:
                     cur_points += field_value * points
             player_points.append( { "player_name": cur_points } )
