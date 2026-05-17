@@ -13,6 +13,6 @@ class AchievementsModel:
             self._data.append({ "Никнейм": nick, "Очки": str(points) })
 
     async def get_data(self):
-        await self.update_data()
         await self.reader.update_player_points()
+        await self.update_data()
         return self._data
