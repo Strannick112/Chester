@@ -24,9 +24,9 @@ class AchievementsView(discord.ui.View):
             player_points_column += "\n"
             rangs_column += "Ранг: Чемпион"
             rangs_column += "\n"
-        embed.add_field(name="Никнейм", value=player_nickname_column, inline=True)
-        embed.add_field(name="Очки", value=player_points_column, inline=True)
-        embed.add_field(name="Ранги", value=rangs_column, inline=True)
+        embed.add_field(name="", value=player_nickname_column, inline=True)
+        embed.add_field(name="", value=player_points_column, inline=True)
+        embed.add_field(name="", value=rangs_column, inline=True)
         return embed
 
     async def update(self):
