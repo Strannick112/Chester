@@ -15,7 +15,4 @@ class AchievementsModel:
     async def get_data(self):
         await self.update_data()
         await self.reader.update_player_points()
-        self.reader.get_session_folder()
-        self.reader.get_player_saves()
         return self._data
-
