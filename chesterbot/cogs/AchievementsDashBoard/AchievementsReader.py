@@ -1,5 +1,7 @@
 import os
 import json
+import re
+
 import luadata
 
 from chesterbot import main_config
@@ -59,7 +61,8 @@ class AchievementsReader():
                 end = clean_json.rfind('}')
                 clean_json = clean_json[:end + 1]
                 print("clean_json:", clean_json)
-                data = data = luadata.unserialize(clean_json)["data"]["kaachievementmanager"]
+                fixed_lua = re.sub(r'e(-?)0+([0-9]+)', r'e\1\2', clean_json)
+                data = luadata.unserialize(fixed_lua)["data"]["kaachievementmanager"]
                 #data = json.loads(json_content.decode('utf-8'))["data"]["kaachievementmanager"]
                 # data = json.load(file)["data"]["kaachievementmanager"]
             print("data: ", data)
