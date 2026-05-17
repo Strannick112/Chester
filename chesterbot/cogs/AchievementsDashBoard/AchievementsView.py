@@ -12,7 +12,7 @@ class AchievementsView(discord.ui.View):
         print("meaw3")
         embed = discord.Embed(color=0x2F3136, title="РЕЙТИНГОВАЯ ТАБЛИЦА")
         header = "Сезон: 1\tОбновлен: 26.04.2024\tДо конца сезона: 26\n"
-        embed.add_field(name="", value=header, inline=True)
+        embed.add_field(name="", value=header, inline=False)
         data = await self.model.get_data()
         player_nickname_column = ""
         player_points_column = ""
