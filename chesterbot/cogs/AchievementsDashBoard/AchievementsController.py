@@ -18,7 +18,6 @@ class AchievementsController(commands.Cog, name="Доска статистики
         self.message_id = None
         self.model = AchievementsModel()
         self.view = AchievementsView(self.model)
-        print("meaw1")
 
     async def on_ready(self):
         self.channel = self.chester_bot.get_channel(main_config["achievements_channel"])
@@ -48,7 +47,6 @@ class AchievementsController(commands.Cog, name="Доска статистики
     @tasks.loop(minutes=1)
     async def reload_data(self):
         try:
-            print("meaw2")
             await self.message.edit(**(await self.view.update()))
         except:
             pass
