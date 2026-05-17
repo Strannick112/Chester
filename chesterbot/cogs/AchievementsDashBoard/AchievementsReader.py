@@ -1,12 +1,15 @@
 import os
+import json
 
 from chesterbot import main_config
+from AchievementsList import achievements_list
 
 class AchievementsReader():
 
     def __init__(self):
         self.session_folder = self.get_session_folder()
         self.player_saves = self.get_player_saves()
+        self.player_points = self.get_player_points()
 
     def get_session_folder(self):
         parent_dir = main_config.get("path_to_save") + "/" + main_config.get("worlds")[0].get("folder_name") \
@@ -42,3 +45,18 @@ class AchievementsReader():
         latest_file = max(files, key=lambda e: e.stat().st_mtime)
         return latest_file.path
 
+    def get_player_points(self):
+        player_points = []
+        data = None
+        for file_name in self.player_saves:
+            with open(file_name, 'r', encoding='utf-8') as file:
+                data = json.load(file)["data"]["kaachievementmanager"]
+            print("data: ", data)
+            cur_points = 0
+            for field_name, field_value in data:
+                if (points := achievements_list.get(field_name)) is not None:
+                    cur_points += field_value * points
+            player_points.append( { "player_name": cur_points } )
+            print("cur_points: ", cur_points)
+        print("player_points: ", player_points)
+        return player_points
