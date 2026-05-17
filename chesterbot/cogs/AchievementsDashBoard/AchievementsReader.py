@@ -1,5 +1,6 @@
 import os
 import json
+import luadata
 
 from chesterbot import main_config
 from chesterbot.cogs.AchievementsDashBoard.AchievementsList import achievements_list
@@ -56,7 +57,7 @@ class AchievementsReader():
                 end = text.rfind('}')
                 clean_json = text[start:end + 1]
 
-                data = json.loads(clean_json)["data"]["kaachievementmanager"]
+                data = data = luadata.unserialize(clean_json)["data"]["kaachievementmanager"]
                 #data = json.loads(json_content.decode('utf-8'))["data"]["kaachievementmanager"]
                 # data = json.load(file)["data"]["kaachievementmanager"]
             print("data: ", data)
