@@ -44,7 +44,7 @@ class AchievementsReader():
         return player_saves
 
     async def update_player_points(self):
-        player_points = []
+        self.player_points = []
         data = None
         for file_name in self._get_player_saves():
             with open(file_name, 'rb') as file:
@@ -64,4 +64,4 @@ class AchievementsReader():
                         cur_points += points
                     else:
                         cur_points += field_value * points
-            player_points.append( { "player_name": cur_points } )
+            self.player_points.append( { "player_name": cur_points } )
