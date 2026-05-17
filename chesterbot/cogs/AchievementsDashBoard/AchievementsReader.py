@@ -12,7 +12,7 @@ class AchievementsReader():
     def __init__(self):
         self.session_folder = self.get_session_folder()
         self.player_saves = self.get_player_saves()
-        self.player_points = self.get_player_points()
+        self.player_points = []
 
     def get_session_folder(self):
         parent_dir = main_config.get("path_to_save") + "/" + main_config.get("worlds")[0].get("folder_name") \
@@ -44,7 +44,7 @@ class AchievementsReader():
         latest_file = max(files, key=lambda e: e.stat().st_mtime)
         return latest_file.path
 
-    def get_player_points(self):
+    def update_player_points(self):
         player_points = []
         data = None
         for file_name in self.player_saves:
@@ -68,4 +68,3 @@ class AchievementsReader():
                     else:
                         cur_points += field_value * points
             player_points.append( { "player_name": cur_points } )
-        return player_points

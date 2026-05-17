@@ -8,18 +8,9 @@ class AchievementsModel:
         self.reader = AchievementsReader()
 
     async def update_data(self):
-        self._data = [
-            { "Никнейм": "Nickname", "Очки": 0 },
-            { "Никнейм": "Nickname", "Очки": 0 },
-            { "Никнейм": "Nickname", "Очки": 0 },
-            { "Никнейм": "Nickname", "Очки": 0 },
-            { "Никнейм": "Nickname", "Очки": 0 },
-            { "Никнейм": "Nickname", "Очки": 0 },
-            { "Никнейм": "Nickname", "Очки": 0 },
-            { "Никнейм": "Nickname", "Очки": 0 },
-            { "Никнейм": "Nickname", "Очки": 0 },
-            { "Никнейм": "Nickname", "Очки": 0 }
-        ]
+        self._data = []
+        for nick, points in self.reader.player_points:
+            self._data.append({ "Никнейм": nick, "Очки": str(points) })
 
     async def get_data(self):
         await self.update_data()
