@@ -44,7 +44,7 @@ class AchievementsReader():
         latest_file = max(files, key=lambda e: e.stat().st_mtime)
         return latest_file.path
 
-    def update_player_points(self):
+    async def update_player_points(self):
         player_points = []
         data = None
         for file_name in self.player_saves:
@@ -58,8 +58,6 @@ class AchievementsReader():
                 clean_json = clean_json[:end + 1]
                 fixed_lua = re.sub(r'([0-9]+\.?[0-9]*)e(-?[0-9]+)', r'0', clean_json)
                 data = luadata.unserialize(fixed_lua)["data"]["kaachievementmanager"]
-                #data = json.loads(json_content.decode('utf-8'))["data"]["kaachievementmanager"]
-                # data = json.load(file)["data"]["kaachievementmanager"]
             cur_points = 0
             for field_name, field_value in data.items():
                 if (points := achievements_list.get(field_name)) is not None:
