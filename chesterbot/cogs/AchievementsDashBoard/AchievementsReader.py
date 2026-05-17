@@ -65,3 +65,4 @@ class AchievementsReader():
                     else:
                         cur_points += field_value * points
             self.player_points.append( { "player_name": cur_points } )
+        print(f"player_points: {self.player_points}")

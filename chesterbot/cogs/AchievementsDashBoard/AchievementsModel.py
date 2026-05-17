@@ -9,6 +9,7 @@ class AchievementsModel:
 
     async def update_data(self):
         self._data = []
+        print(f"player_points: {self.reader.player_points}")
         for nick, points in self.reader.player_points:
             self._data.append({ "Никнейм": nick, "Очки": str(points) })
 
