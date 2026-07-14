@@ -69,14 +69,23 @@ class AchievementsReader():
             with open(file_name, 'rb') as file:
                 print(f"meaw inside open file")
                 content = file.read()
+                print("1")
                 text = content.decode('utf-8', errors='ignore')
+                print("2")
                 start = text.find('{')
+                print("3")
                 end = text.rfind('}')
+                print("4")
                 clean_json = text[start:end]
+                print("5")
                 end = clean_json.rfind('}')
+                print("6")
                 clean_json = clean_json[:end + 1]
+                print("7")
                 fixed_lua = re.sub(r'([0-9]+\.?[0-9]*)e(-?[0-9]+)', r'0', clean_json)
+                print("8")
                 data = luadata.unserialize(fixed_lua)["data"]["kaachievementmanager"]
+                print("9")
             cur_points = 0
             print(f"meaw after close file")
             for field_name, field_value in data.items():
