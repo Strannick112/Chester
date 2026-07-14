@@ -1,15 +1,17 @@
 import os
-import json
 import re
 
 import luadata
 
 from chesterbot import main_config
 from chesterbot.cogs.AchievementsDashBoard.AchievementsList import achievements_list
+from chesterbot.models import SteamAccount
+
 
 class AchievementsReader():
 
-    def __init__(self):
+    def __init__(self, chester_bot):
+        self.chester_bot = chester_bot
         self._session_folder = self._get_session_folder()
         self.player_points = []
 
@@ -64,4 +66,9 @@ class AchievementsReader():
                         cur_points += points
                     else:
                         cur_points += field_value * points
-            self.player_points.append( { ku_id: cur_points } )
+            player_name = None
+            async with self.chester_bot.async_session() as session:
+                async with session.begin():
+                    player_name = ( await SteamAccount.get_by_ku_id(session=session, ku_id=ku_id) ).nickname
+            if player_name is not None:
+                self.player_points.append( { player_name: cur_points } )

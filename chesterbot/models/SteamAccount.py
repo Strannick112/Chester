@@ -18,7 +18,6 @@ class SteamAccount(Base):
     def __repr__(self) -> str:
         return f"SteamAccount(id={str(self.id)!r}, ku_id={str(self.ku_id)!r}, nickname={str(self.nickname)!r})"
 
-
     @staticmethod
     async def get_or_create(session, ku_id, nickname):
         instance = (await session.execute(select(SteamAccount).filter_by(ku_id=ku_id))).scalars().first()
@@ -32,3 +31,7 @@ class SteamAccount(Base):
             session.add(instance)
             await session.flush()
         return instance
+
+    @staticmethod
+    async def get_by_ku_id(session, ku_id):
+        return await session.execute(select(SteamAccount).filter_by(ku_id=ku_id)).scalars().first()
