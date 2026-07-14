@@ -65,7 +65,9 @@ class AchievementsReader():
             if player_name is None:
                 continue
 
+            print(f"meaw before open file")
             with open(file_name, 'rb') as file:
+                print(f"meaw inside open file")
                 content = file.read()
                 text = content.decode('utf-8', errors='ignore')
                 start = text.find('{')
@@ -76,6 +78,7 @@ class AchievementsReader():
                 fixed_lua = re.sub(r'([0-9]+\.?[0-9]*)e(-?[0-9]+)', r'0', clean_json)
                 data = luadata.unserialize(fixed_lua)["data"]["kaachievementmanager"]
             cur_points = 0
+            print(f"meaw after close file")
             for field_name, field_value in data.items():
                 if (points := achievements_list.get(field_name)) is not None:
                     if isinstance(field_value, dict):
