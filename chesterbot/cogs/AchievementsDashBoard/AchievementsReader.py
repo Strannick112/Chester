@@ -68,6 +68,7 @@ class AchievementsReader():
             with open(file_name, 'rb') as file:
                 content = file.read()
                 text = content.decode('utf-8', errors='ignore')
+                print("meaw1")
                 clean_json = re.findall(r"""Еreturn (\{[\w\W]+?age = \d+?,\s*?prefab = "[\w\W]+?"\s*?})""", text)[0]
                 # start = text.find('{')
                 # end = text.rfind('}')
