@@ -2,9 +2,9 @@ from chesterbot.cogs.AchievementsDashBoard.AchievementsReader import Achievement
 
 
 class AchievementsModel:
-    def __init__(self):
+    def __init__(self, chester_bot):
         self._data = []
-        self.reader = AchievementsReader()
+        self.reader = AchievementsReader(chester_bot)
 
     async def update_data(self):
         self._data = []

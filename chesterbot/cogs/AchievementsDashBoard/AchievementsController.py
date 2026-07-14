@@ -16,7 +16,7 @@ class AchievementsController(commands.Cog, name="Доска статистики
         self.channel = None
         self.message = None
         self.message_id = None
-        self.model = AchievementsModel()
+        self.model = AchievementsModel(self.chester_bot)
         self.view = AchievementsView(self.model)
 
     async def on_ready(self):
