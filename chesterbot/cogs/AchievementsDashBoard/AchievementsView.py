@@ -11,7 +11,7 @@ class AchievementsView(discord.ui.View):
 
     def column_size_corrector(self, column_headers):
         return [
-            header + ' ' * max(self.column_size - len(header), 0)
+            header + '⠀' * max(self.column_size - len(header), 0)
             for header in column_headers
         ]
 
