@@ -1,4 +1,3 @@
-from chesterbot import main_config
 from chesterbot.cogs.AchievementsDashBoard.AchievementsReader import AchievementsReader
 
 

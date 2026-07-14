@@ -41,6 +41,7 @@ class AchievementsReader():
         player_saves = []
         for player_folder in player_folders:
             player_saves.append(self._get_latest_file(player_folder))
+        print(f"player_folders: {player_folders}")
         return player_saves
 
     async def update_player_points(self):
