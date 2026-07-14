@@ -81,8 +81,10 @@ class AchievementsReader():
                 if (points := achievements_list.get(field_name)) is not None:
                     if isinstance(field_value, dict):
                         cur_points += points
+
                     else:
                         cur_points += field_value * points
+                    print(f"{field_name}: points: {points}, cur_points: {cur_points}")
 
             self.player_points.append( { player_name: cur_points } )
         # self.player_points = [player for player in self.player_points if next(iter(player.values())) > 200]
