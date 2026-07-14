@@ -34,4 +34,5 @@ class SteamAccount(Base):
 
     @staticmethod
     async def get_by_ku_id(session, ku_id):
+        print("meaw inside")
         return (await session.execute(select(SteamAccount).filter_by(ku_id=ku_id))).scalars().first()
