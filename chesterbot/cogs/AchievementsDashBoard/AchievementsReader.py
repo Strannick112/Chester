@@ -28,7 +28,7 @@ class AchievementsReader():
     def _get_latest_file(self, parent_dir):
         files = [
             entry for entry in os.scandir(parent_dir)
-            if entry.is_file() and not entry.name.endswith('.meta')
+            if entry.is_file() and not entry.name.endswith('.meta') and not entry.name == "savelocation"
         ]
         if not files:
             return None
