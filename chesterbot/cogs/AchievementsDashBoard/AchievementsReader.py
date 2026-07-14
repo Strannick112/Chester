@@ -69,10 +69,11 @@ class AchievementsReader():
                     else:
                         cur_points += field_value * points
             player_name = None
-
+            print(f"cur_points: {cur_points}")
 
             async with self.chester_bot.async_session() as session:
                 async with session.begin():
                     player_name = ( await SteamAccount.get_by_ku_id(session=session, ku_id=ku_id) ).nickname
+            print(f"player_name: {player_name}")
             if player_name is not None:
                 self.player_points.append( { player_name: cur_points } )
