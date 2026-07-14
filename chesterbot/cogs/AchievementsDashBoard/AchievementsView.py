@@ -7,12 +7,24 @@ class AchievementsView(discord.ui.View):
     def __init__(self, model):
         super().__init__()
         self.model = model
+        self.column_size = 32
+
+    def column_size_corrector(self, column_headers: list[str]):
+        return [
+            header + ' ' * max(self.column_size - len(header), 0)
+            for header in column_headers
+        ]
 
     async def _make_dashboard(self):
         embed = discord.Embed(color=0x2F3136, title="РЕЙТИНГОВАЯ ТАБЛИЦА")
         # header = "Сезон: 1\nОбновлен: 26.04.2024\nДо конца сезона: 26\n"
+        headers = (
+            "Сезон: 1\n",
+            "",
+            "",
+        )
 
-        embed.add_field(name="", value="Сезон: 1                       \n", inline=True)
+        embed.add_field(name="", value="Сезон: 1\n", inline=True)
         # embed.add_field(name="", value="Обновлен: 26.04.2024\n", inline=True)
         # embed.add_field(name="", value="До конца сезона: 26\n", inline=True)
         embed.add_field(name="", value="\n", inline=False)

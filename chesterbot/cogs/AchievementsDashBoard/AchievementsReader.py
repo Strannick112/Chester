@@ -40,28 +40,21 @@ class AchievementsReader():
             full_path for f in os.listdir(self._session_folder)
             if os.path.isdir(full_path := os.path.join(self._session_folder, f))
         ]
-        print(f"player_folders: {player_folders}")
         player_saves = []
         for player_folder in player_folders:
             player_saves.append( (os.path.basename(player_folder)[:-1], self._get_latest_file(player_folder)) )
-        print(f"player_saves: {player_saves}")
         return player_saves
 
     async def update_player_points(self):
         self.player_points = []
         data = None
         for ku_id, file_name in self._get_player_saves():
-            print(f"ku_id: {ku_id}")
-            print(f"file_name: {file_name}")
-
             player_name = None
             async with self.chester_bot.async_session() as session:
                 async with session.begin():
                     player = ( await SteamAccount.get_by_ku_id(session=session, ku_id=ku_id) )
-                    print(f"player: {player}")
                     if player is not None:
                         player_name = player.nickname
-            print(f"player_name: {player_name}")
             if player_name is None:
                 continue
 
@@ -90,7 +83,6 @@ class AchievementsReader():
                         cur_points += points
                     else:
                         cur_points += field_value * points
-            print(f"cur_points: {cur_points}")
 
             self.player_points.append( { player_name: cur_points } )
         # self.player_points = [player for player in self.player_points if next(iter(player.values())) > 200]
