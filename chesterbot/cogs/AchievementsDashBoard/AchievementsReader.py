@@ -68,12 +68,13 @@ class AchievementsReader():
             with open(file_name, 'rb') as file:
                 content = file.read()
                 text = content.decode('utf-8', errors='ignore')
+                print(f"text: {text}")
                 start = text.find('{')
                 end = text.rfind('}')
                 clean_json = text[start:end]
                 end = clean_json.rfind('}')
                 clean_json = clean_json[:end + 1]
-                print(f"clean_json: {clean_json}")
+                # print(f"clean_json: {clean_json}")
                 fixed_lua = re.sub(r'([0-9]+\.?[0-9]*)e(-?[0-9]+)', r'0', clean_json)
                 # print(f"fixed_lua: {fixed_lua}")
                 data = luadata.unserialize(fixed_lua)["data"]["kaachievementmanager"]
