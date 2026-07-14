@@ -53,6 +53,17 @@ class AchievementsReader():
         for ku_id, file_name in self._get_player_saves():
             print(f"ku_id: {ku_id}")
             print(f"file_name: {file_name}")
+
+            player_name = None
+            async with self.chester_bot.async_session() as session:
+                async with session.begin():
+                    player = ( await SteamAccount.get_by_ku_id(session=session, ku_id=ku_id) )
+                    if player is not None:
+                        player_name = player.name
+            print(f"player_name: {player_name}")
+            if player_name is None:
+                continue
+
             with open(file_name, 'rb') as file:
                 content = file.read()
                 text = content.decode('utf-8', errors='ignore')
@@ -70,10 +81,7 @@ class AchievementsReader():
                         cur_points += points
                     else:
                         cur_points += field_value * points
-            player_name = None
-            async with self.chester_bot.async_session() as session:
-                async with session.begin():
-                    player_name = ( await SteamAccount.get_by_ku_id(session=session, ku_id=ku_id) ).nickname
-            print(f"player_name: {player_name}")
+            print(f"cur_points: {cur_points}")
+
             if player_name is not None:
                 self.player_points.append( { player_name: cur_points } )
