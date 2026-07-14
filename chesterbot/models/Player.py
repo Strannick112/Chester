@@ -4,7 +4,6 @@ from typing import List, Optional
 from sqlalchemy import ForeignKey, select
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from chesterbot.ConsoleDSTChecker import ConsoleDSTChecker
 from .Base import Base
 
 
@@ -39,7 +38,7 @@ class Player(Base):
         await session.flush()
         return instance
 
-    async def is_player_online(self, console_dst_checker: ConsoleDSTChecker):
+    async def is_player_online(self, console_dst_checker):
         ku_id = (await self.awaitable_attrs.steam_account).ku_id
         tasks = console_dst_checker.check_all_worlds(
             f"""print(\\\"PlayerID: \\\", LookupPlayerInstByUserID(\\\"{ku_id}\\\").userid)""",

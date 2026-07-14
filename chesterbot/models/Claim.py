@@ -4,7 +4,6 @@ from typing import List, Optional
 from sqlalchemy import DateTime, ForeignKey, func, BigInteger, String, select, update
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from chesterbot.ConsoleDSTChecker import ConsoleDSTChecker
 from . import statuses, Wipe
 from .Base import Base
 
@@ -101,7 +100,7 @@ class Claim(Base):
 
     semaphore_give_items = asyncio.Semaphore(1)
 
-    async def give_items(self, *, session, console_dst_checker: ConsoleDSTChecker) -> bool:
+    async def give_items(self, *, session, console_dst_checker) -> bool:
         async with self.semaphore_give_items:
             await session.refresh(self)
             if self.status_id == statuses.get("approved"):
@@ -135,7 +134,7 @@ class Claim(Base):
 
     semaphore_take_items = asyncio.Semaphore(1)
 
-    async def take_items(self, *, checked_items, console_dst_checker: ConsoleDSTChecker):
+    async def take_items(self, *, checked_items, console_dst_checker):
         ku_id = (await (await self.awaitable_attrs.player).awaitable_attrs.steam_account).ku_id
         items_row = "{"
         for numbered_item in await self.awaitable_attrs.numbered_items:
@@ -157,7 +156,7 @@ class Claim(Base):
                 return False
         return False
 
-    async def check_days(self, *, console_dst_checker: ConsoleDSTChecker):
+    async def check_days(self, *, console_dst_checker):
         ku_id = (await (await self.awaitable_attrs.player).awaitable_attrs.steam_account).ku_id
 
         command = f"""print('CheckDaysForPlayer: ', \\\"{ku_id}\\\", TheNet:GetClientTableForUser(\\\"{ku_id}\\\").playerage)"""

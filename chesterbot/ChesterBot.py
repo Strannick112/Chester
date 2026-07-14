@@ -12,7 +12,7 @@ from chesterbot.cogs.Halloween import Halloween
 from chesterbot.cogs.DashBoardEmbed import DashBoardEmbed
 from chesterbot.cogs.server_manage import ServerManage
 from chesterbot.cogs.server_manage.commands import send_message_to_game
-from chesterbot.cogs.wipe_manage.models import models_init
+from chesterbot.models import models_init
 
 
 class ChesterBot(commands.Bot):
@@ -21,7 +21,7 @@ class ChesterBot(commands.Bot):
         intents.message_content = True
         intents.members = True
         self.default_role = None
-        self.console_dst_checker = ConsoleDSTChecker(main_config["worlds"])
+        self.console_dst_checker = ConsoleDSTChecker(self, main_config["worlds"])
 
         with codecs.open("./chesterbot/replies.json", "r", encoding="utf-8") as file:
             self.replies = json.load(file)

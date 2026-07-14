@@ -4,7 +4,6 @@ from sqlalchemy import select, BigInteger, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .Base import Base
-# from .ClaimItem import claim_item
 
 
 class NumberedItem(Base):

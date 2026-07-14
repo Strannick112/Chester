@@ -7,11 +7,13 @@ import subprocess
 from discord.ext import tasks
 
 from chesterbot import main_config
+from chesterbot.models import SteamAccount
 
 
 class ConsoleDSTChecker:
 
-    def __init__(self, worlds):
+    def __init__(self, chester_bot, worlds):
+        self.chester_bot = chester_bot
         self.__loop = None
         self.worlds = worlds
         self.__all_commands = {}
@@ -91,6 +93,14 @@ class ConsoleDSTChecker:
             if text := world["file_log_iter"].readline()[12:]:
                 if "Client authenticated" in text:
                     await main_config['log_channel'].send(content=("```" + text + "```"))
+                    ku_id, player_name = re.findall(r"Client authenticated:\s\(([\w\W]+?)\)\s([\w\W]+)", text)[0]
+                    async with self.chester_bot.async_session() as session:
+                        async with session.begin():
+                            await SteamAccount.get_or_create(
+                                session=session,
+                                ku_id=ku_id,
+                                nickname=player_name
+                            )
 
                 # Против ддос атаки, возникающей, когда клиент пытается отсоединиться от сервера, но не присылает данных
                 if "disconnected from [SHDMASTER](1)" in text:
