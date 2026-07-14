@@ -60,7 +60,7 @@ class AchievementsReader():
                     player = ( await SteamAccount.get_by_ku_id(session=session, ku_id=ku_id) )
                     print(f"player: {player}")
                     if player is not None:
-                        player_name = player.name
+                        player_name = player.nickname
             print(f"player_name: {player_name}")
             if player_name is None:
                 continue
