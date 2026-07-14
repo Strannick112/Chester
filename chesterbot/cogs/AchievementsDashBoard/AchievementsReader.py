@@ -40,14 +40,13 @@ class AchievementsReader():
         ]
         player_saves = []
         for player_folder in player_folders:
-            player_saves.append(self._get_latest_file(player_folder))
-        print(f"player_folders: {player_folders}")
+            player_saves.append( (os.path.basename(player_folder), self._get_latest_file(player_folder)) )
         return player_saves
 
     async def update_player_points(self):
         self.player_points = []
         data = None
-        for file_name in self._get_player_saves():
+        for ku_id, file_name in self._get_player_saves():
             with open(file_name, 'rb') as file:
                 content = file.read()
                 text = content.decode('utf-8', errors='ignore')
@@ -65,4 +64,4 @@ class AchievementsReader():
                         cur_points += points
                     else:
                         cur_points += field_value * points
-            self.player_points.append( { "player_name": cur_points } )
+            self.player_points.append( { ku_id: cur_points } )
