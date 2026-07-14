@@ -42,7 +42,7 @@ class AchievementsReader():
         ]
         player_saves = []
         for player_folder in player_folders:
-            player_saves.append( (os.path.basename(player_folder), self._get_latest_file(player_folder)) )
+            player_saves.append( (os.path.basename(player_folder)[:-1], self._get_latest_file(player_folder)) )
         return player_saves
 
     async def update_player_points(self):
