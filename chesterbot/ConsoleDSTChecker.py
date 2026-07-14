@@ -93,7 +93,7 @@ class ConsoleDSTChecker:
             if text := world["file_log_iter"].readline()[12:]:
                 if "Client authenticated" in text:
                     await main_config['log_channel'].send(content=("```" + text + "```"))
-                    ku_id, player_name = re.findall(r"Client authenticated:\s\(([\w\W]+?)\)\s([\w\W]+)", text)[0]
+                    ku_id, player_name = re.findall(r"Client authenticated:\s\(([\w\W]+?)\)\s([\w\W]+)\s", text)[0]
                     async with self.chester_bot.async_session() as session:
                         async with session.begin():
                             await SteamAccount.get_or_create(
