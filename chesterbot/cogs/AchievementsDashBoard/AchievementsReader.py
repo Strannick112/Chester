@@ -58,6 +58,7 @@ class AchievementsReader():
             async with self.chester_bot.async_session() as session:
                 async with session.begin():
                     player = ( await SteamAccount.get_by_ku_id(session=session, ku_id=ku_id) )
+                    print(f"player: {player}")
                     if player is not None:
                         player_name = player.name
             print(f"player_name: {player_name}")
