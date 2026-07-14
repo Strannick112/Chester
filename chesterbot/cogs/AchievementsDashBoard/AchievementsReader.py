@@ -68,19 +68,21 @@ class AchievementsReader():
             with open(file_name, 'rb') as file:
                 content = file.read()
                 text = content.decode('utf-8', errors='ignore')
-                print("meaw1")
-                clean_json = re.findall(r"""Еreturn (\{[\w\W]+?age = \d+?,\s*?prefab = "[\w\W]+?"\s*?})""", text)[0]
-                # start = text.find('{')
-                # end = text.rfind('}')
-                # clean_json = text[start:end]
-                # end = clean_json.rfind('}')
-                # clean_json = clean_json[:end + 1]
-                print(f"clean_json: {clean_json}")
-                fixed_lua = re.sub(r'([0-9]+\.?[0-9]*)e(-?[0-9]+)', r'0', clean_json)
-                print(f"fixed_lua: {fixed_lua}")
+                counter_scobok = 0
+                index = 0
+                start = text.find('{')
+                text = text[start:]
+                for letter in text:
+                    if letter == '{':
+                        counter_scobok += 1
+                    if letter == '}':
+                        counter_scobok -= 1
+                    if counter_scobok == 0 and index != 0:
+                        break
+                    index += 1
+                text = text[:index + 1]
+                fixed_lua = re.sub(r'([0-9]+\.?[0-9]*)e(-?[0-9]+)', r'0', text)
                 data = luadata.unserialize(fixed_lua)["data"]["kaachievementmanager"]
-                print(f"data: {data}")
-                print("9")
             cur_points = 0
             for field_name, field_value in data.items():
                 if (points := achievements_list.get(field_name)) is not None:
