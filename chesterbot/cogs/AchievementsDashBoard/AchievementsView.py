@@ -19,19 +19,25 @@ class AchievementsView:
     async def _make_dashboard(self):
         print("meaw1")
         embed = discord.Embed(color=0x2F3136, title="РЕЙТИНГ ИГРОКОВ")
+        print("meaw2")
         embed.set_thumbnail(url=main_config["achievements_tumbnail"])
+        print("meaw3")
         headers = self.column_size_corrector((
             "Сезон: 1",
             "",
             "",
         ))
+        print("meaw4")
         for header in headers:
             embed.add_field(name="", value=header, inline=True)
+        print("meaw5")
         # embed.add_field(name="", value="Сезон: 1\n", inline=True)
         # embed.add_field(name="", value="Обновлен: 26.04.2024\n", inline=True)
         # embed.add_field(name="", value="До конца сезона: 26\n", inline=True)
         embed.add_field(name="", value="\n", inline=False)
+        print("meaw6")
         data = await self.model.get_data()
+        print("meaw7")
         player_nickname_column = ""
         player_points_column = ""
         rangs_column = ""
