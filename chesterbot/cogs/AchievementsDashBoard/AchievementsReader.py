@@ -62,6 +62,9 @@ class AchievementsReader():
             with open(file_name, 'rb') as file:
                 content = file.read()
                 text = content.decode('utf-8', errors='ignore')
+                index = text.find("return")
+                if index != -1:
+                    text = text[index:]
                 counter_scobok = 0
                 index = 0
                 start = text.find('{')
