@@ -18,12 +18,7 @@ class AchievementsView(discord.ui.View):
 
     async def _make_dashboard(self):
         embed = discord.Embed(color=0x2F3136, title="РЕЙТИНГОВАЯ ТАБЛИЦА")
-        tumbnail_name = "tumbnail.png"
-        try:
-            embed_picture = discord.File(tumbnail_name, filename=tumbnail_name)
-        except OSError:
-            return
-        embed.set_thumbnail(url=f"attachment://{tumbnail_name}")
+        embed.set_thumbnail(url=main_config["achievements_tumbnail"])
         headers = self.column_size_corrector((
             "Сезон: 1",
             "",
@@ -57,10 +52,10 @@ class AchievementsView(discord.ui.View):
         embed.add_field(name="", value=player_nickname_column, inline=True)
         embed.add_field(name="", value=player_points_column, inline=True)
         embed.add_field(name="", value=rangs_column, inline=True)
-        return {"embed": embed, "file": embed_picture}
+        return embed
 
     async def update(self):
-        embed_info = await self._make_dashboard()
+        embeds = [await self._make_dashboard()]
 
         # view = discord.ui.View()
         # style = discord.ButtonStyle.gray
@@ -73,4 +68,4 @@ class AchievementsView(discord.ui.View):
         #     )
 
         # return { "embeds": embeds, "view": view }
-        return { "embeds": embed_info.get("embed_info"), "file": embed_info.get("file") }
+        return { "embeds": embeds }

@@ -19,6 +19,7 @@ main_config = {
     "description": "short description of the server",
     "path_to_save": "/path/to/save_folder",
     "main_embed_picture": "url_to_image",
+    "achievements_tumbnail": "url_to_image",
     "achievement_embed_picture": "url_to_image",
 
     "is_event": False,
