@@ -47,6 +47,7 @@ class AchievementsReader():
 
     async def update_player_points(self):
         self.player_points = []
+        print("meaw100")
         data = None
         for ku_id, file_name in self._get_player_saves():
             player_name = None
@@ -57,7 +58,7 @@ class AchievementsReader():
                         player_name = player.nickname
             if player_name is None:
                 continue
-
+            print("meaw101")
             with open(file_name, 'rb') as file:
                 content = file.read()
                 text = content.decode('utf-8', errors='ignore')
@@ -76,6 +77,7 @@ class AchievementsReader():
                 text = text[:index + 1]
                 fixed_lua = re.sub(r'([0-9]+\.?[0-9]*)e(-?[0-9]+)', r'0', text)
                 data = luadata.unserialize(fixed_lua)["data"]["kaachievementmanager"]
+            print("meaw102")
             cur_points = 0
             for field_name, field_value in data.items():
                 if (points := achievements_list.get(field_name)) is not None:
@@ -86,7 +88,11 @@ class AchievementsReader():
                     if field_name == "numSurvivedDay":
                         cur_points += field_value * points
                     # print(f"{field_name}: points: {points}, cur_points: {cur_points}")
-
+            print("meaw103")
             self.player_points.append( { player_name: cur_points } )
+        print("meaw104")
         self.player_points = [player for player in self.player_points if next(iter(player.values())) > 200]
+        print("meaw105")
         self.player_points = sorted(self.player_points, key=lambda player: next(iter(player.values())), reverse=True)
+        print("meaw106")
+
