@@ -12,7 +12,6 @@ achievements_list = {
     "hasCraftedBook_book_silviculture": 0,
     "hasCooked_taffy": 2,
     "completed_Time_firstnight": 0,
-
     "hasWitnessedHutch": 3,
     "hasActivatedArchives": 0,
     "hasCooked_seafoodgumbo": 2,
@@ -156,7 +155,6 @@ achievements_list = {
     "hasCooked_turkeydinner": 2,
     "numKilledWithAbi": 0,
     "completed_Exploration_cavesbiome": 3,
-
     "numKilledKoalaWinter": 7,
     "hasPutItemInBeard": 0,
     "hasHeardLivingLogScream": 3,
@@ -353,7 +351,6 @@ achievements_list = {
     "hasCooked_koalefig_trunk": 2,
     "hasLitFlare": 2,
     "completed_Exploration_ruinsbiome": 3,
-
     "numKilledAlterGuardian": 25,
     "hasDiedToNightmarePie": 3,
     "numUsedFert_wx78_foodbrick": 0,
@@ -417,7 +414,6 @@ achievements_list = {
     "numKilledDeerclopsYule": 10,
     "hasCooked_unagi": 2,
     "completed_Boss_minotaur": 0,
-
     "hasBeenInArchivesBiome": 3,
     "numKilledBearger": 10,
     "hasCraftedBook_book_temperature": 0,
