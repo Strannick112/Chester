@@ -50,7 +50,6 @@ class AchievementsView(discord.ui.View):
             rangs_column += f"Ранг: {cur_rang}"
             rangs_column += "\n"
         embed.add_field(name="", value=player_nickname_column, inline=True)
-        embed.add_field(name="", value="", inline=True)
         embed.add_field(name="", value=player_points_column, inline=True)
         embed.add_field(name="", value=rangs_column, inline=True)
         return embed
