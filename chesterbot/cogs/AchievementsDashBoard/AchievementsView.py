@@ -47,7 +47,7 @@ class AchievementsView(discord.ui.View):
                 else:
                     break
             print(f"cur_rang: {cur_rang}")
-            rangs_column += f"Ранг: {cur_rang}"
+            rangs_column += f"⠀⠀Ранг: {cur_rang}"
             rangs_column += "\n"
         embed.add_field(name="", value=player_nickname_column, inline=True)
         embed.add_field(name="", value=player_points_column, inline=True)
