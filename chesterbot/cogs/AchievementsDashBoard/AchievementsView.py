@@ -1,6 +1,7 @@
 import discord
 
 from chesterbot import main_config
+from chesterbot.cogs.AchievementsDashBoard.RangList import rang_list
 
 
 class AchievementsView(discord.ui.View):
@@ -33,11 +34,18 @@ class AchievementsView(discord.ui.View):
         player_points_column = ""
         rangs_column = ""
         for player in data:
+            points = player.get('Очки')
             player_nickname_column += player.get("Никнейм")
             player_nickname_column += "\n"
-            player_points_column += f"Очки: {str(player.get('Очки'))}"
+            player_points_column += f"Очки: {str(points)}"
             player_points_column += "\n"
-            rangs_column += "Ранг: Чемпион"
+            cur_rang = None
+            for rang_info in rang_list.items():
+                if rang_info[1] < points:
+                    cur_rang = rang_info[0]
+                else:
+                    break
+            rangs_column += f"Ранг: {cur_rang}"
             rangs_column += "\n"
         embed.add_field(name="", value=player_nickname_column, inline=True)
         embed.add_field(name="", value=player_points_column, inline=True)
