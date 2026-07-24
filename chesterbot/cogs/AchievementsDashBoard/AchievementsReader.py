@@ -79,6 +79,7 @@ class AchievementsReader():
                 print("meaw1001")
                 fixed_lua = re.sub(r'([0-9]+\.?[0-9]*)e(-?[0-9]+)', r'0', text)
                 print("meaw1002")
+                print(f"fixed_lua: {fixed_lua}")
                 data = luadata.unserialize(fixed_lua)["data"]["kaachievementmanager"]
                 print("meaw1003")
             print("meaw102")
