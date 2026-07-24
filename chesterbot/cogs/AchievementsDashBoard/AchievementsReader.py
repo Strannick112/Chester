@@ -80,7 +80,7 @@ class AchievementsReader():
             for field_name, field_value in data.items():
                 if (points := achievements_list.get(field_name)) is not None:
                     # if isinstance(field_value, dict):
-                        cur_points += points
+                    cur_points += points
                     # else:
                     #     cur_points += field_value * points
                     print(f"{field_name}: points: {points}, cur_points: {cur_points}")
