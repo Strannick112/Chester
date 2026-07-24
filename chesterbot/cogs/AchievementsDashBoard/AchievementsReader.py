@@ -59,8 +59,8 @@ class AchievementsReader():
             if player_name is None:
                 continue
             print("meaw101")
+            print(f"filename: {file_name}")
             with open(file_name, 'rb') as file:
-                print(f"filename: {file_name}")
                 content = file.read()
                 text = content.decode('utf-8', errors='ignore')
                 index = text.find("return")
