@@ -60,6 +60,7 @@ class AchievementsReader():
                 continue
             print("meaw101")
             with open(file_name, 'rb') as file:
+                print(f"filename: {file_name}")
                 content = file.read()
                 text = content.decode('utf-8', errors='ignore')
                 index = text.find("return")
@@ -82,7 +83,6 @@ class AchievementsReader():
                 print("meaw1001")
                 fixed_lua = re.sub(r'([0-9]+\.?[0-9]*)e(-?[0-9]+)', r'0', text)
                 print("meaw1002")
-                print(f"filename: {file_name}")
                 # print(f"fixed_lua: {fixed_lua}")
                 data = luadata.unserialize(fixed_lua)["data"]["kaachievementmanager"]
                 print("meaw1003")
