@@ -50,6 +50,8 @@ class AchievementsReader():
         print("meaw100")
         data = None
         for ku_id, file_name in self._get_player_saves():
+            if file_name is None:
+                continue
             player_name = None
             async with self.chester_bot.async_session() as session:
                 async with session.begin():
@@ -59,8 +61,6 @@ class AchievementsReader():
             if player_name is None:
                 continue
             print("meaw101")
-            print(f"ku_id: {ku_id}")
-            print(f"filename: {file_name}")
             with open(file_name, 'rb') as file:
                 content = file.read()
                 text = content.decode('utf-8', errors='ignore')
