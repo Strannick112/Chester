@@ -59,6 +59,7 @@ class AchievementsReader():
             if player_name is None:
                 continue
             print("meaw101")
+            print(f"ku_id: {ku_id}")
             print(f"filename: {file_name}")
             with open(file_name, 'rb') as file:
                 content = file.read()
