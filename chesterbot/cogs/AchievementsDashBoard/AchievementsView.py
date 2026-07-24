@@ -40,10 +40,15 @@ class AchievementsView(discord.ui.View):
             player_points_column += f"Очки: {str(points)}"
             player_points_column += "\n"
             cur_rang = ""
+            print("meaw")
             for rang_info in rang_list.items():
+                print("meaw2")
                 if rang_info[1] < points:
+                    print("meaw3")
                     cur_rang = rang_info[0]
+                    print("meaw4")
                 else:
+                    print("meaw5")
                     break
             print(f"cur_rang: {cur_rang}")
             rangs_column += f"Ранг: {cur_rang}"
