@@ -66,6 +66,7 @@ class AchievementsReader():
                 index = 0
                 start = text.find('{')
                 text = text[start:]
+                print("meaw1000")
                 for letter in text:
                     if letter == '{':
                         counter_scobok += 1
@@ -75,8 +76,11 @@ class AchievementsReader():
                         break
                     index += 1
                 text = text[:index + 1]
+                print("meaw1001")
                 fixed_lua = re.sub(r'([0-9]+\.?[0-9]*)e(-?[0-9]+)', r'0', text)
+                print("meaw1002")
                 data = luadata.unserialize(fixed_lua)["data"]["kaachievementmanager"]
+                print("meaw1003")
             print("meaw102")
             cur_points = 0
             for field_name, field_value in data.items():
