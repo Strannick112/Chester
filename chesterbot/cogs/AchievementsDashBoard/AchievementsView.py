@@ -4,7 +4,7 @@ from chesterbot import main_config
 from chesterbot.cogs.AchievementsDashBoard.RangList import rang_list
 
 
-class AchievementsView(discord.ui.View):
+class AchievementsView:
     def __init__(self, model):
         super().__init__()
         self.model = model
