@@ -39,7 +39,7 @@ class AchievementsView(discord.ui.View):
             player_nickname_column += "\n"
             player_points_column += f"Очки: {str(points)}"
             player_points_column += "\n"
-            cur_rang = None
+            cur_rang = ""
             for rang_info in rang_list.items():
                 if rang_info[1] < points:
                     cur_rang = rang_info[0]
