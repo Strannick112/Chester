@@ -44,6 +44,9 @@ class AchievementsView(discord.ui.View):
             for rang_info in rang_list.items():
                 print("meaw2")
                 print(rang_info)
+                print(f"points: {points}")
+                print(f"rang_info[1]: {rang_info[1]}")
+                print(f"rang_info[1] < points: {rang_info[1] < points}")
                 if rang_info[1] < points:
                     print("meaw3")
                     cur_rang = rang_info[0]
