@@ -17,6 +17,7 @@ class AchievementsView:
         ]
 
     async def _make_dashboard(self):
+        print("meaw1")
         embed = discord.Embed(color=0x2F3136, title="РЕЙТИНГ ИГРОКОВ")
         embed.set_thumbnail(url=main_config["achievements_tumbnail"])
         headers = self.column_size_corrector((
@@ -34,6 +35,7 @@ class AchievementsView:
         player_nickname_column = ""
         player_points_column = ""
         rangs_column = ""
+        print("meaw2")
         for player in data:
             points = player.get('Очки')
             player_nickname_column += player.get("Никнейм")
