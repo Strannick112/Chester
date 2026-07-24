@@ -18,6 +18,11 @@ class AchievementsView(discord.ui.View):
 
     async def _make_dashboard(self):
         embed = discord.Embed(color=0x2F3136, title="РЕЙТИНГОВАЯ ТАБЛИЦА")
+        try:
+            embed_picture = discord.File(main_config["main_embed_picture"])
+        except OSError:
+            return
+        embed.set_thumbnail(url="./tumbnail.png")
         headers = self.column_size_corrector((
             "Сезон: 1",
             "",
