@@ -17,7 +17,7 @@ class AchievementsView(discord.ui.View):
         ]
 
     async def _make_dashboard(self):
-        embed = discord.Embed(color=0x2F3136, title="РЕЙТИНГОВАЯ ТАБЛИЦА")
+        embed = discord.Embed(color=0x2F3136, title="РЕЙТИНГ ИГРОКОВ")
         embed.set_thumbnail(url=main_config["achievements_tumbnail"])
         headers = self.column_size_corrector((
             "Сезон: 1",
