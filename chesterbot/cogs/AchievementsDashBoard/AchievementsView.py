@@ -38,7 +38,7 @@ class AchievementsView(discord.ui.View):
             points = player.get('Очки')
             player_nickname_column += player.get("Никнейм")
             player_nickname_column += "\n"
-            player_points_column += f"Очки: {str(points)}"
+            player_points_column += f"⠀⠀⠀Очки: {str(points)}"
             player_points_column += "\n"
             cur_rang = ""
             for rang_info in rang_list.items():
