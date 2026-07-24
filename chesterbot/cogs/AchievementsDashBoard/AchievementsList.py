@@ -358,7 +358,7 @@ achievements_list = {
     "numGivenToPlayer": 3,
     "numResistedGrue": 2,
     "numTeamKilledBoss": 5,
-    "numSurvivedDay": 0,
+    "numSurvivedDay": 1,
     "numMadeAsleepPlayer": 1,
     "hasPerused_book_sleep": 0,
     "hasEaten_lobsterbisque": 0,

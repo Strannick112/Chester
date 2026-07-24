@@ -83,6 +83,8 @@ class AchievementsReader():
                         cur_points += points
                     else:
                         cur_points += min(field_value, 1) * points
+                    if field_name == "numSurvivedDay":
+                        cur_points += field_value * points
                     print(f"{field_name}: points: {points}, cur_points: {cur_points}")
 
             self.player_points.append( { player_name: cur_points } )
