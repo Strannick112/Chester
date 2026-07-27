@@ -17,31 +17,37 @@ class AchievementsView:
         ]
 
     async def _make_dashboard(self):
-        print("meaw1")
-        embed = discord.Embed(color=0x2F3136, title="РЕЙТИНГ ИГРОКОВ")
-        print("meaw2")
-        embed.set_thumbnail(url=main_config["achievements_tumbnail"])
-        print("meaw3")
+        # print("meaw1")
+        # embed = discord.Embed(color=0x2F3136, title="РЕЙТИНГ ИГРОКОВ")
+        embed = discord.Embed(color=0x2F3136, title="")
+        # print("meaw2")
+        # embed.set_thumbnail(url=main_config["achievements_tumbnail"])
+        # print("meaw3")
+        # headers = self.column_size_corrector((
+        #     "Сезон: 1",
+        #     "",
+        #     "",
+        # ))
         headers = self.column_size_corrector((
-            "Сезон: 1",
+            "",
             "",
             "",
         ))
-        print("meaw4")
+        # print("meaw4")
         for header in headers:
             embed.add_field(name="", value=header, inline=True)
-        print("meaw5")
+        # print("meaw5")
         # embed.add_field(name="", value="Сезон: 1\n", inline=True)
         # embed.add_field(name="", value="Обновлен: 26.04.2024\n", inline=True)
         # embed.add_field(name="", value="До конца сезона: 26\n", inline=True)
         embed.add_field(name="", value="\n", inline=False)
-        print("meaw6")
+        # print("meaw6")
         data = await self.model.get_data()
-        print("meaw7")
+        # print("meaw7")
         player_nickname_column = ""
         player_points_column = ""
         rangs_column = ""
-        print("meaw2")
+        # print("meaw2")
         for player in data:
             points = player.get('Очки')
             player_nickname_column += player.get("Никнейм")
@@ -54,7 +60,7 @@ class AchievementsView:
                     cur_rang = rang_info[0]
                 else:
                     break
-            print(f"cur_rang: {cur_rang}")
+            # print(f"cur_rang: {cur_rang}")
             rangs_column += f"⠀⠀Ранг: {cur_rang}"
             rangs_column += "\n"
         embed.add_field(name="", value=player_nickname_column, inline=True)
@@ -63,7 +69,16 @@ class AchievementsView:
         return embed
 
     async def update(self):
-        embeds = [await self._make_dashboard()]
+        embed = discord.Embed(color=0x2F3136, title="РЕЙТИНГ ИГРОКОВ")
+        # print("meaw2")
+        embed.set_thumbnail(url=main_config["achievements_tumbnail"])
+        # print("meaw3")
+        headers = self.column_size_corrector((
+            "Сезон: 1",
+            "",
+            "",
+        ))
+        embeds = [embed, await self._make_dashboard()]
 
         # view = discord.ui.View()
         # style = discord.ButtonStyle.gray
