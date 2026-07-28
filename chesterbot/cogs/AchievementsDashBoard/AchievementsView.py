@@ -21,15 +21,16 @@ class AchievementsView:
         players_by_rang = dict()
         for player in data:
             points = player.get('Очки')
+            cur_rang = ""
             for rang_info in rang_list.items():
                 if int(rang_info[1]) < int(points):
                     cur_rang = rang_info[0]
                 else:
                     break
-                if players_by_rang.get(cur_rang, None) is None:
-                    players_by_rang[cur_rang] = [player]
-                else:
-                    players_by_rang[cur_rang].append(player)
+            if players_by_rang.get(cur_rang, None) is None:
+                players_by_rang[cur_rang] = [player]
+            else:
+                players_by_rang[cur_rang].append(player)
         rang_embeds = []
         for rang, players in players_by_rang.items():
             rang_embed = discord.Embed(color=0x2F3136, title="")
