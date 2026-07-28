@@ -22,6 +22,16 @@ main_config = {
     "achievement_embed_law_picture": "url_to_image",
     "achievements_tumbnail": "url_to_image",
     "achievement_embed_picture": "url_to_image",
+    "achievement_rang_list": {
+        "Бронза": "url_to_image",
+        "Серебро": "url_to_image",
+        "Золото": "url_to_image",
+        "Платина": "url_to_image",
+        "Титан": "url_to_image",
+        "Алмаз": "url_to_image",
+        "Легенда": "url_to_image"
+    },
+
 
     "is_event": False,
     "proxy": {
