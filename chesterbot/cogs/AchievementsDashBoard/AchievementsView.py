@@ -34,11 +34,11 @@ class AchievementsView:
         rang_embeds = []
         for rang, players in players_by_rang.items():
             rang_embed = discord.Embed(color=0x2F3136, title="")
-            headers = self.column_size_corrector((
-                "",
-                "",
-                "",
-            ))
+            headers = (
+                "```\n                                \n```",
+                "```\n                                \n```",
+                "```\n                                \n```",
+            )
             for header in headers:
                 rang_embed.add_field(name="", value=header, inline=True)
             rang_embed.add_field(name="", value="\n", inline=False)
@@ -63,11 +63,11 @@ class AchievementsView:
     async def update(self):
         embed = discord.Embed(color=0x2F3136, title="РЕЙТИНГ ИГРОКОВ")
         embed.set_thumbnail(url=main_config["achievements_tumbnail"])
-        headers = self.column_size_corrector((
-            "Сезон: 1",
-            "",
-            "",
-        ))
+        headers = (
+            "```\nСезон: 1                        \n```",
+            "```\n                                \n```",
+            "```\n                                \n```",
+        )
         embed.set_image(url=main_config["achievement_embed_law_picture"])
         for header in headers:
             embed.add_field(name="", value=header, inline=True)
