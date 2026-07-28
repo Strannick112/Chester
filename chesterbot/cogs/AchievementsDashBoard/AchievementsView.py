@@ -8,7 +8,7 @@ class AchievementsView:
     def __init__(self, model):
         super().__init__()
         self.model = model
-        self.column_size = 42
+        self.column_size = 41
 
     def column_size_corrector(self, column_headers):
         return [
