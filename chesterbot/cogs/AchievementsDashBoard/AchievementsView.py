@@ -68,7 +68,7 @@ class AchievementsView:
             "",
             "",
         ))
-        embed.set_image(url=main_config["achievement_embed_law_picture"])
+        # embed.set_image(url=main_config["achievement_embed_law_picture"])
         for header in headers:
             embed.add_field(name="", value=header, inline=True)
         embeds = [embed, *(await self._make_dashboard())]
