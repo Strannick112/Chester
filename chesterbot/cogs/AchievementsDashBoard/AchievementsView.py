@@ -69,8 +69,8 @@ class AchievementsView:
             "Завершение: 18.09",
         )
         # embed.set_image(url=main_config["achievement_embed_law_picture"])
-        for header in headers:
-            embed.add_field(name="", value=header, inline=True)
+        # for header in headers:
+        embed.add_field(name="", value="Сезон:1               Порог входа: 200 очков               Завершение: 18.09", inline=True)
         embeds = [embed, *(await self._make_dashboard())]
 
         # view = discord.ui.View()
