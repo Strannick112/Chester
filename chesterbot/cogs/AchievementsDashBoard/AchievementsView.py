@@ -64,13 +64,13 @@ class AchievementsView:
         embed = discord.Embed(color=0x2F3136, title="РЕЙТИНГ ИГРОКОВ")
         # embed.set_thumbnail(url=main_config["achievements_tumbnail"])
         headers = (
-            "Сезон: 1",
-            "Порог входа: 200 очков",
-            "Завершение: 18.09",
+            "Сезон: 1⠀⠀⠀⠀⠀⠀",
+            "Порог входа: 200 очков⠀⠀⠀⠀⠀⠀",
+            "Завершение: 18.09⠀⠀⠀⠀⠀⠀⠀⠀",
         )
         # embed.set_image(url=main_config["achievement_embed_law_picture"])
-        # for header in headers:
-        embed.add_field(name="", value="Сезон:⠀1⠀⠀⠀⠀⠀⠀Порог входа: 200 очков⠀⠀⠀⠀⠀⠀Завершение: 18.09⠀⠀⠀⠀⠀\u200b \u200b \u200b ", inline=True)
+        for header in headers:
+            embed.add_field(name="", value=header, inline=True)
         embeds = [embed, *(await self._make_dashboard())]
 
         # view = discord.ui.View()
