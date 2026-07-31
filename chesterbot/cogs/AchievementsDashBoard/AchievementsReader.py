@@ -97,7 +97,10 @@ class AchievementsReader():
                     # print(f"{field_name}: points: {points}, cur_points: {cur_points}")
             self.player_points.append( { player_name: cur_points } )
         print("meaw1")
-        self.player_points = [player for player in self.player_points if next(iter(player.values())) > 200]
+        self.player_points = [
+            player for player in self.player_points
+            if (val := next(iter(player.values()))) is not None and val > 200
+        ]
         print("meaw2")
         self.player_points = sorted(self.player_points, key=lambda player: next(iter(player.values())), reverse=True)
 
