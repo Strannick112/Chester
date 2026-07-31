@@ -66,7 +66,7 @@ class AchievementsController(commands.Cog, name="Доска статистики
             ku_id - уникальный klei_id игрока в игре
         """
         reader = self.model.reader
-        stat = await reader.get_player_stat( reader.get_player_saves(key = lambda x: x == ku_id) )
+        stat = await reader.get_player_stat( reader.get_player_saves(key = lambda x: x == ku_id)[0][1] )
         await ctx.send(f"""Подробная информация об игроке "{ku_id}": 
             ```json
             {stat} 
