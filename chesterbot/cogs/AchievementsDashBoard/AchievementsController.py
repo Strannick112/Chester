@@ -57,3 +57,18 @@ class AchievementsController(commands.Cog, name="Доска статистики
         except:
             print("achievements NOT updated")
             pass
+
+    @commands.command(name=main_config['short_server_name'] + "_get_achievements_info")
+    @commands.has_role(main_config['master_role'])
+    async def get_achievements_info(self, ctx, ku_id: str):
+        """
+            Отображает полную статистику игрока, сколько баллов и за что выдано для доски рейтинга:
+            ku_id - уникальный klei_id игрока в игре
+        """
+        reader = self.model.reader
+        stat = await reader.get_player_stat( await reader.get_player_saves(key = lambda x: x == ku_id) )
+        await ctx.send(f"""Подробная информация об игроке "{ku_id}": 
+            ```json
+            {stat} 
+            ```""" + main_config["server_name"] + "»"
+        )

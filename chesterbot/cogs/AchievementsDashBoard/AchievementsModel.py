@@ -15,6 +15,6 @@ class AchievementsModel:
         # print(f"self._data: {self._data}")
 
     async def get_data(self):
-        await self.reader.update_player_points()
+        await self.reader.update_players_points()
         await self.update_data()
         return self._data
