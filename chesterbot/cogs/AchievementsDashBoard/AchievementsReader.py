@@ -49,6 +49,7 @@ class AchievementsReader():
         self.player_points = []
         data = None
         for ku_id, file_name in self._get_player_saves():
+            print(f"player_info: ku_id: {ku_id}, file_name: {file_name}")
             if file_name is None:
                 continue
             player_name = None
@@ -59,7 +60,7 @@ class AchievementsReader():
                         player_name = player.nickname
             if player_name is None:
                 continue
-            print(f"player_info: player_name: {player_name}, ku_id: {ku_id}, file_name: {file_name}")
+            print(f"player_info: player_name: {player_name}")
             with open(file_name, 'rb') as file:
                 content = file.read()
                 text = content.decode('utf-8', errors='ignore')
