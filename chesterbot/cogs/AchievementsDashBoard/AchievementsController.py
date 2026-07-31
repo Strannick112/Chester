@@ -1,4 +1,5 @@
 import codecs
+import io
 import json
 import os
 
@@ -67,8 +68,11 @@ class AchievementsController(commands.Cog, name="Доска статистики
         """
         reader = self.model.reader
         stat = await reader.get_player_stat( reader.get_player_saves(key = lambda x: x == ku_id)[0][1] )
-        await ctx.send(f"""Подробная информация об игроке "{ku_id}": 
-            ```json
-            {stat} 
-            ```""" + main_config["server_name"] + "»"
-        )
+        text_message = f"""Подробная информация об игроке "{ku_id}": 
+        ```json
+        {stat} 
+        ```"""
+        if len(text_message) < 4000:
+            await ctx.send(text_message)
+        else:
+            await ctx.send(file = discord.File(fp=io.BytesIO(text_message.encode('utf-8')), filename=f"{ku_id}.txt"))
