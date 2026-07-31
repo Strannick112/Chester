@@ -59,6 +59,7 @@ class AchievementsReader():
                         player_name = player.nickname
             if player_name is None:
                 continue
+            print(f"before: player_name: {player_name}, ku_id: {ku_id}, file_name: {file_name}")
             with open(file_name, 'rb') as file:
                 content = file.read()
                 text = content.decode('utf-8', errors='ignore')
@@ -89,9 +90,9 @@ class AchievementsReader():
                     else:
                         cur_points += min(field_value, 1) * points
                     if field_name == "numSurvivedDay":
-                        print(f"before: player_name: {player_name}, ku_id: {ku_id}, file_name: {file_name}, {field_name}: points: {points}, cur_points: {cur_points}")
-                        cur_points += field_value * points
                         print(f"before: {field_name}: points: {points}, cur_points: {cur_points}")
+                        cur_points += field_value * points
+                        print(f"after: {field_name}: points: {points}, cur_points: {cur_points}")
                     # print(f"{field_name}: points: {points}, cur_points: {cur_points}")
             self.player_points.append( { player_name: cur_points } )
         self.player_points = [player for player in self.player_points if next(iter(player.values())) > 200]
