@@ -84,5 +84,4 @@ class AchievementsView:
         #     )
 
         # return { "embeds": embeds, "view": view }
-        print("achievements updated")
         return { "embeds": embeds }

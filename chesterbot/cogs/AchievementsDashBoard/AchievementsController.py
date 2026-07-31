@@ -55,3 +55,4 @@ class AchievementsController(commands.Cog, name="Доска статистики
             await self.message.edit(**(await self.view.update()))
         except:
             pass
+        print("achievements updated")

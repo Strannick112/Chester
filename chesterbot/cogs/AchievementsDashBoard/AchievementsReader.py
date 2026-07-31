@@ -49,7 +49,6 @@ class AchievementsReader():
         self.player_points = []
         data = None
         for ku_id, file_name in self._get_player_saves():
-            print(f"player_info: ku_id: {ku_id}, file_name: {file_name}")
             if file_name is None:
                 continue
             player_name = None
@@ -60,7 +59,6 @@ class AchievementsReader():
                         player_name = player.nickname
             if player_name is None:
                 continue
-            print(f"player_info: player_name: {player_name}")
             with open(file_name, 'rb') as file:
                 content = file.read()
                 text = content.decode('utf-8', errors='ignore')
@@ -93,14 +91,11 @@ class AchievementsReader():
                     if field_name == "numSurvivedDay":
                         print(f"before: {field_name}: points: {points}, cur_points: {cur_points}")
                         cur_points += field_value * points
-                        print(f"after: {field_name}: points: {points}, cur_points: {cur_points}")
+                        print(f"after: {field_name}: field_value: {field_value}, points: {points}, cur_points: {cur_points}")
                     # print(f"{field_name}: points: {points}, cur_points: {cur_points}")
             self.player_points.append( { player_name: cur_points } )
-        print("meaw1")
         self.player_points = [
             player for player in self.player_points
             if (val := next(iter(player.values()))) is not None and val > 200
         ]
-        print("meaw2")
         self.player_points = sorted(self.player_points, key=lambda player: next(iter(player.values())), reverse=True)
-        print("meaw3")
