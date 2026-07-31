@@ -103,4 +103,4 @@ class AchievementsReader():
         ]
         print("meaw2")
         self.player_points = sorted(self.player_points, key=lambda player: next(iter(player.values())), reverse=True)
-
+        print("meaw3")
