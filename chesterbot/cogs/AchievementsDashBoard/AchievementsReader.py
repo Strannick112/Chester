@@ -83,7 +83,7 @@ class AchievementsReader():
                     else:
                         actual_points = min(field_value, 1) * points
             stat[field_name] = actual_points
-            print(f"after: {field_name}: field_value: {field_value}, points: {points}, actual_points: {actual_points}")
+            # print(f"after: {field_name}: field_value: {field_value}, points: {points}, actual_points: {actual_points}")
         return stat
 
     async def get_player_name(self, ku_id):
