@@ -73,6 +73,9 @@ class AchievementsController(commands.Cog, name="Доска статистики
         {stat} 
         ```"""
         if len(text_message) < 4000:
-            await ctx.send(text_message)
+            await ctx.send(stat)
         else:
-            await ctx.send(file = discord.File(fp=io.BytesIO(text_message.encode('utf-8')), filename=f"{ku_id}.txt"))
+            updated_stat = json.loads(
+                json.dumps({"title": f"""Подробная информация об игроке "{ku_id}" """, **data}, ensure_ascii=False)
+            )
+            await ctx.send(file = discord.File(fp=io.BytesIO(updated_stat.encode('utf-8')), filename=f"{ku_id}.txt"))
