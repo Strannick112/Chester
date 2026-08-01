@@ -67,14 +67,21 @@ class AchievementsController(commands.Cog, name="Доска статистики
             ku_id - уникальный klei_id игрока в игре
         """
         reader = self.model.reader
-        stat = await reader.get_player_stat( reader.get_player_saves(key = lambda x: x == ku_id)[0][1] )
-        text_message = f"""Подробная информация об игроке "{ku_id}": 
+        stat = reader.get_player_stat(await reader.get_player_raw_info(reader.get_player_saves(key = lambda x: x == ku_id)[0][1]))
+        text_message = f"""Подробная информация об игроке "{ku_id}":
+        Количество очков: {reader.calculate_points(stat)}
         ```json
         {stat} 
         ```"""
         if len(text_message) < 4000:
             await ctx.send(stat)
         else:
-            updated_stat = json.dumps({"title": f"""Подробная информация об игроке "{ku_id}" """, **stat}, indent=2, ensure_ascii=False)
+            updated_stat = json.dumps(
+                {
+                    "title": f"""Подробная информация об игроке "{ku_id}" """,
+                    "Количество очков": {reader.calculate_points(stat)},
+                    **stat
+                }, indent=2, ensure_ascii=False
+            )
 
             await ctx.send(file = discord.File(fp=io.BytesIO(updated_stat.encode('utf-8')), filename=f"{ku_id}.json"))

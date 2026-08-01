@@ -63,23 +63,28 @@ class AchievementsReader():
             return None
         if (player_name := await self.get_player_name(ku_id)) is None:
             return None
-        return { player_name: await self.calculate_points( await self.get_player_stat(file_name) ) }
+        return {player_name: self.calculate_points(await self.get_player_raw_info(file_name))}
 
     @staticmethod
-    async def calculate_points(stat_info):
-        cur_points = 0
+    def calculate_points(stat_info):
+        return sum(val for d in AchievementsReader.get_player_stat(stat_info) for val in d.values() if val is not None)
+
+    @staticmethod
+    def get_player_stat(stat_info):
+        stat = []
+        actual_points = 0
         for field_name, field_value in stat_info.items():
             if (points := achievements_list.get(field_name)) is not None:
                 if isinstance(field_value, dict):
-                    cur_points += points
+                    actual_points = points
                 else:
-                    cur_points += min(field_value, 1) * points
-                if field_name == "numSurvivedDay":
-                    print(f"before: {field_name}: points: {points}, cur_points: {cur_points}")
-                    cur_points += field_value * points
-                    print(
-                        f"after: {field_name}: field_value: {field_value}, points: {points}, cur_points: {cur_points}")
-        return cur_points
+                    if field_name == "numSurvivedDay":
+                        actual_points = field_value * points
+                    else:
+                        actual_points = min(field_value, 1) * points
+            stat.append((field_name, actual_points))
+            print(f"after: {field_name}: field_value: {field_value}, points: {points}, actual_points: {actual_points}")
+        return stat
 
     async def get_player_name(self, ku_id):
         player_name = None
@@ -91,7 +96,7 @@ class AchievementsReader():
         return player_name
 
     @staticmethod
-    async def get_player_stat(file_name):
+    async def get_player_raw_info(file_name):
         with open(file_name, 'rb') as file:
             content = file.read()
             text = content.decode('utf-8', errors='ignore')
