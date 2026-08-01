@@ -53,6 +53,7 @@ class AchievementsController(commands.Cog, name="Доска статистики
 
     @tasks.loop(minutes=1)
     async def reload_data(self):
+        print("meaw4")
         try:
             print("meaw3")
             await self.message.edit(**(await self.view.update()))
