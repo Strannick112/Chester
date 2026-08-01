@@ -19,6 +19,7 @@ class AchievementsView:
     async def _make_dashboard(self):
         data = await self.model.get_data()
         players_by_rang = dict()
+        print("meaw1")
         for player in data:
             points = player.get('Очки')
             cur_rang = ""
@@ -66,6 +67,7 @@ class AchievementsView:
 
     async def update(self):
         embed = discord.Embed(color=0x2F3136, title="РЕЙТИНГ ИГРОКОВ")
+        print("meaw2")
         # embed.set_thumbnail(url=main_config["achievement_embed_law_picture"])
         headers = (
             "Сезон: 1⠀⠀⠀⠀⠀⠀",
