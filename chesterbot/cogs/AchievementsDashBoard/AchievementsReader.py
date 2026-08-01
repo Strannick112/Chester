@@ -63,11 +63,11 @@ class AchievementsReader():
             return None
         if (player_name := await self.get_player_name(ku_id)) is None:
             return None
-        return {player_name: self.calculate_points(await self.get_player_raw_info(file_name))}
+        return {player_name: self.calculate_points( AchievementsReader.get_player_stat(await self.get_player_raw_info(file_name) ) ) }
 
     @staticmethod
     def calculate_points(stat_info):
-        return sum(val for d in AchievementsReader.get_player_stat(stat_info) for val in d.values() if val is not None)
+        return sum(val for d in stat_info for val in d.values() if val is not None)
 
     @staticmethod
     def get_player_stat(stat_info):

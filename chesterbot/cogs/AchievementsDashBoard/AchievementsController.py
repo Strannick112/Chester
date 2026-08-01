@@ -67,7 +67,8 @@ class AchievementsController(commands.Cog, name="Доска статистики
             ku_id - уникальный klei_id игрока в игре
         """
         reader = self.model.reader
-        stat = reader.get_player_stat(await reader.get_player_raw_info(reader.get_player_saves(key = lambda x: x == ku_id)[0][1]))
+        raw_stat_info = await reader.get_player_raw_info(reader.get_player_saves(key = lambda x: x == ku_id)[0][1])
+        stat = reader.get_player_stat(raw_stat_info)
         text_message = f"""Подробная информация об игроке "{ku_id}":
         Количество очков: {reader.calculate_points(stat)}
         ```json
@@ -79,7 +80,7 @@ class AchievementsController(commands.Cog, name="Доска статистики
             updated_stat = json.dumps(
                 {
                     "title": f"""Подробная информация об игроке "{ku_id}" """,
-                    "Количество очков": {reader.calculate_points(stat)},
+                    "Количество очков": {reader.calculate_points(raw_stat_info)},
                     **stat
                 }, indent=2, ensure_ascii=False
             )
