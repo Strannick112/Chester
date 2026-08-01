@@ -80,7 +80,7 @@ class AchievementsController(commands.Cog, name="Доска статистики
             updated_stat = json.dumps(
                 {
                     "title": f"""Подробная информация об игроке "{ku_id}" """,
-                    "Количество очков": {reader.calculate_points(stat)},
+                    "Количество очков": reader.calculate_points(stat),
                     **stat
                 }, indent=2, ensure_ascii=False
             )
