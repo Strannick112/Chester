@@ -71,7 +71,7 @@ class AchievementsReader():
 
     @staticmethod
     def get_player_stat(stat_info):
-        stat = {}
+        stat = dict()
         actual_points = 0
         for field_name, field_value in stat_info.items():
             if (points := achievements_list.get(field_name)) is not None:
