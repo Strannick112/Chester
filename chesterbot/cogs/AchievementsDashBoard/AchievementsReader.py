@@ -67,11 +67,11 @@ class AchievementsReader():
 
     @staticmethod
     def calculate_points(stat_info):
-        return sum(val for d in stat_info for val in d.values() if val is not None)
+        return sum(stat for stat in stat_info.values() if stat is not None)
 
     @staticmethod
     def get_player_stat(stat_info):
-        stat = []
+        stat = {}
         actual_points = 0
         for field_name, field_value in stat_info.items():
             if (points := achievements_list.get(field_name)) is not None:
@@ -82,7 +82,7 @@ class AchievementsReader():
                         actual_points = field_value * points
                     else:
                         actual_points = min(field_value, 1) * points
-            stat.append((field_name, actual_points))
+            stat[field_name] = actual_points
             print(f"after: {field_name}: field_value: {field_value}, points: {points}, actual_points: {actual_points}")
         return stat
 
