@@ -1,3 +1,4 @@
+import asyncio
 import codecs
 import io
 import json
@@ -53,6 +54,8 @@ class AchievementsController(commands.Cog, name="Доска статистики
     @tasks.loop(minutes=1)
     async def reload_data(self):
         try:
+            await self.message.edit(embeds=[])
+            await asyncio.sleep(5)
             await self.message.edit(**(await self.view.update()))
             print("achievements updated")
         except:
