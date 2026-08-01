@@ -82,6 +82,6 @@ class AchievementsView:
         #             url=button_description["url"]
         #         )
         #     )
-
+        print("Поля первого эмбеда:", embeds[2].fields)
         # return { "embeds": embeds, "view": view }
         return { "embeds": embeds }
