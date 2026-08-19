@@ -11,7 +11,7 @@ class Status(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     name: Mapped[str] = mapped_column(String(100))
-    claim: Mapped[List["Claim"]] = relationship("Claim")
+    claims: Mapped[List["Claim"]] = relationship("Claim")
 
     def __repr__(self) -> str:
         return f"Status(id={str(self.id)!r}, name={str(self.name)!r})"

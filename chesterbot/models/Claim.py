@@ -19,10 +19,10 @@ class Claim(Base):
     channel_id: Mapped[int] = mapped_column(BigInteger)
 
     player_id: Mapped[int] = mapped_column(ForeignKey("player.id"))
-    player: Mapped[Optional["Player"]] = relationship("Player", back_populates="claim")
+    player: Mapped[Optional["Player"]] = relationship("Player", back_populates="claims")
 
     status_id: Mapped[int] = mapped_column(ForeignKey("status.id"), default=1)
-    status: Mapped[Optional["Status"]] = relationship("Status", back_populates="claim")
+    status: Mapped[Optional["Status"]] = relationship("Status", back_populates="claims")
 
     wipe_id: Mapped[int] = mapped_column(ForeignKey("wipe.id"))
     wipe: Mapped[Optional["Wipe"]] = relationship("Wipe")
