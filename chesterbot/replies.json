@@ -15,6 +15,7 @@
     "delete_claim_success": "Заявка успешно удалена",
     "delete_claim_fail": "Удаление заявки не удалось",
     "checkout_marks_on_executed_claims_success": "Все реакции под оставленными заявками были синхронизированы",
+    "achievements_save_success": "Информация о текущем рейтинге вайпа сохранена",
     "rollback_claims_success": "Откат заявок успешно выполенен",
     "rollback_claims_fall": "Откат заявок не выполнен",
     "rollback_claim_success": "Откат заявки успешно выполенен",

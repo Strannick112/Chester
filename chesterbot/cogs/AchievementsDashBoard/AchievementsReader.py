@@ -16,6 +16,7 @@ class AchievementsReader():
         self.player_points = []
 
     def _get_session_folder(self):
+        """Получить список всех путей к папкам с сохранениями"""
         parent_dir = main_config.get("path_to_save") + "/" + main_config.get("worlds")[0].get("folder_name") \
              + "/save/session"
         folders = [f for f in os.listdir(parent_dir) if os.path.isdir(os.path.join(parent_dir, f))]
@@ -26,6 +27,7 @@ class AchievementsReader():
         return None
 
     def _get_latest_file(self, parent_dir):
+        """Получить актуальный файл сохранения из папки с сохранениями игрока"""
         files = [
             entry for entry in os.scandir(parent_dir)
             if entry.is_file() and not entry.name.endswith('.meta') and not entry.name == "savelocation"
@@ -36,6 +38,7 @@ class AchievementsReader():
         return latest_file.path
 
     def get_player_saves(self, key = lambda x: True):
+        """Получить список путей к актуальным файлам сохранения игрока"""
         player_folders = [
             full_path for f in os.listdir(self._session_folder)
             if os.path.isdir(full_path := os.path.join(self._session_folder, f))
@@ -48,29 +51,39 @@ class AchievementsReader():
         return player_saves
 
     async def update_players_points(self):
+        """Посчитать рейтинг каждого игрока"""
         self.player_points = []
         for ku_id, file_name in self.get_player_saves():
             if player_info := await self.get_player_points(ku_id, file_name):
                 self.player_points.append(player_info)
         self.player_points = [
             player for player in self.player_points
-            if (val := next(iter(player.values()))) is not None and val > 200
+            if (val := player.get("Очки")) is not None and val > 200
         ]
-        self.player_points = sorted(self.player_points, key=lambda player: next(iter(player.values())), reverse=True)
+        self.player_points.sort(key=lambda player: player["Очки"], reverse=True)
 
     async def get_player_points(self, ku_id, file_name):
+        """Получить количество очков для конкретного игрока"""
         if file_name is None:
             return None
         if (player_name := await self.get_player_name(ku_id)) is None:
             return None
-        return {player_name: self.calculate_points( AchievementsReader.get_player_stat(await self.get_player_raw_info(file_name) ) ) }
+        return {
+            "Никнейм": player_name,
+            "Очки": str(
+                self.calculate_points(AchievementsReader.get_player_stat(await self.get_player_raw_info(file_name)))
+            ),
+            "ku_id": ku_id,
+        }
 
     @staticmethod
     def calculate_points(stat_info):
+        """Расчитать количество очков для одного игрока"""
         return sum(stat for stat in stat_info.values() if stat is not None)
 
     @staticmethod
     def get_player_stat(stat_info):
+        """Получить статистику очков для игроков"""
         stat = dict()
         actual_points = 0
         for field_name, field_value in stat_info.items():
@@ -86,6 +99,7 @@ class AchievementsReader():
         return stat
 
     async def get_player_name(self, ku_id):
+        """Получить никнейм игрока по его уникальному ku_id"""
         player_name = None
         async with self.chester_bot.async_session() as session:
             async with session.begin():
@@ -96,6 +110,7 @@ class AchievementsReader():
 
     @staticmethod
     async def get_player_raw_info(file_name):
+        """Считать информацию из файла сохранения для конкретного игрока"""
         with open(file_name, 'rb') as file:
             content = file.read()
             text = content.decode('utf-8', errors='ignore')

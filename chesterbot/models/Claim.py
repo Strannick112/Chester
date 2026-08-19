@@ -91,8 +91,8 @@ class Claim(Base):
             return old_claim
         try:
             session.expunge(old_claim)
-        except:
-            pass
+        except Exception as error:
+            print(error)
         new_claim = Claim(player_id=player_id, numbered_items=numbered_items, **kwargs)
         session.add(new_claim)
         await session.flush()

@@ -21,7 +21,7 @@ from .Item import Item
 from .ClaimItem import ClaimItem
 from .NumberedItem import NumberedItem
 from .Claim import Claim
-# from .AchievementsHistory import AchievementsHistory
+from .WipeAchievements import WipeAchievements
 
 
 from sqlalchemy import func, select

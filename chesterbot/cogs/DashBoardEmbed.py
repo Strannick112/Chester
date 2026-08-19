@@ -43,8 +43,8 @@ class DashBoardEmbed(commands.Cog, name="Доска подсчёта"):
         except:
             try:
                 embed_picture = discord.File(main_config["main_embed_picture"])
-            except OSError:
-                return
+            except Exception as error:
+                print(error)
             await self.channel.send(file=embed_picture)
             self.message = await self.channel.send(embeds=embed_list)
             self.message_id = self.message.id
@@ -72,8 +72,8 @@ class DashBoardEmbed(commands.Cog, name="Доска подсчёта"):
             )
         try:
             await self.message.edit(embeds=dashboard, view=view)
-        except:
-            pass
+        except Exception as error:
+            print(error)
 
     @tasks.loop(minutes=1)
     async def reload_data(self):

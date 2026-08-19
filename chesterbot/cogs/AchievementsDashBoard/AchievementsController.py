@@ -6,10 +6,12 @@ import os
 
 import discord
 from discord.ext import tasks, commands
+from sqlalchemy import select
 
-from chesterbot import main_config
+from chesterbot import main_config, models
 from chesterbot.cogs.AchievementsDashBoard.AchievementsModel import AchievementsModel
 from chesterbot.cogs.AchievementsDashBoard.AchievementsView import AchievementsView
+from chesterbot.models.WipeAchievements import WipeAchievements
 
 
 class AchievementsController(commands.Cog, name="Доска статистики"):
@@ -54,9 +56,10 @@ class AchievementsController(commands.Cog, name="Доска статистики
     @tasks.loop(minutes=1)
     async def reload_data(self):
         try:
+            await self.save_achievements_info()
             await self.message.edit(**(await self.view.update()))
-        except:
-            pass
+        except Exception as error:
+            print(error)
 
     @commands.command(name=main_config['short_server_name'] + "_get_achievements_info")
     @commands.has_role(main_config['master_role'])
@@ -85,3 +88,27 @@ class AchievementsController(commands.Cog, name="Доска статистики
             )
 
             await ctx.send(file = discord.File(fp=io.BytesIO(updated_stat.encode('utf-8')), filename=f"{ku_id}.json"))
+
+    @commands.command(name=main_config['short_server_name'] + "_get_achievements_info")
+    @commands.has_role(main_config['master_role'])
+    async def save_achievements_wipe_info(self, ctx):
+        """
+            Сохраняет рейтинг игроков на текущий вайп
+        """
+        await self.save_achievements_info()
+        await ctx.reply(self.__replies['achievements_save_success'])
+        return True
+
+    async def save_achievements_info(self):
+        async with self.chester_bot.async_session() as session:
+            async with session.begin():
+                last_wipe_id = (await session.execute(select(models.Wipe).order_by(
+                    models.Wipe.id.desc()))).scalars().first().id
+                for player in await self.model.get_data():
+                    try:
+                        await WipeAchievements.create_or_update(
+                            session=session,
+                            steam_account_id=player["ku_id"], wipe_id=last_wipe_id, points=player["Очки"]
+                        )
+                    except Exception as error:
+                        print(error)
