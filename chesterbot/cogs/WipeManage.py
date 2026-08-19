@@ -1,4 +1,5 @@
 import re
+import traceback
 
 import discord
 from discord import WebhookMessage, Message
@@ -70,7 +71,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                                     await msg.add_reaction(self.__replies['claim_items_executed'])
                     except Exception as error:
                         print(error)
-                        print(error.__traceback__.__str__())
+                        print(traceback.format_exc())
 
         await ctx.reply(self.__replies['checkout_marks_on_executed_claims_success'])
         return True

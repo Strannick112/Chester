@@ -2,6 +2,7 @@ import asyncio
 import codecs
 import json
 import os
+import traceback
 
 import discord
 from discord.ext import tasks, commands
@@ -45,7 +46,7 @@ class DashBoardEmbed(commands.Cog, name="Доска подсчёта"):
                 embed_picture = discord.File(main_config["main_embed_picture"])
             except Exception as error:
                 print(error)
-                print(error.__traceback__.__str__())
+                print(traceback.format_exc())
             await self.channel.send(file=embed_picture)
             self.message = await self.channel.send(embeds=embed_list)
             self.message_id = self.message.id
