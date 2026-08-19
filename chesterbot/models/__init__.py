@@ -1,7 +1,6 @@
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 
 from chesterbot import main_config
-from .AchievementsSeason import AchievementsSeason
 
 statuses = dict()
 statuses["not_approved"] = 1
@@ -23,6 +22,7 @@ from .ClaimItem import ClaimItem
 from .NumberedItem import NumberedItem
 from .Claim import Claim
 from .WipeAchievements import WipeAchievements
+from .AchievementsSeason import AchievementsSeason
 
 
 from sqlalchemy import func, select
