@@ -17,7 +17,7 @@ class Wipe(Base):
 
     wipe_achievements: Mapped[List["WipeAchievements"]] = relationship("WipeAchievements")
 
-    achievements_season_id: Mapped[int] = mapped_column(ForeignKey("achievements_season.id"))
+    achievements_season_id: Mapped[int] = mapped_column(ForeignKey("achievements_season.id"), nullable=True, default=None)
     achievements_season: Mapped[Optional["AchievementsSeason"]] = relationship("AchievementsSeason", back_populates="wipes")
 
     def __repr__(self) -> str:
