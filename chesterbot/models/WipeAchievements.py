@@ -7,13 +7,13 @@ from .Base import Base
 
 
 class WipeAchievements(Base):
-    __tablename__ = "achievements_history"
+    __tablename__ = "wipe_achievements"
 
     wipe_id: Mapped[int] = mapped_column(ForeignKey("wipe.id"), primary_key=True)
-    wipe: Mapped[Optional["Wipe"]] = relationship("Wipe", back_populates="achievements_history")
+    wipe: Mapped[Optional["Wipe"]] = relationship("Wipe", back_populates="wipe_achievements")
 
     steam_account_id: Mapped[int] = mapped_column(ForeignKey("steam_account.id"), primary_key=True)
-    steam_account: Mapped[Optional["SteamAccount"]] = relationship("SteamAccount", back_populates="achievements_history")
+    steam_account: Mapped[Optional["SteamAccount"]] = relationship("SteamAccount", back_populates="wipe_achievements")
 
     score: Mapped[str] = mapped_column(BigInteger)
 
