@@ -17,7 +17,7 @@ class Wipe(Base):
 
     wipe_achievements: Mapped[List["WipeAchievements"]] = relationship("WipeAchievements")
 
-    achievements_season_id: Mapped[int] = mapped_column(ForeignKey("achievements_season.id"), server_default="1", default=1)
+    achievements_season_id: Mapped[int] = mapped_column(ForeignKey("achievements_season.id"))
     achievements_season: Mapped[Optional["AchievementsSeason"]] = relationship("AchievementsSeason", back_populates="wipes")
 
     def __repr__(self) -> str:
@@ -51,3 +51,27 @@ class Wipe(Base):
             session.add(instance)
         await session.flush()
         return instance
+
+    @staticmethod
+    async def get_last_wipe(session):
+        return (await session.execute(
+            select(Wipe)
+            .order_by(Wipe.id.desc())
+            .limit(1)
+        )).scalars().first()
+
+    @staticmethod
+    async def get_last_stopped_wipe(session):
+        return (await session.execute(
+            select(Wipe)
+            .where(Wipe.stopped.is_not(None))
+            .order_by(Wipe.id.desc())
+            .limit(1)
+        )).scalars().first()
+
+    @staticmethod
+    async def get_wipe_by_id(session, wipe_id):
+        return (await session.execute(
+            select(Wipe)
+            .filter_by(id=wipe_id)
+        )).scalars().first()

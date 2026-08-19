@@ -8,7 +8,7 @@ from sqlalchemy import func, select
 
 from chesterbot import main_config
 from chesterbot.cogs.server_manage.commands import send_message_to_game
-from chesterbot.models import DiscordAccount, SteamAccount
+from chesterbot.models import DiscordAccount, SteamAccount, Wipe
 import chesterbot.models as models
 
 
@@ -34,8 +34,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
                 for claim in (await session.execute(select(
                     models.Claim
                 ).where(
-                    models.Claim.wipe_id == (await session.execute(select(models.Wipe).order_by(
-                        models.Wipe.id.desc()))).scalars().first().id
+                    models.Claim.wipe_id == (await Wipe.get_last_wipe(session)).id
                 ))).all():
                     try:
                         if msg := await self.chester_bot.get_channel(claim.channel_id).fetch_message(claim.message_id):
@@ -154,13 +153,11 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
             async with self.chester_bot.async_session() as session:
                 async with session.begin():
                     if wipe_id is None:
-                        if last_wipe := (await session.execute(select(models.Wipe).order_by(
-                                models.Wipe.id.desc()))).scalars().first():
+                        if last_wipe := (await Wipe.get_last_wipe(session)):
                             text = await last_wipe.to_str()
                     else:
                         wipe_id = int(wipe_id)
-                        if last_wipe := (await session.execute(select(
-                                models.Wipe).filter_by(id=wipe_id))).scalars().first():
+                        if last_wipe := (await Wipe.get_wipe_by_id(session, wipe_id)):
                             text = await last_wipe.to_str()
             await ctx.reply(embed=discord.Embed(
                 title="Информация о вайпе",
@@ -549,8 +546,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
         async with self.chester_bot.async_session() as session:
             async with session.begin():
                 for claim in (await session.execute(select(models.Claim).where(
-                        models.Wipe.id == (await session.execute(select(models.Wipe).order_by(
-                            models.Wipe.id.desc()))).scalars().first().id
+                        models.Wipe.id == (await Wipe.get_last_wipe(session)).id
                 ))).scalars().all():
                     if await claim.rollback_claim(session=session):
                         try:
@@ -571,16 +567,14 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
         """Открывает приём заявок от игроков"""
         async with self.chester_bot.async_session() as session:
             async with session.begin():
-                last_wipe = (await session.execute(select(models.Wipe).order_by(
-                    models.Wipe.id.desc()))).scalars().first()
+                last_wipe = (await Wipe.get_last_wipe(session))
                 if last_wipe.started != last_wipe.stopped:
                     last_wipe = models.Wipe()
                     session.add(last_wipe)
                     for claim in (await session.execute(select(
                         models.Claim
                     ).where(
-                        models.Claim.wipe_id == (await session.execute(select(models.Wipe).order_by(
-                            models.Wipe.id.desc()))).scalars().first().id
+                        models.Claim.wipe_id == (await Wipe.get_last_wipe(session)).id
                     ))).scalars().all():
                         try:
                             if msg := await self.chester_bot.get_channel(claim.channel_id).fetch_message(claim.message_id):
@@ -610,15 +604,13 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
         """Закрывает набор заявок от игроков"""
         async with self.chester_bot.async_session() as session:
             async with session.begin():
-                last_wipe = (await session.execute(select(models.Wipe).order_by(
-                    models.Wipe.id.desc()))).scalars().first()
+                last_wipe = (await Wipe.get_last_wipe(session))
                 is_started = last_wipe.stopped == last_wipe.started
                 if is_started:
                     await ctx.reply(self.__replies['stop_success'])
                     last_wipe.stopped = func.now()
                     for claim in (await session.execute(select(models.Claim).where(
-                            models.Claim.wipe_id == (await session.execute(select(models.Wipe).order_by(
-                                models.Wipe.id.desc()))).scalars().first().id
+                            models.Claim.wipe_id == (await Wipe.get_last_wipe(session)).id
                     ))).scalars().all():
                         try:
                             if msg := await self.chester_bot.get_channel(claim.channel_id).fetch_message(claim.message_id):
@@ -635,8 +627,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
         if message.channel.id in self.__replies['claim_channel_id']:
             async with self.chester_bot.async_session() as session:
                 async with session.begin():
-                    last_wipe = (await session.execute(select(models.Wipe).order_by(
-                        models.Wipe.id.desc()))).scalars().first()
+                    last_wipe = (await Wipe.get_last_wipe(session))
                     if last_wipe.stopped != last_wipe.started:
                         return
             if raw_claim := re.findall(
@@ -762,8 +753,7 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
         ).join(
             models.Player.discord_account
         ).where(
-            models.Claim.wipe_id == (await session.execute(select(models.Wipe).order_by(
-                models.Wipe.id.desc()))).scalars().first().id
+            models.Claim.wipe_id == (await Wipe.get_last_wipe(session)).id
         ).where(
             models.DiscordAccount.discord_id == discord_id
         ))).scalars().first()

@@ -1,6 +1,6 @@
 from typing import List
 
-from sqlalchemy import select, func
+from sqlalchemy import select, func, and_
 from sqlalchemy.orm import relationship, Mapped, mapped_column
 
 from chesterbot.models import Base, Wipe, WipeAchievements, SteamAccount
@@ -36,7 +36,7 @@ class AchievementsSeason(Base):
                 .join(AchievementsSeason.wipes)
                 .join(Wipe.wipe_achievements)
                 .join(WipeAchievements.steam_account)
-                .where(AchievementsSeason.id == last_season_id)
+                .where(and_(AchievementsSeason.id == last_season_id, WipeAchievements.score > 200))
                 .group_by(SteamAccount.ku_id, SteamAccount.nickname)
                 .order_by(func.sum(WipeAchievements.score).desc())
             )).all()

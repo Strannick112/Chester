@@ -12,7 +12,7 @@ from sqlalchemy import select
 from chesterbot import main_config, models
 from chesterbot.cogs.AchievementsDashBoard.AchievementsReader import AchievementsReader
 from chesterbot.cogs.AchievementsDashBoard.AchievementsView import AchievementsView
-from chesterbot.models import SteamAccount
+from chesterbot.models import SteamAccount, Wipe
 from chesterbot.models.WipeAchievements import WipeAchievements
 
 
@@ -107,8 +107,7 @@ class AchievementsController(commands.Cog, name="Доска статистики
     async def save_achievements_info(self):
         async with self.chester_bot.async_session() as session:
             async with session.begin():
-                last_wipe_id = (await session.execute(select(models.Wipe).order_by(
-                    models.Wipe.id.desc()))).scalars().first().id
+                last_wipe_id = (await Wipe.get_last_stopped_wipe(session)).id
                 for player in self.reader.player_points:
                     try:
                         await WipeAchievements.create_or_update(
