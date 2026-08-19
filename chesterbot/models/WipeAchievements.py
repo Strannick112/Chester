@@ -12,7 +12,7 @@ class WipeAchievements(Base):
     wipe_id: Mapped[int] = mapped_column(ForeignKey("wipe.id"), primary_key=True)
     wipe: Mapped[Optional["Wipe"]] = relationship("Wipe", back_populates="wipe_achievements")
 
-    id: Mapped[int] = mapped_column(ForeignKey("steam_account.id"), primary_key=True)
+    steam_account_id: Mapped[int] = mapped_column(ForeignKey("steam_account.id"), primary_key=True)
     steam_account: Mapped[Optional["SteamAccount"]] = relationship("SteamAccount", back_populates="wipe_achievements")
 
     score: Mapped[str] = mapped_column(BigInteger)
