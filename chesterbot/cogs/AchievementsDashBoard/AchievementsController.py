@@ -40,8 +40,9 @@ class AchievementsController(commands.Cog, name="Доска статистики
         except:
             try:
                 embed_picture = discord.File(main_config["achievement_embed_picture"])
-            except OSError:
-                return
+            except OSError as error:
+                print(error)
+                print(error.__traceback__)
             await self.channel.send(file=embed_picture)
             embed = discord.Embed(
                 title="Статистика",
@@ -62,6 +63,7 @@ class AchievementsController(commands.Cog, name="Доска статистики
             await self.message.edit(**(await self.view.update()))
         except Exception as error:
             print(error)
+            print(error.__traceback__)
 
     @commands.command(name=main_config['short_server_name'] + "_get_achievements_info")
     @commands.has_role(main_config['master_role'])
@@ -115,3 +117,4 @@ class AchievementsController(commands.Cog, name="Доска статистики
                         )
                     except Exception as error:
                         print(error)
+                        print(error.__traceback__)

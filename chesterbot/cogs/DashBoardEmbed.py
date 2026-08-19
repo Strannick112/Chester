@@ -45,6 +45,7 @@ class DashBoardEmbed(commands.Cog, name="Доска подсчёта"):
                 embed_picture = discord.File(main_config["main_embed_picture"])
             except Exception as error:
                 print(error)
+                print(error.__traceback__)
             await self.channel.send(file=embed_picture)
             self.message = await self.channel.send(embeds=embed_list)
             self.message_id = self.message.id
