@@ -52,10 +52,30 @@ class AchievementsSeason(Base):
 
     @staticmethod
     async def start_new_season(session):
-        count_of_wipes_by_last_season = (await session.execute(
+        subquery = (
+            select(
+                WipeAchievements.wipe_id,
+                func.sum(WipeAchievements.score).label('total_score')
+            )
+            .select_from(WipeAchievements)
+            .group_by(WipeAchievements.wipe_id)
+            .subquery()
+        )
+
+        query = (
             select(func.count(Wipe.id))
-            .where(Wipe.achievements_season_id == (await AchievementsSeason.get_last_season(session)).id)
-        )).scalar()
+            .select_from(Wipe)
+            .join(subquery, Wipe.id == subquery.c.wipe_id)
+            .where(
+                and_(
+                    Wipe.achievements_season_id == (await AchievementsSeason.get_last_season(session)).id,
+                    subquery.c.total_score > 0
+                )
+            )
+        )
+
+        count_of_wipes_by_last_season = await session.execute(query)
+
         print("Count of Wipes by last season:", count_of_wipes_by_last_season)
         # if count_of_wipes_by_last_season == 2:
         #     session.add(AchievementsSeason())
