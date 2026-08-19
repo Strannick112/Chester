@@ -76,6 +76,8 @@ class AchievementsSeason(Base):
 
         count_of_wipes_by_last_season = (await session.execute(query)).scalar()
 
+        print(f"Count of wipes: {count_of_wipes_by_last_season}")
+
         if count_of_wipes_by_last_season == 2:
             session.add(AchievementsSeason())
             session.flush()
