@@ -11,6 +11,7 @@ from sqlalchemy import select
 from chesterbot import main_config, models
 from chesterbot.cogs.AchievementsDashBoard.AchievementsModel import AchievementsModel
 from chesterbot.cogs.AchievementsDashBoard.AchievementsView import AchievementsView
+from chesterbot.models import SteamAccount
 from chesterbot.models.WipeAchievements import WipeAchievements
 
 
@@ -108,7 +109,8 @@ class AchievementsController(commands.Cog, name="Доска статистики
                     try:
                         await WipeAchievements.create_or_update(
                             session=session,
-                            steam_account_id=player["ku_id"], wipe_id=last_wipe_id, score=player["Очки"]
+                            steam_account_id=(await SteamAccount.get_by_ku_id(session=session, ku_id=player["ku_id"])).id,
+                            wipe_id=last_wipe_id, score=player["Очки"]
                         )
                     except Exception as error:
                         print(error)
