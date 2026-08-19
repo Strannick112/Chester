@@ -37,7 +37,7 @@ class AchievementsSeason(Base):
                 .join(Wipe.wipe_achievements)
                 .join(WipeAchievements.steam_account)
                 .where(AchievementsSeason.id == last_season_id)
-                .group_by(SteamAccount.ku_id)
+                .group_by(SteamAccount.ku_id, SteamAccount.nickname)
                 .order_by(func.sum(WipeAchievements.score).desc())
             )).all()
-        return [ { "Никнейм": row.nickname, "Очки": row.total_score, "ku_id": row.ku_id } for row in instance ]
+        return [ { "Никнейм": row.nickname, "Очки": row.score, "ku_id": row.ku_id } for row in instance ]
