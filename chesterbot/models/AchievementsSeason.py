@@ -80,4 +80,4 @@ class AchievementsSeason(Base):
 
         if count_of_wipes_by_last_season == 2:
             session.add(AchievementsSeason())
-            session.flush()
+            await session.flush()
