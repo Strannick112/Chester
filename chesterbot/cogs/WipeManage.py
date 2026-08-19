@@ -739,16 +739,18 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
             print(error)
 
     async def get_claim_by_ku_id(self, ku_id, session):
-        return (await session.execute(select(
-            models.Claim
-        ).join(models.Claim.player
-               ).join(models.Player.steam_account
-                      ).where(
-            models.Claim.wipe_id == (await session.execute(select(models.Wipe).order_by(
-                models.Wipe.id.desc()))).scalars().first().id
-        ).where(
-            models.SteamAccount.ku_id == ku_id
-        ))).scalars().first()
+        return ((
+            await session.execute(
+                select(models.Claim)
+                .join(models.Claim.player)
+                .join(models.Player.steam_account)
+                .where(models.Claim.wipe_id == (
+                    await session.execute(
+                        select(models.Wipe)
+                        .order_by(models.Wipe.id.desc()))
+                ).scalars().first().id)
+                .where(models.SteamAccount.ku_id == ku_id)
+            )).scalars().first())
 
     async def get_claim_by_discord_id(self, discord_id, session):
         return (await session.execute(select(

@@ -2,12 +2,13 @@ import discord
 
 from chesterbot import main_config
 from chesterbot.cogs.AchievementsDashBoard.RangList import rang_list
+from chesterbot.models import AchievementsSeason
 
 
 class AchievementsView:
-    def __init__(self, model):
+    def __init__(self, bot):
         super().__init__()
-        self.model = model
+        self.chester_bot = bot
         self.column_size = 42
 
     def column_size_corrector(self, column_headers):
@@ -17,7 +18,10 @@ class AchievementsView:
         ]
 
     async def _make_dashboard(self):
-        data = await self.model.get_data()
+        data = None
+        async with self.chester_bot.async_session() as session:
+            async with session.begin():
+                data = await AchievementsSeason.get_achievements_info(session)
         players_by_rang = dict()
         for player in data:
             points = player.get('Очки')

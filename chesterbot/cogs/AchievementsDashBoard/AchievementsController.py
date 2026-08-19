@@ -9,7 +9,7 @@ from discord.ext import tasks, commands
 from sqlalchemy import select
 
 from chesterbot import main_config, models
-from chesterbot.cogs.AchievementsDashBoard.AchievementsModel import AchievementsModel
+from chesterbot.cogs.AchievementsDashBoard.AchievementsReader import AchievementsReader
 from chesterbot.cogs.AchievementsDashBoard.AchievementsView import AchievementsView
 from chesterbot.models import SteamAccount
 from chesterbot.models.WipeAchievements import WipeAchievements
@@ -21,8 +21,8 @@ class AchievementsController(commands.Cog, name="Доска статистики
         self.channel = None
         self.message = None
         self.message_id = None
-        self.model = AchievementsModel(self.chester_bot)
-        self.view = AchievementsView(self.model)
+        self.reader = AchievementsReader(self.chester_bot)
+        self.view = AchievementsView(self.chester_bot)
 
     async def on_ready(self):
         self.channel = self.chester_bot.get_channel(main_config["achievements_channel"])
@@ -57,6 +57,7 @@ class AchievementsController(commands.Cog, name="Доска статистики
     @tasks.loop(minutes=1)
     async def reload_data(self):
         try:
+            await self.reader.update_players_points()
             await self.save_achievements_info()
             await self.message.edit(**(await self.view.update()))
         except Exception as error:
@@ -105,7 +106,7 @@ class AchievementsController(commands.Cog, name="Доска статистики
             async with session.begin():
                 last_wipe_id = (await session.execute(select(models.Wipe).order_by(
                     models.Wipe.id.desc()))).scalars().first().id
-                for player in await self.model.get_data():
+                for player in await self.reader.player_points:
                     try:
                         await WipeAchievements.create_or_update(
                             session=session,
