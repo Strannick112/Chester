@@ -3,7 +3,6 @@ from typing import List, Optional
 from sqlalchemy import DateTime, func, select, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from chesterbot.models.AchievementsSeason import AchievementsSeason
 from .Base import Base
 
 
@@ -18,7 +17,7 @@ class Wipe(Base):
 
     wipe_achievements: Mapped[List["WipeAchievements"]] = relationship("WipeAchievements")
 
-    achievements_season_id: Mapped[int] = mapped_column(ForeignKey("achievements_season.id"), default=0)
+    achievements_season_id: Mapped[int] = mapped_column(ForeignKey("achievements_season.id"), server_default="1", default=1)
     achievements_season: Mapped[Optional["AchievementsSeason"]] = relationship("AchievementsSeason", back_populates="wipes")
 
     def __repr__(self) -> str:
