@@ -108,7 +108,7 @@ class AchievementsController(commands.Cog, name="Доска статистики
                     try:
                         await WipeAchievements.create_or_update(
                             session=session,
-                            steam_account_id=player["ku_id"], wipe_id=last_wipe_id, points=player["Очки"]
+                            steam_account_id=player["ku_id"], wipe_id=last_wipe_id, score=player["Очки"]
                         )
                     except Exception as error:
                         print(error)
