@@ -89,7 +89,7 @@ class AchievementsController(commands.Cog, name="Доска статистики
 
             await ctx.send(file = discord.File(fp=io.BytesIO(updated_stat.encode('utf-8')), filename=f"{ku_id}.json"))
 
-    @commands.command(name=main_config['short_server_name'] + "_get_achievements_info")
+    @commands.command(name=main_config['short_server_name'] + "_save_achievements")
     @commands.has_role(main_config['master_role'])
     async def save_achievements_wipe_info(self, ctx):
         """
