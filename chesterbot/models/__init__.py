@@ -1,6 +1,7 @@
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 
 from chesterbot import main_config
+from .AchievementsSeason import AchievementsSeason
 
 statuses = dict()
 statuses["not_approved"] = 1
@@ -35,6 +36,7 @@ async def models_init():
         await conn.run_sync(Base.metadata.create_all)
     async with globals()["async_session"]() as session:
         async with session.begin():
+            session.add(await AchievementsSeason.get_or_create(session=session, id=1))
             row_count = (await session.execute(select(func.count(Status.id)))).scalar()
             if row_count < 4:
                 print("Инициализация таблицы Status")

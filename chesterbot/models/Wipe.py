@@ -1,8 +1,9 @@
-from typing import List
+from typing import List, Optional
 
-from sqlalchemy import DateTime, func, select
+from sqlalchemy import DateTime, func, select, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+from chesterbot.models.AchievementsSeason import AchievementsSeason
 from .Base import Base
 
 
@@ -17,8 +18,11 @@ class Wipe(Base):
 
     wipe_achievements: Mapped[List["WipeAchievements"]] = relationship("WipeAchievements")
 
+    achievements_season_id: Mapped[int] = mapped_column(ForeignKey("achievements_season.id"), default=0)
+    achievements_season: Mapped[Optional["AchievementsSeason"]] = relationship("AchievementsSeason", back_populates="wipes")
+
     def __repr__(self) -> str:
-        return f"Wipe(id={str(self.id)!r}, started={str(self.started)!r}, stopped={str(self.stopped)!r})"
+        return f"Wipe(id={str(self.id)!r}, started={str(self.started)!r}, stopped={str(self.stopped)!r}, achievements_season_id={str(self.achievements_season_id)!r})"
 
     async def to_str(self):
         claims = "[\n"
@@ -34,7 +38,8 @@ class Wipe(Base):
             claims += ";\n"
         claims += "]"
         stopped = '?' if self.stopped == self.started else str(self.stopped)
-        return (f"Номер вайпа={str(self.id)},\nНачало={str(self.started)},\nКонец={stopped!r},\n"
+        return (f"Номер вайпа={str(self.id)},\nНомер сезона={str(self.achievements_season_id)},\n"
+                f"Начало={str(self.started)},\nКонец={stopped!r},\n"
                 f"Заявки={str(claims)}\n")
 
     @staticmethod
@@ -45,5 +50,5 @@ class Wipe(Base):
         else:
             instance = Wipe(**kwargs)
             session.add(instance)
-            await session.flush()
+        await session.flush()
         return instance
