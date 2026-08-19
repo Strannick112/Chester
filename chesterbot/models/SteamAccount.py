@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 
 from sqlalchemy import String, select
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -14,6 +14,8 @@ class SteamAccount(Base):
     nickname: Mapped[str] = mapped_column(String(100))
 
     player: Mapped[Optional["Player"]] = relationship("Player")
+
+    wipe_achievements: Mapped[List["WipeAchievements"]] = relationship("WipeAchievements")
 
     def __repr__(self) -> str:
         return f"SteamAccount(id={str(self.id)!r}, ku_id={str(self.ku_id)!r}, nickname={str(self.nickname)!r})"

@@ -4,6 +4,7 @@ from typing import List, Optional
 from sqlalchemy import ForeignKey, select
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+from chesterbot.models import WipeAchievements
 from .Base import Base
 
 
@@ -18,7 +19,7 @@ class Player(Base):
     discord_account_id: Mapped[int] = mapped_column(ForeignKey("discord_account.id"))
     discord_account: Mapped[Optional["DiscordAccount"]] = relationship("DiscordAccount", back_populates="player")
 
-    claim: Mapped[List["Claim"]] = relationship("Claim")
+    claims: Mapped[List["Claim"]] = relationship("Claim")
 
     def __repr__(self) -> str:
         return f"Player(id={str(self.id)!r}, steam_account_id={str(self.steam_account_id)!r}, discord_account_id={str(self.discord_account_id)!r})"

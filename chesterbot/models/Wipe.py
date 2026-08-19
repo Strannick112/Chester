@@ -15,6 +15,8 @@ class Wipe(Base):
 
     claims: Mapped[List["Claim"]] = relationship("Claim", back_populates="wipe")
 
+    wipe_achievements: Mapped[List["WipeAchievements"]] = relationship("WipeAchievements")
+
     def __repr__(self) -> str:
         return f"Wipe(id={str(self.id)!r}, started={str(self.started)!r}, stopped={str(self.stopped)!r})"
 
