@@ -109,7 +109,7 @@ class AchievementsController(commands.Cog, name="Доска статистики
             async with session.begin():
                 last_wipe_id = (await session.execute(select(models.Wipe).order_by(
                     models.Wipe.id.desc()))).scalars().first().id
-                for player in await self.reader.player_points:
+                for player in self.reader.player_points:
                     try:
                         await WipeAchievements.create_or_update(
                             session=session,
