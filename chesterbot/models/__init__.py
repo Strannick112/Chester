@@ -37,6 +37,7 @@ async def models_init():
     async with globals()["async_session"]() as session:
         async with session.begin():
             session.add(await AchievementsSeason.get_or_create(session=session, id=1))
+            await session.flush()
             row_count = (await session.execute(select(func.count(Status.id)))).scalar()
             if row_count < 4:
                 print("Инициализация таблицы Status")
