@@ -53,13 +53,9 @@ class AchievementsController(commands.Cog, name="Доска статистики
 
     @tasks.loop(minutes=1)
     async def reload_data(self):
-        print("meaw4")
         try:
-            print("meaw3")
             await self.message.edit(**(await self.view.update()))
-            print("achievements updated")
         except:
-            print("achievements NOT updated")
             pass
 
     @commands.command(name=main_config['short_server_name'] + "_get_achievements_info")

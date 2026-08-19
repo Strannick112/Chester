@@ -19,7 +19,6 @@ class AchievementsView:
     async def _make_dashboard(self):
         data = await self.model.get_data()
         players_by_rang = dict()
-        print("meaw1")
         for player in data:
             points = player.get('Очки')
             cur_rang = ""
@@ -55,10 +54,6 @@ class AchievementsView:
                 player_points_column += "\n"
                 rangs_column += f"⠀⠀Ранг: {rang}"
                 rangs_column += "\n"
-            print(f"points: {points}")
-            print(f"player_nickname_column: {player_nickname_column}")
-            print(f"player_points_column: {player_points_column}")
-            print(f"rangs_column: {rangs_column}")
             rang_embed.add_field(name="", value=player_nickname_column, inline=True)
             rang_embed.add_field(name="", value=player_points_column, inline=True)
             rang_embed.add_field(name="", value=rangs_column, inline=True)
@@ -67,7 +62,6 @@ class AchievementsView:
 
     async def update(self):
         embed = discord.Embed(color=0x2F3136, title="РЕЙТИНГ ИГРОКОВ")
-        print("meaw2")
         # embed.set_thumbnail(url=main_config["achievement_embed_law_picture"])
         headers = (
             "Сезон: 1⠀⠀⠀⠀⠀⠀",
@@ -88,6 +82,5 @@ class AchievementsView:
         #             url=button_description["url"]
         #         )
         #     )
-        print("embed filds:", embeds[2].fields)
         # return { "embeds": embeds, "view": view }
         return { "embeds": embeds }

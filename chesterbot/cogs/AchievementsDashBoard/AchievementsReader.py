@@ -83,7 +83,6 @@ class AchievementsReader():
                     else:
                         actual_points = min(field_value, 1) * points
             stat[field_name] = actual_points
-            # print(f"after: {field_name}: field_value: {field_value}, points: {points}, actual_points: {actual_points}")
         return stat
 
     async def get_player_name(self, ku_id):
@@ -117,5 +116,4 @@ class AchievementsReader():
                 index += 1
             text = text[:index + 1]
             fixed_lua = re.sub(r'([0-9]+\.?[0-9]*)e(-?[0-9]+)', r'0', text)
-            # print(f"fixed_lua: {fixed_lua}")
             return luadata.unserialize(fixed_lua)["data"]["kaachievementmanager"]
