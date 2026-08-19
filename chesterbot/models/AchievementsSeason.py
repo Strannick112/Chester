@@ -41,3 +41,22 @@ class AchievementsSeason(Base):
                 .order_by(func.sum(WipeAchievements.score).desc())
             )).all()
         return [ { "Никнейм": row.nickname, "Очки": row.score, "ku_id": row.ku_id } for row in instance ]
+
+    @staticmethod
+    async def get_last_season(session):
+        return (await session.execute(
+            select(AchievementsSeason)
+            .order_by(AchievementsSeason.id.desc())
+            .limit(1)
+        )).scalars().first()
+
+    @staticmethod
+    async def start_new_season(session):
+        count_of_wipes_by_last_season = (await session.execute(
+            select(func.count(Wipe.id))
+            .where(Wipe.achievements_season_id == (await AchievementsSeason.get_last_season(session)).id)
+        )).scalar()
+        print("Count of Wipes by last season:", count_of_wipes_by_last_season)
+        # if count_of_wipes_by_last_season == 2:
+        #     session.add(AchievementsSeason())
+        #     session.flush()

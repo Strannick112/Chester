@@ -22,6 +22,7 @@ class AchievementsView:
         async with self.chester_bot.async_session() as session:
             async with session.begin():
                 data = await AchievementsSeason.get_achievements_info(session)
+                await AchievementsSeason.start_new_season(session)
         players_by_rang = dict()
         for player in data:
             points = player.get('Очки')
@@ -73,6 +74,7 @@ class AchievementsView:
             "Завершение: 18.09⠀⠀⠀ㅤㅤㅤ",
         )
         # embed.set_image(url=main_config["achievement_embed_law_picture"])
+
         for header in headers:
             embed.add_field(name="", value=header, inline=True)
         embeds = [embed, *(await self._make_dashboard())]

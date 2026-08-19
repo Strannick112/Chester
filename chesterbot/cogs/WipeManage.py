@@ -8,7 +8,7 @@ from sqlalchemy import func, select
 
 from chesterbot import main_config
 from chesterbot.cogs.server_manage.commands import send_message_to_game
-from chesterbot.models import DiscordAccount, SteamAccount, Wipe
+from chesterbot.models import DiscordAccount, SteamAccount, Wipe, AchievementsSeason
 import chesterbot.models as models
 
 
@@ -605,6 +605,8 @@ class WipeManage(commands.Cog, name="Управление вайпами"):
         async with self.chester_bot.async_session() as session:
             async with session.begin():
                 last_wipe = (await Wipe.get_last_wipe(session))
+                await AchievementsSeason.start_new_season(session=session)
+                last_wipe.achievements_season_id = (await AchievementsSeason.get_last_season(session=session)).id
                 is_started = last_wipe.stopped == last_wipe.started
                 if is_started:
                     await ctx.reply(self.__replies['stop_success'])
