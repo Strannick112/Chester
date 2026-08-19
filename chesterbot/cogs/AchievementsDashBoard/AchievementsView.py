@@ -23,7 +23,7 @@ class AchievementsView:
             points = player.get('Очки')
             cur_rang = ""
             for rang_info in rang_list.items():
-                if int(rang_info[1]) < int(points):
+                if int(rang_info[1]) < points:
                     cur_rang = rang_info[0]
                 else:
                     break

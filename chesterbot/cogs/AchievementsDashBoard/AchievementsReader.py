@@ -70,9 +70,7 @@ class AchievementsReader():
             return None
         return {
             "Никнейм": player_name,
-            "Очки": str(
-                self.calculate_points(AchievementsReader.get_player_stat(await self.get_player_raw_info(file_name)))
-            ),
+            "Очки": self.calculate_points(AchievementsReader.get_player_stat(await self.get_player_raw_info(file_name))),
             "ku_id": ku_id,
         }
 
