@@ -14,9 +14,9 @@ class AchievementsReader():
         self.chester_bot = chester_bot
         self.player_points = []
 
-    def _get_session_folder(self):
+    def _get_session_folder(self, world_file_name):
         """Получить список всех путей к папкам с сохранениями"""
-        parent_dir = main_config.get("path_to_save") + "/" + main_config.get("worlds")[0].get("folder_name") \
+        parent_dir = main_config.get("path_to_save") + "/" + world_file_name \
              + "/save/session"
         folders = [f for f in os.listdir(parent_dir) if os.path.isdir(os.path.join(parent_dir, f))]
         if folders:
@@ -25,29 +25,44 @@ class AchievementsReader():
             return full_path
         return None
 
-    def _get_latest_file(self, parent_dir):
+    def _get_latest_file(self, ku_id):
         """Получить актуальный файл сохранения из папки с сохранениями игрока"""
-        files = [
-            entry for entry in os.scandir(parent_dir)
-            if entry.is_file() and not entry.name.endswith('.meta') and not entry.name == "savelocation"
-        ]
+        parent_dirs = []
+        for world in main_config.get("worlds"):
+            session_folder = self._get_session_folder(world.get("folder_name"))
+            player_folders = self._get_player_folders(session_folder)
+            for player_folder in player_folders:
+                local_ku_id = os.path.basename(player_folder)[:-1]
+                if local_ku_id == ku_id:
+                    parent_dirs.append(player_folder)
+                    break
+        files = []
+        for parent_dir in parent_dirs:
+            files += [
+                entry for entry in os.scandir(parent_dir)
+                if entry.is_file() and not entry.name.endswith('.meta') and not entry.name == "savelocation"
+            ]
         if not files:
             return None
         latest_file = max(files, key=lambda e: e.stat().st_mtime)
         return latest_file.path
 
-    def get_player_saves(self, key = lambda x: True):
-        """Получить список путей к актуальным файлам сохранения игрока"""
-        session_folder = self._get_session_folder()
-        player_folders = [
+    def _get_player_folders(self, session_folder):
+        """Получить список всех сохранений с определенного шарда"""
+        return [
             full_path for f in os.listdir(session_folder)
             if os.path.isdir(full_path := os.path.join(session_folder, f))
         ]
+
+    def get_player_saves(self, key = lambda x: True):
+        """Получить список путей к актуальным файлам сохранения игрока"""
+        session_folder = self._get_session_folder(main_config.get("worlds")[0].get("folder_name"))
+        player_folders = self._get_player_folders(session_folder)
         player_saves = []
         for player_folder in player_folders:
             ku_id = os.path.basename(player_folder)[:-1]
             if key(ku_id):
-                player_saves.append( (ku_id, self._get_latest_file(player_folder)) )
+                player_saves.append( (ku_id, self._get_latest_file(ku_id)) )
         return player_saves
 
     async def update_players_points(self):
