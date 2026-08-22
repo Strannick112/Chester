@@ -1,4 +1,3 @@
-import asyncio
 import codecs
 import io
 import json
@@ -7,9 +6,8 @@ import traceback
 
 import discord
 from discord.ext import tasks, commands
-from sqlalchemy import select
 
-from chesterbot import main_config, models
+from chesterbot import main_config
 from chesterbot.cogs.AchievementsDashBoard.AchievementsReader import AchievementsReader
 from chesterbot.cogs.AchievementsDashBoard.AchievementsView import AchievementsView
 from chesterbot.models import SteamAccount, Wipe

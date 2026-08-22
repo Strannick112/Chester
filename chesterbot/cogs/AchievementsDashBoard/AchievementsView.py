@@ -10,7 +10,6 @@ class AchievementsView:
         super().__init__()
         self.chester_bot = bot
         self.column_size = 42
-        self.season_number = 0
 
     def column_size_corrector(self, column_headers):
         return [
@@ -23,7 +22,6 @@ class AchievementsView:
         async with self.chester_bot.async_session() as session:
             async with session.begin():
                 data = await AchievementsSeason.get_achievements_info(session)
-                self.season_number = (await AchievementsSeason.get_last_season(session)).id
         players_by_rang = dict()
         for player in data:
             points = player.get('Очки')
@@ -69,8 +67,12 @@ class AchievementsView:
     async def update(self):
         embed = discord.Embed(color=0x2F3136, title="РЕЙТИНГ ИГРОКОВ")
         # embed.set_thumbnail(url=main_config["achievement_embed_law_picture"])
+        season_number = 0
+        async with self.chester_bot.async_session() as session:
+            async with session.begin():
+                season_number = (await AchievementsSeason.get_last_season(session)).id
         headers = (
-            f"Сезон: {self.season_number}⠀⠀⠀⠀⠀⠀",
+            f"Сезон: {season_number}⠀⠀⠀⠀⠀⠀",
             "Порог входа: 200 очков⠀⠀⠀⠀",
             "Завершение: 18.09⠀⠀⠀ㅤㅤㅤ",
         )
