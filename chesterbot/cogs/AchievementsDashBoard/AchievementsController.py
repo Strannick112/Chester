@@ -76,6 +76,9 @@ class AchievementsController(commands.Cog, name="Доска статистики
         if len(save_info) == 0:
             await ctx.send(f"""Об игроке {ku_id} нет информации""")
             return False
+        if save_info[0][1] is None:
+            await ctx.send(f"""Игрок {ku_id} был на сервере, но почти сразу его покинул. Информации нет.""")
+            return False
         raw_stat_info = await reader.get_player_raw_info(save_info[0][1])
         stat = reader.get_player_stat(raw_stat_info)
         text_message = f"""Подробная информация об игроке "{ku_id}":
