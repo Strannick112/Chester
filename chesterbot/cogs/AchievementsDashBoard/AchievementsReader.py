@@ -12,7 +12,6 @@ class AchievementsReader():
 
     def __init__(self, chester_bot):
         self.chester_bot = chester_bot
-        self._session_folder = self._get_session_folder()
         self.player_points = []
 
     def _get_session_folder(self):
@@ -39,9 +38,10 @@ class AchievementsReader():
 
     def get_player_saves(self, key = lambda x: True):
         """Получить список путей к актуальным файлам сохранения игрока"""
+        session_folder = self._get_session_folder()
         player_folders = [
-            full_path for f in os.listdir(self._session_folder)
-            if os.path.isdir(full_path := os.path.join(self._session_folder, f))
+            full_path for f in os.listdir(session_folder)
+            if os.path.isdir(full_path := os.path.join(session_folder, f))
         ]
         player_saves = []
         for player_folder in player_folders:
