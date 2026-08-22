@@ -71,7 +71,7 @@ class AchievementsController(commands.Cog, name="Доска статистики
             Отображает полную статистику игрока, сколько баллов и за что выдано для доски рейтинга:
             ku_id - уникальный klei_id игрока в игре
         """
-        reader = self.model.reader
+        reader = self.reader
         raw_stat_info = await reader.get_player_raw_info(reader.get_player_saves(key = lambda x: x == ku_id)[0][1])
         stat = reader.get_player_stat(raw_stat_info)
         text_message = f"""Подробная информация об игроке "{ku_id}":
