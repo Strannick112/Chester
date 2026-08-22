@@ -72,7 +72,11 @@ class AchievementsController(commands.Cog, name="Доска статистики
             ku_id - уникальный klei_id игрока в игре
         """
         reader = self.reader
-        raw_stat_info = await reader.get_player_raw_info(reader.get_player_saves(key = lambda x: x == ku_id)[0][1])
+        save_info = reader.get_player_saves(key=lambda x: x == ku_id)
+        if len(save_info) == 0:
+            await ctx.send(f"""Об игроке {ku_id} нет информации""")
+            return False
+        raw_stat_info = await reader.get_player_raw_info(save_info[0][1])
         stat = reader.get_player_stat(raw_stat_info)
         text_message = f"""Подробная информация об игроке "{ku_id}":
         Количество очков: {reader.calculate_points(stat)}
