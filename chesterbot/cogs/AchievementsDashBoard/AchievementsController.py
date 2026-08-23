@@ -81,14 +81,6 @@ class AchievementsController(commands.Cog, name="Доска статистики
             return False
         raw_stat_info = await reader.get_player_raw_info(save_info[0][1])
         stat = reader.get_player_stat(raw_stat_info)
-        # text_message = f"""Подробная информация об игроке "{ku_id}":
-        # Количество очков: {reader.calculate_points(stat)}
-        # ```json
-        # {stat}
-        # ```"""
-        # if len(text_message) < 4000:
-        #     await ctx.send(text_message)
-        # else:
         updated_stat = json.dumps(
             {
                 "title": f"""Подробная информация об игроке "{ku_id}" """,
