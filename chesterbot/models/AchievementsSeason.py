@@ -26,10 +26,7 @@ class AchievementsSeason(Base):
 
     @staticmethod
     async def get_achievements_info(session):
-        last_season_id = (await session.execute(
-            select(AchievementsSeason)
-            .order_by(AchievementsSeason.id.desc())
-        )).scalars().first().id
+        last_season_id = (await AchievementsSeason.get_last_season(session)).id
         instance = (
             await session.execute(
                 select(SteamAccount.ku_id, SteamAccount.nickname, func.sum(WipeAchievements.score).label('score'))
