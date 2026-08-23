@@ -87,7 +87,7 @@ class AchievementsController(commands.Cog, name="Доска статистики
         {stat} 
         ```"""
         if len(text_message) < 4000:
-            await ctx.send(stat)
+            await ctx.send(text_message)
         else:
             updated_stat = json.dumps(
                 {
@@ -96,8 +96,8 @@ class AchievementsController(commands.Cog, name="Доска статистики
                     **stat
                 }, indent=2, ensure_ascii=False
             )
-
             await ctx.send(file = discord.File(fp=io.BytesIO(updated_stat.encode('utf-8')), filename=f"{ku_id}.json"))
+        return True
 
     @commands.command(name=main_config['short_server_name'] + "_save_achievements")
     @commands.has_role(main_config['master_role'])
