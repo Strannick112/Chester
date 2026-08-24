@@ -44,6 +44,10 @@ main_config = {
         {"description": "description by default", "url": "https://discord.gg/NFGxUDDbz7"}
     ],
 
+    "achievements_buttons": [
+        {"description": "description by default", "url": "https://discord.gg/NFGxUDDbz7"}
+    ],
+
     "worlds": [
         {"public_name": "Обычный мир, поверхность", "shard_id": "1", "world_type": "overworld", "folder_name": "Shard 1"},
         {"public_name": "Обычный мир, пещеры", "shard_id": "2", "world_type": "caves", "folder_name": "Shard 2"},

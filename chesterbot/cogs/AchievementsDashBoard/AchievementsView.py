@@ -1,3 +1,6 @@
+from datetime import datetime
+from zoneinfo import ZoneInfo
+
 import discord
 
 from chesterbot import main_config
@@ -82,14 +85,22 @@ class AchievementsView:
             embed.add_field(name="", value=header, inline=True)
         embeds = [embed, *(await self._make_dashboard())]
 
-        # view = discord.ui.View()
-        # style = discord.ButtonStyle.gray
-        # for button_description in main_config["buttons"]:
-        #     view.add_item(
-        #         item=discord.ui.Button(
-        #             style=style, label=button_description["description"],
-        #             url=button_description["url"]
-        #         )
-        #     )
-        # return { "embeds": embeds, "view": view }
-        return { "embeds": embeds }
+        if main_config.get("achievements_buttons") is not None:
+            view = discord.ui.View()
+            style = discord.ButtonStyle.gray
+            for button_description in main_config["achievements_buttons"]:
+                view.add_item(
+                    item=discord.ui.Button(
+                        style=style, label=button_description["description"],
+                        url=button_description["url"]
+                    )
+                )
+            view.add_item(
+                item=discord.ui.Button(
+                    style=style, label=datetime.now(ZoneInfo("Europe/Moscow")).strftime("%d.%m.%Y %H:%M:%S %Z"),
+                    url=""
+                )
+            )
+            return { "embeds": embeds, "view": view }
+        else:
+            return { "embeds": embeds }
