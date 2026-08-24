@@ -67,7 +67,7 @@ class AchievementsView:
             rang_embeds.append(rang_embed)
         return rang_embeds
 
-    async def update(self):
+    async def update(self, message):
         embed = discord.Embed(color=0x2F3136, title="РЕЙТИНГ ИГРОКОВ")
         # embed.set_thumbnail(url=main_config["achievement_embed_law_picture"])
         season_number = 0
@@ -98,9 +98,10 @@ class AchievementsView:
             view.add_item(
                 item=discord.ui.Button(
                     style=style, label=datetime.now(ZoneInfo("Europe/Moscow")).strftime("%d.%m.%Y %H:%M:%S %Z"),
-                    custom_id="achievements_time_update_button"
+                    url=message.jump_url
                 )
             )
+
             return { "embeds": embeds, "view": view }
         else:
             return { "embeds": embeds }

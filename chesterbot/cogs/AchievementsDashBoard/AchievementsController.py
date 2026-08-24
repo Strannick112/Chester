@@ -59,7 +59,7 @@ class AchievementsController(commands.Cog, name="Доска статистики
         try:
             await self.reader.update_players_points()
             await self.save_achievements_info()
-            await self.message.edit(**(await self.view.update()))
+            await self.message.edit(**(await self.view.update(self.message)))
         except Exception as error:
             print(error)
             print(traceback.format_exc())
