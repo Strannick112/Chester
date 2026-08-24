@@ -98,7 +98,7 @@ class AchievementsView:
             view.add_item(
                 item=discord.ui.Button(
                     style=style, label=datetime.now(ZoneInfo("Europe/Moscow")).strftime("%d.%m.%Y %H:%M:%S %Z"),
-                    url=""
+                    custom_id="achievements_time_update_button"
                 )
             )
             return { "embeds": embeds, "view": view }
