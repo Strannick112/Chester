@@ -61,9 +61,14 @@ class AchievementsView:
                 player_points_column += "\n"
                 rangs_column += f"⠀⠀Ранг: {rang}"
                 rangs_column += "\n"
-            rang_embed.add_field(name="", value=player_nickname_column, inline=True)
-            rang_embed.add_field(name="", value=player_points_column, inline=True)
-            rang_embed.add_field(name="", value=rangs_column, inline=True)
+            rang_table = """```diff
++ 1. Targetay        2924 очк. (Лидер)
+  2. VII             2363 очк.
+- 3. KING M1DAS       852 очк. (Падает в ранге)
+```"""
+            rang_embed.add_field(name="", value=rang_table, inline=True)
+            # rang_embed.add_field(name="", value=player_points_column, inline=True)
+            # rang_embed.add_field(name="", value=rangs_column, inline=True)
             rang_embeds.append(rang_embed)
         return rang_embeds
 
