@@ -49,7 +49,7 @@ class AchievementsView:
             for header in headers:
                 rang_embed.add_field(name="", value=header, inline=True)
             rang_embed.add_field(name="", value="\n", inline=False)
-            rang_embed.set_thumbnail(url=main_config["achievement_rang_list"][rang])
+            # rang_embed.set_thumbnail(url=main_config["achievement_rang_list"][rang])
             player_nickname_column = ""
             player_points_column = ""
             rangs_column = ""
