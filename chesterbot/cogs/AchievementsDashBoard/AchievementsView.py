@@ -13,12 +13,18 @@ class AchievementsView:
         super().__init__()
         self.chester_bot = bot
         self.column_size = 42
+        self.nickname_len = 20
 
     def column_size_corrector(self, column_headers):
         return [
             header + "\u200b " * max(self.column_size - len(header), 0)
             for header in column_headers
         ]
+
+    def truncate_string(self, nickname: str) -> str:
+        if len(nickname) > self.nickname_len:
+            return nickname[:self.nickname_len - 3] + "..."
+        return nickname
 
     async def _make_dashboard(self):
         data = None
@@ -55,7 +61,7 @@ class AchievementsView:
             rangs_column = ""
             for player in players:
                 points = player.get('Очки')
-                player_nickname_column += player.get("Никнейм")
+                player_nickname_column += self.truncate_string(player.get("Никнейм"))
                 player_nickname_column += "\n"
                 player_points_column += f"⠀⠀⠀Очки: {str(points)}"
                 player_points_column += "\n"
