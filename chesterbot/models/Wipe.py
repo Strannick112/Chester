@@ -64,7 +64,7 @@ class Wipe(Base):
     async def get_last_stopped_wipe(session):
         return (await session.execute(
             select(Wipe)
-            .where(Wipe.stopped.is_not(None))
+            .where(Wipe.started != Wipe.stopped)
             .order_by(Wipe.id.desc())
             .limit(1)
         )).scalars().first()
