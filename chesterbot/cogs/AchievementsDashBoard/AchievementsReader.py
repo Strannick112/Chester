@@ -98,8 +98,8 @@ class AchievementsReader():
     def get_player_stat(stat_info):
         """Получить статистику очков для игроков"""
         stat = dict()
-        actual_points = 0
         for field_name, field_value in stat_info.items():
+            actual_points = 0
             if (points := achievements_list.get(field_name)) is not None:
                 if isinstance(field_value, dict):
                     actual_points = points
