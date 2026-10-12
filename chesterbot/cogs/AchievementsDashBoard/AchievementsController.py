@@ -10,7 +10,7 @@ from discord.ext import tasks, commands
 from chesterbot import main_config
 from chesterbot.cogs.AchievementsDashBoard.AchievementsReader import AchievementsReader
 from chesterbot.cogs.AchievementsDashBoard.AchievementsView import AchievementsView
-from chesterbot.models import SteamAccount, Wipe
+from chesterbot.models import SteamAccount, Wipe, AchievementsSeason
 from chesterbot.models.WipeAchievements import WipeAchievements
 
 
@@ -81,10 +81,21 @@ class AchievementsController(commands.Cog, name="Доска статистики
             return False
         raw_stat_info = await reader.get_player_raw_info(save_info[0][1])
         stat = reader.get_player_stat(raw_stat_info)
+
+        async with self.chester_bot.async_session() as session:
+            async with session.begin():
+                data = await AchievementsSeason.get_achievements_info(session)
+        additional_points = 0
+        for player in data:
+            if player.get("ku_id") == ku_id:
+                additional_points = player.get('Дополнительные очки')
+                break
+
         updated_stat = json.dumps(
             {
                 "title": f"""Подробная информация об игроке "{ku_id}" """,
                 "Количество очков": reader.calculate_points(stat),
+                "Дополнительные очки": additional_points,
                 **stat
             }, indent=2, ensure_ascii=False
         )
@@ -115,3 +126,35 @@ class AchievementsController(commands.Cog, name="Доска статистики
                     except Exception as error:
                         print(error)
                         print(traceback.format_exc())
+
+    @commands.command(name=main_config['short_server_name'] + "_add_points")
+    @commands.has_role(main_config['master_role'])
+    async def add_points(self, ctx, ku_id, points):
+        """
+            Добавляет очки в рейтинг указанного игрока на текущий вайп
+        """
+        result = False
+        async with self.chester_bot.async_session() as session:
+            async with session.begin():
+                result = await WipeAchievements.add_points(session, ku_id, points)
+        if result:
+            await ctx.reply(self.__replies['achievements_save_success'])
+        if result is False:
+            await ctx.reply(self.__replies['achievements_save_unsuccess'])
+        return True
+
+    @commands.command(name=main_config['short_server_name'] + "_remove_points")
+    @commands.has_role(main_config['master_role'])
+    async def remove_points(self, ctx, ku_id, points):
+        """
+            Отнимает очки в рейтинг указанного игрока на текущий вайп
+        """
+        result = False
+        async with self.chester_bot.async_session() as session:
+            async with session.begin():
+                result = await WipeAchievements.remove_points(session, ku_id, points)
+        if result:
+            await ctx.reply(self.__replies['achievements_save_success'])
+        if result is False:
+            await ctx.reply(self.__replies['achievements_save_unsuccess'])
+        return True

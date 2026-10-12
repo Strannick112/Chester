@@ -29,15 +29,18 @@ class AchievementsSeason(Base):
         last_season_id = (await AchievementsSeason.get_last_season(session)).id
         instance = (
             await session.execute(
-                select(SteamAccount.ku_id, SteamAccount.nickname, func.sum(WipeAchievements.score).label('score'))
+                select(SteamAccount.ku_id, SteamAccount.nickname, func.sum(WipeAchievements.score).label('score'), WipeAchievements.additional_points)
                 .join(AchievementsSeason.wipes)
                 .join(Wipe.wipe_achievements)
                 .join(WipeAchievements.steam_account)
-                .where(and_(AchievementsSeason.id == last_season_id, WipeAchievements.score > 200))
+                .where(and_(AchievementsSeason.id == last_season_id, (WipeAchievements.score + WipeAchievements.additional_points) > 200))
                 .group_by(SteamAccount.ku_id, SteamAccount.nickname)
                 .order_by(func.sum(WipeAchievements.score).desc())
             )).all()
-        return [ { "Никнейм": row.nickname, "Очки": row.score, "ku_id": row.ku_id } for row in instance ]
+        return [ {
+            "Никнейм": row.nickname, "Очки": row.score + row.additional_points,
+            "Чистые очки": row.score, "Дополнительные очки": row.additional_points,
+            "ku_id": row.ku_id } for row in instance ]
 
     @staticmethod
     async def get_last_season(session):
@@ -52,7 +55,8 @@ class AchievementsSeason(Base):
         subquery = (
             select(
                 WipeAchievements.wipe_id,
-                func.sum(WipeAchievements.score).label('total_score')
+                func.sum(WipeAchievements.score).label('total_score'),
+                WipeAchievements.additional_points
             )
             .select_from(WipeAchievements)
             .group_by(WipeAchievements.wipe_id)
@@ -66,7 +70,7 @@ class AchievementsSeason(Base):
             .where(
                 and_(
                     Wipe.achievements_season_id == (await AchievementsSeason.get_last_season(session)).id,
-                    subquery.c.total_score > 0
+                    (subquery.c.total_score + subquery.c.additional_points) > 0
                 )
             )
         )
