@@ -101,7 +101,7 @@ achievements_list = {
     "hasPerused_book_horticulture": 0,
     "equipped_waterplant_bomb": 1,
     "hasCooked_stuffedeggplant": 2,
-    "numKilledPlayer": 0,
+    "numKilledPlayer": 20,
     "numKilledAsMoose": 0,
     "hasPickedUpRose": 1,
     "hasGrownGiantCrop": 20,

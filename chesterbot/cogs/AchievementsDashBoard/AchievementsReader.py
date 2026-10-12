@@ -106,6 +106,8 @@ class AchievementsReader():
                 else:
                     if field_name == "numSurvivedDay":
                         actual_points = field_value * points
+                    elif field_name == "numKilledPlayer":
+                        actual_points = min(field_value, 5) * points
                     else:
                         actual_points = min(field_value, 1) * points
             if actual_points != 0:

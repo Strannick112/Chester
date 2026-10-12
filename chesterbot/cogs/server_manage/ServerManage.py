@@ -172,6 +172,10 @@ class ServerManage(commands.Cog, name="Управление сервером"):
                         "Chester_bot",
                         "Данный игровой сервер оснащён ботом. Используйте @help, чтобы получить больше информации"
                     )
+                    await send_message_to_game(
+                        "Chester_bot",
+                        "Мы в Discord https://discord.gg/wtt4GPmZXX"
+                    )
                     return
                 if "[Whisper]" in text:
                     await self.log_channel.send(content=("```" + text + "```"))
