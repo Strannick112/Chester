@@ -29,7 +29,8 @@ class AchievementsSeason(Base):
         last_season_id = (await AchievementsSeason.get_last_season(session)).id
         instance = (
             await session.execute(
-                select(SteamAccount.ku_id, SteamAccount.nickname, func.sum(WipeAchievements.score).label('score'), WipeAchievements.additional_points)
+                select(SteamAccount.ku_id, SteamAccount.nickname, func.sum(WipeAchievements.score).label('score'),
+                       func.sum(WipeAchievements.additional_points).label('additional_points'))
                 .join(AchievementsSeason.wipes)
                 .join(Wipe.wipe_achievements)
                 .join(WipeAchievements.steam_account)
@@ -56,7 +57,8 @@ class AchievementsSeason(Base):
             select(
                 WipeAchievements.wipe_id,
                 func.sum(WipeAchievements.score).label('total_score'),
-                WipeAchievements.additional_points
+                WipeAchievements.additional_points,
+                func.sum(WipeAchievements.additional_points).label('additional_points')
             )
             .select_from(WipeAchievements)
             .group_by(WipeAchievements.wipe_id)
