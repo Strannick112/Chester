@@ -109,7 +109,7 @@ class AchievementsController(commands.Cog, name="Доска статистики
             Сохраняет рейтинг игроков на текущий вайп
         """
         await self.save_achievements_info()
-        await ctx.reply(self.__replies['achievements_save_success'])
+        await ctx.reply(self.chester_bot.__replies['achievements_save_success'])
         return True
 
     async def save_achievements_info(self):
@@ -138,9 +138,9 @@ class AchievementsController(commands.Cog, name="Доска статистики
             async with session.begin():
                 result = await WipeAchievements.add_points(session, ku_id, points)
         if result:
-            await ctx.reply(self.__replies['achievements_save_success'])
+            await ctx.reply(self.chester_bot.__replies['achievements_save_success'])
         if result is False:
-            await ctx.reply(self.__replies['achievements_save_unsuccess'])
+            await ctx.reply(self.chester_bot.__replies['achievements_save_unsuccess'])
         return True
 
     @commands.command(name=main_config['short_server_name'] + "_remove_points")
@@ -154,7 +154,7 @@ class AchievementsController(commands.Cog, name="Доска статистики
             async with session.begin():
                 result = await WipeAchievements.remove_points(session, ku_id, points)
         if result:
-            await ctx.reply(self.__replies['achievements_save_success'])
+            await ctx.reply(self.chester_bot.__replies['achievements_save_success'])
         if result is False:
-            await ctx.reply(self.__replies['achievements_save_unsuccess'])
+            await ctx.reply(self.chester_bot.__replies['achievements_save_unsuccess'])
         return True
