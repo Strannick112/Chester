@@ -53,7 +53,7 @@ class WipeAchievements(Base):
             steam_account_id=(await SteamAccount.get_by_ku_id(session, ku_id)).id)
         )).scalars().first()
         if instance:
-            instance.additional_points += additional_points
+            instance.additional_points += int(additional_points)
             await session.flush()
             return True
         return False
@@ -65,7 +65,7 @@ class WipeAchievements(Base):
             steam_account_id=(await SteamAccount.get_by_ku_id(session, ku_id)).id)
         )).scalars().first()
         if instance:
-            instance.additional_points -= additional_points
+            instance.additional_points -= int(additional_points)
             await session.flush()
             return True
         return False
