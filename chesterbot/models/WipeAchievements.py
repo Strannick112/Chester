@@ -3,7 +3,8 @@ from typing import Optional
 from sqlalchemy import ForeignKey, select, BigInteger
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from chesterbot.models import SteamAccount, Wipe
+from .Wipe import Wipe
+from .SteamAccount import SteamAccount
 
 # from . import Wipe, SteamAccount
 from .Base import Base
