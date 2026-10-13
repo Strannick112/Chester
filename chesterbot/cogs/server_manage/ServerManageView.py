@@ -3,7 +3,7 @@ from discord import ButtonStyle, Interaction
 from discord.ui import View
 
 from chesterbot import main_config
-from chesterbot.cogs.server_manage.commands import restart, stop, soft_stop, soft_restart, soft_world_regenerate
+from chesterbot.cogs.server_manage.commands import restart, stop, soft_stop, soft_restart, soft_world_regenerate, turn_on_pvp, turn_off_pvp
 
 
 class ServerManageView(View):
@@ -41,6 +41,16 @@ class ServerManageView(View):
     async def soft_world_regenerate_callback(self, interaction, button):
         await soft_world_regenerate()
         await interaction.response.send_message("Пересоздание игрового мира принято к исполнению")
+
+    @discord.ui.button(label="Включить PvP", style=ButtonStyle.green, row=2)
+    async def soft_world_regenerate_callback(self, interaction, button):
+        await turn_on_pvp()
+        await interaction.response.send_message("PvP включено. Перезапуск сервера через 1 минуту принят к исполнению")
+
+    @discord.ui.button(label="Отключить PvP", style=ButtonStyle.red, row=2)
+    async def soft_world_regenerate_callback(self, interaction, button):
+        await turn_off_pvp()
+        await interaction.response.send_message("PvP отключено. Перезапуск сервера через 1 минуту принят к исполнению")
 
     async def interaction_check(self, interaction: Interaction, /) -> bool:
         if interaction.user.get_role(main_config["master_role"]) is not None:

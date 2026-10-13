@@ -1,5 +1,6 @@
 import re
 import subprocess
+import configparser
 
 from chesterbot import main_config
 
@@ -117,6 +118,24 @@ async def send_message_to_game(author: str, text: str):
     finally:
         return False
 
+async def turn_on_pvp():
+    config, file_path = pvp_config()
+    config.set("GAMEPLAY", "pvp", "true")
+    with open(file_path, "w", encoding="utf-8") as configfile:
+        config.write(configfile)
+
+async def turn_off_pvp():
+    config, file_path = pvp_config()
+    config.set("GAMEPLAY", "pvp", "false")
+    with open(file_path, "w", encoding="utf-8") as configfile:
+        config.write(configfile)
+
+def pvp_config():
+    file_path = main_config["path_to_save"] + "/cluster.ini"
+    config = configparser.ConfigParser()
+    config.optionxform = str
+    config.read(file_path, encoding="utf-8")
+    return config, file_path
 
 # async def send_announce_to_game(text: str, color: tuple = (255, 0, 0, 1)):
 #     """Отправляет сообщение от указанного автора в игру"""
