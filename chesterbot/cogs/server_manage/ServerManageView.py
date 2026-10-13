@@ -43,12 +43,12 @@ class ServerManageView(View):
         await interaction.response.send_message("Пересоздание игрового мира принято к исполнению")
 
     @discord.ui.button(label="Включить PvP", style=ButtonStyle.green, row=2)
-    async def soft_world_regenerate_callback(self, interaction, button):
+    async def turn_on_pvp_callback(self, interaction, button):
         await turn_on_pvp()
         await interaction.response.send_message("PvP включено. Перезапуск сервера через 1 минуту принят к исполнению")
 
     @discord.ui.button(label="Отключить PvP", style=ButtonStyle.red, row=2)
-    async def soft_world_regenerate_callback(self, interaction, button):
+    async def turn_off_pvp_callback(self, interaction, button):
         await turn_off_pvp()
         await interaction.response.send_message("PvP отключено. Перезапуск сервера через 1 минуту принят к исполнению")
 
