@@ -123,12 +123,14 @@ async def turn_on_pvp():
     config.set("GAMEPLAY", "pvp", "true")
     with open(file_path, "w", encoding="utf-8") as configfile:
         config.write(configfile)
+    await soft_restart()
 
 async def turn_off_pvp():
     config, file_path = pvp_config()
     config.set("GAMEPLAY", "pvp", "false")
     with open(file_path, "w", encoding="utf-8") as configfile:
         config.write(configfile)
+    await soft_restart()
 
 def pvp_config():
     file_path = main_config["path_to_save"] + "/cluster.ini"
