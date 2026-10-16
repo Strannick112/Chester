@@ -57,7 +57,6 @@ class AchievementsSeason(Base):
             select(
                 WipeAchievements.wipe_id,
                 func.sum(WipeAchievements.score).label('total_score'),
-                WipeAchievements.additional_points,
                 func.sum(WipeAchievements.additional_points).label('additional_points')
             )
             .select_from(WipeAchievements)
