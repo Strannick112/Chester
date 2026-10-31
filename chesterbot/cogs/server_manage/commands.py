@@ -1,7 +1,7 @@
 import re
 import subprocess
 import configparser
-
+import base64
 from chesterbot import main_config
 
 
@@ -87,35 +87,46 @@ async def soft_world_regenerate():
         return False
 
 
-async def send_message_to_game(author: str, text: str):
-    """Отправляет сообщение от указанного автора в игру"""
+async def send_message_to_game(author: str, text: str) -> bool:
+    """Отправляет сообщение в DST, передавая текст в виде чисел.
+    Полностью защищает от Lua-инъекций и не вызывает лагов игры.
+    """
     try:
-        screen_list = subprocess.run(
-            'screen -ls',
-            shell=True,
+        # 1. Проверяем наличие экрана БЕЗ shell=True
+        result = subprocess.run(
+            ['screen', '-ls'],
             stdout=subprocess.PIPE,
-            stdin=subprocess.PIPE
-        ).stdout.decode('ascii')
-        if main_config['server_main_screen_name'] in screen_list:
-            nickname = re.sub(r'\'', r"\\\\\'", author)
-            nickname = re.sub(r'\"', r"\\\\\"", nickname)
-            nickname = re.sub(r'\$', r"\\\\\$", nickname)
-            nickname = re.sub(r'>', r"\\\\\>", nickname)
-            nickname = re.sub(r'<', r"\\\\\<", nickname)
-            nickname = re.sub(r'/', r"\\\\\/", nickname)
-            text = re.sub(r'\'', r"\\\\\'", text)
-            text = re.sub(r'\"', r"\\\\\"", text)
-            text = re.sub(r'\$', r"\\\\\$", text)
-            text = re.sub(r'>', r"\\\\\>", text)
-            text = re.sub(r'<', r"\\\\\<", text)
-            text = re.sub(r'/', r"\\\\\/", text)
-            subprocess.check_output(
-                f"""screen -S {main_config['server_main_screen_name']} -X stuff""" +
-                f""" "c_announce(\\\"{nickname}: {text}\\\")\n\"""",
-                shell=True
-            )
+            stderr=subprocess.PIPE,
+            text=True
+        )
+
+        if main_config['server_main_screen_name'] not in result.stdout:
+            return False
+
+        # Полная строка сообщения, которую должен увидеть сервер
+        full_message = f"{author}: {text}"
+
+        # 2. Переводим каждый символ строки в его числовой ID (ASCII/UTF-8 байт)
+        # Пример: "A" станет 65, "B" станет 66. Хакерский код станет просто набором цифр.
+        byte_list = [str(b) for b in full_message.encode('utf-8')]
+        bytes_string = ", ".join(byte_list)  # Получится строка вида: "72, 97, 99, 107, 101, 114"
+
+        # 3. Формируем команду для DST.
+        # string.char(72, 97, ...) мгновенно собирает строку в памяти Lua на Си-уровне.
+        # Никаких циклов, никаких кавычек, в которые можно внедриться!
+        lua_command = f"c_announce(string.char({bytes_string}))\n"
+
+        # 4. Отправляем в screen БЕЗ shell=True
+        subprocess.run([
+            'screen',
+            '-S', main_config['server_main_screen_name'],
+            '-X', 'stuff',
+            lua_command
+        ], check=True)
+
         return True
-    finally:
+    except Exception as e:
+        print(f"Ошибка при отправке: {e}")
         return False
 
 async def turn_on_pvp():
