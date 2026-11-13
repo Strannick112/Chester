@@ -83,7 +83,7 @@ class AchievementsView:
         headers = (
             f"Сезон: {season_number}⠀⠀⠀⠀⠀⠀",
             "Порог входа: 200 очков⠀⠀⠀⠀",
-            "Завершение: 13.11⠀⠀⠀ㅤㅤㅤ",
+            "Завершение: 08.01⠀⠀⠀ㅤㅤㅤ",
         )
         # embed.set_image(url=main_config["achievement_embed_law_picture"])
 
